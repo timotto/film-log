@@ -1,0 +1,15 @@
+List<double> shutterSpeeds() => [
+      10000,
+      5000,
+      2500,
+      1000,
+      500,
+      250,
+      125,
+      60,
+      30,
+      15,
+      1,
+      0.5,
+      0.25,
+    ].map((v) => 1 / v).toList(growable: false);
