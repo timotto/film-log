@@ -29,15 +29,21 @@ class FilmInstance {
     required this.archive,
   });
 
-  factory FilmInstance.createNew() => FilmInstance(
+  factory FilmInstance.createNew({
+    Camera? camera,
+    FilmStock? filmStock,
+    double? actualIso,
+    int? maxPhotoCount,
+  }) =>
+      FilmInstance(
         id: const UuidV4().generate(),
         name: '',
         inserted: DateTime.timestamp(),
-        stock: null,
-        actualIso: 100,
-        camera: null,
+        stock: filmStock,
+        actualIso: actualIso ?? 100,
+        camera: camera,
         photos: [],
-        maxPhotoCount: 10,
+        maxPhotoCount: maxPhotoCount ?? 10,
         archive: false,
       );
 

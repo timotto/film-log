@@ -3,6 +3,7 @@ import 'package:film_log/model/photo.dart';
 import 'package:film_log/pages/edit_film_page/edit_film_page.dart';
 import 'package:film_log/pages/edit_photo_page/edit_photo_page.dart';
 import 'package:film_log/service/film_repo.dart';
+import 'package:film_log/service/lru.dart';
 import 'package:film_log/service/repos.dart';
 import 'package:film_log/widgets/app_menu.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,8 @@ class FilmLogPage extends StatefulWidget {
 
 class _FilmLogPageState extends State<FilmLogPage> {
   late FilmInstance film;
+
+  final _lru = LruService();
 
   @override
   void initState() {
@@ -50,10 +53,14 @@ class _FilmLogPageState extends State<FilmLogPage> {
 
   Future<void> _addPhoto(BuildContext context) async {
     final frameNumber = film.photos.length + 1;
-    final result = await Navigator.of(context).push(MaterialPageRoute(
+    final Photo? result = await Navigator.of(context).push(MaterialPageRoute(
       builder: (_) => EditPhotoPage(
         photo: Photo.createNew(
           frameNumber,
+          lens: _lru.lens,
+          shutter: _lru.shutter,
+          aperture: _lru.aperture,
+          filters: _lru.filters,
         ),
         film: film,
         repos: widget.repos,
@@ -61,6 +68,12 @@ class _FilmLogPageState extends State<FilmLogPage> {
       ),
     ));
     if (result == null) return;
+    _lru.setPhoto(
+      lens: result.lens,
+      shutter: result.shutter,
+      aperture: result.aperture,
+      filters: result.filters,
+    );
     film = film.update(photos: [...film.photos, result]);
     await widget.repo.update(film);
     if (!mounted || !context.mounted) return;

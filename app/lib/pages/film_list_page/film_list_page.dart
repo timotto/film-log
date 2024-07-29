@@ -2,31 +2,46 @@ import 'package:film_log/model/film_instance.dart';
 import 'package:film_log/pages/edit_film_page/edit_film_page.dart';
 import 'package:film_log/pages/film_log_page/film_log_page.dart';
 import 'package:film_log/service/film_repo.dart';
+import 'package:film_log/service/lru.dart';
 import 'package:film_log/service/repos.dart';
 import 'package:film_log/widgets/app_menu.dart';
 import 'package:flutter/material.dart';
 
 class FilmListPage extends StatelessWidget {
-  const FilmListPage({
+  FilmListPage({
     super.key,
     required this.repo,
     required this.repos,
     this.archive = false,
   });
 
+  final _lru = LruService();
+
   final FilmRepo repo;
   final Repos repos;
   final bool archive;
 
   Future<void> _addFilm(BuildContext context) async {
-    final result = await Navigator.of(context).push(MaterialPageRoute(
+    final FilmInstance? result =
+        await Navigator.of(context).push(MaterialPageRoute(
       builder: (_) => EditFilmPage(
         repos: repos,
-        film: FilmInstance.createNew(),
+        film: FilmInstance.createNew(
+          camera: _lru.camera,
+          filmStock: _lru.filmStock,
+          actualIso: _lru.filmStock?.iso,
+          maxPhotoCount: _lru.maxPhotoCount,
+        ),
         create: true,
       ),
     ));
     if (result == null) return;
+
+    _lru.setFilm(
+      camera: result.camera,
+      filmStock: result.stock,
+      maxPhotoCount: result.maxPhotoCount,
+    );
 
     final item = await repo.add(result);
     if (!context.mounted) return;
