@@ -4,6 +4,12 @@
 <dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Record location where a picture was taken</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Select thumbnails of gear and recorded photos</string>
+    <key>NSCameraUsageDescription</key>
+    <string>Store thumbnails of gear and recorded photos</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Not needed</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>

@@ -1,6 +1,7 @@
 import 'package:film_log/fmt/aperture.dart';
 import 'package:film_log/fmt/shutterspeed.dart';
 import 'package:film_log/fmt/timestamp.dart';
+import 'package:film_log/model/thumbnail.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:uuid/v4.dart';
 
@@ -20,6 +21,7 @@ class Photo {
   final Lens? lens;
   final Location? location;
   final String? notes;
+  final Thumbnail? thumbnail;
 
   Photo({
     required this.id,
@@ -31,6 +33,7 @@ class Photo {
     required this.lens,
     required this.location,
     required this.notes,
+    required this.thumbnail,
   });
 
   String listItemSubtitle(BuildContext context,
@@ -54,6 +57,7 @@ class Photo {
     Lens? lens,
     Location? location,
     String? notes,
+    Thumbnail? thumbnail,
   }) =>
       Photo(
         id: id,
@@ -65,6 +69,7 @@ class Photo {
         lens: lens ?? this.lens,
         location: location ?? this.location,
         notes: notes ?? this.notes,
+        thumbnail: thumbnail ?? this.thumbnail,
       );
 
   Photo updateLocation(Location? value) => Photo(
@@ -77,6 +82,20 @@ class Photo {
         lens: lens,
         location: value,
         notes: notes,
+        thumbnail: thumbnail,
+      );
+
+  Photo updateThumbnail(Thumbnail? thumbnail) => Photo(
+        id: id,
+        timestamp: timestamp,
+        frameNumber: frameNumber,
+        shutter: shutter,
+        aperture: aperture,
+        filters: filters,
+        lens: lens,
+        location: location,
+        notes: notes,
+        thumbnail: thumbnail,
       );
 
   factory Photo.createNew(
@@ -97,6 +116,7 @@ class Photo {
         lens: lens,
         location: location,
         notes: null,
+        thumbnail: null,
       );
 
   factory Photo.fromJson(
@@ -124,6 +144,9 @@ class Photo {
             ? Location.fromJson(json['location'])
             : null,
         notes: json['notes'],
+        thumbnail: json['thumbnail'] != null
+            ? Thumbnail.fromJson(json['thumbnail'])
+            : null,
       );
 
   Map<String, dynamic> toJson() => {
@@ -137,5 +160,6 @@ class Photo {
         if (lens != null) 'lens': lens!.id,
         if (location != null) 'location': location!.toJson(),
         if (notes != null) 'notes': notes,
+        if (thumbnail != null) 'thumbnail': thumbnail!.toJson(),
       };
 }

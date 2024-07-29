@@ -1,4 +1,5 @@
 import 'package:film_log/service/film_repo.dart';
+import 'package:film_log/service/thumbnail_repo.dart';
 
 import 'camera_repo.dart';
 import 'filmstock_repo.dart';
@@ -20,6 +21,7 @@ class Repos {
   late final FilterRepo filterRepo;
   final filmstockRepo = FilmstockRepo();
   final filmRepo = FilmRepo();
+  final thumbnailRepo = ThumbnailRepo();
 
   Future<void> load() async {
     try {
@@ -27,6 +29,7 @@ class Repos {
       await Future.wait([
             cameraRepo.load(),
             filmstockRepo.load(),
+            thumbnailRepo.load(),
           ]);
 
       await lensRepo.load();

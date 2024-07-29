@@ -11,6 +11,7 @@ import 'package:film_log/pages/gear/widgets/text_edit_tile.dart';
 import 'package:film_log/service/location.dart';
 import 'package:film_log/service/repos.dart';
 import 'package:film_log/widgets/location_list_tile.dart';
+import 'package:film_log/widgets/thumbnail_list_tile.dart';
 import 'package:film_log/widgets/timestamp_list_tile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -63,6 +64,25 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
       return;
     }
 
+    if (widget.photo.thumbnail != null) {
+      bool photoChanged = false;
+      if (photo.thumbnail != null) {
+        if (!widget.photo.thumbnail!.equals(photo.thumbnail!)) {
+          photoChanged = true;
+        }
+      } else {
+        photoChanged = true;
+      }
+      if (photoChanged) {
+        await widget.repos.thumbnailRepo.delete(widget.photo.thumbnail!);
+      }
+    }
+
+    print('save photo');
+    print('old item:');
+    print(widget.photo.toJson());
+    print('new item:');
+    print(photo.toJson());
     widget.film.photos.removeWhere((item) => item.id == photo.id);
     widget.film.photos.add(photo);
     widget.film.photos.sort((a, b) => a.frameNumber.compareTo(b.frameNumber));
@@ -82,6 +102,8 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
 
   void Function(T) _onUpdate<T>(Photo Function(T) fn) =>
       (value) => setState(() => photo = fn(value));
+
+  bool _show<T>(T? value) => edit || value != null;
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -103,12 +125,14 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
         body: ListView(
           children: [
             _timestampEditTile(context),
-            _shutterSpeedEditTile(context),
-            _lensEditTile(context),
-            _apertureEditTile(context),
-            _filtersEditTile(context),
-            _locationEditTile(context),
-            _notesEditTile(context),
+            if (_show(photo.shutter)) _shutterSpeedEditTile(context),
+            if (_show(photo.lens)) _lensEditTile(context),
+            if (_show(photo.aperture)) _apertureEditTile(context),
+            if (edit || photo.filters.isNotEmpty) _filtersEditTile(context),
+            if (_show(photo.location)) _locationEditTile(context),
+            if (edit || (photo.notes?.isNotEmpty ?? false))
+              _notesEditTile(context),
+            if (_show(photo.thumbnail)) _thumbnailEditTile(context),
           ],
         ),
       );
@@ -174,5 +198,13 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
         onUpdate: _onUpdate((value) => photo.update(
               notes: value.isNotEmpty ? value : null,
             )),
+      );
+
+  Widget _thumbnailEditTile(BuildContext context) => ThumbnailListTile(
+        label: 'Thumbnail',
+        edit: edit,
+        value: photo.thumbnail,
+        repo: widget.repos.thumbnailRepo,
+        onUpdate: _onUpdate((value) => photo.updateThumbnail(value)),
       );
 }

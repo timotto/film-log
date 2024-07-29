@@ -90,6 +90,7 @@ class _FilmLogPageState extends State<FilmLogPage> {
         repos: widget.repos,
       ),
     ));
+    setState(() {});
   }
 
   bool _canAddPhoto() =>
@@ -141,22 +142,28 @@ class _FilmLogPageState extends State<FilmLogPage> {
 
   Widget _list(BuildContext context) => ListView(
         children: film.photos
-            .asMap()
-            .map((index, item) => MapEntry(
-                index,
-                ListTile(
-                  title: Text('#${index + 1}'),
-                  subtitle: Text(item.listItemSubtitle(
-                    context,
-                    photos: film.photos,
-                  )),
-                  onTap: () => _selectItem(context, item),
-                )))
-            .values
+            .map((item) => _photoListTile(context, item))
             .toList(growable: false),
       );
 
   Widget _empty(BuildContext context) => const Center(
         child: Text('There are no photos yet'),
+      );
+
+  Widget _photoListTile(BuildContext context, Photo item) => ListTile(
+        title: Text('#${item.frameNumber}'),
+        subtitle: Text(item.listItemSubtitle(
+          context,
+          photos: film.photos,
+        )),
+        leading: item.thumbnail != null
+            ? Image(
+                image: ResizeImage(
+                  FileImage(widget.repos.thumbnailRepo.file(item.thumbnail!)),
+                  width: 64,
+                ),
+              )
+            : null,
+        onTap: () => _selectItem(context, item),
       );
 }
