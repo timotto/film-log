@@ -26,9 +26,11 @@ class FilmListPage extends StatelessWidget {
         create: true,
       ),
     ));
-    if (result != null) {
-      repo.add(result);
-    }
+    if (result == null) return;
+
+    final item = await repo.add(result);
+    if (!context.mounted) return;
+    await _selectFilm(context, item);
   }
 
   Future<void> _selectFilm(BuildContext context, FilmInstance item) async {

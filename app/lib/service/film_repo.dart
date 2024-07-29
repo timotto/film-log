@@ -21,10 +21,12 @@ class FilmRepo {
 
   List<FilmInstance> items() => itemsList;
 
-  Future<void> add(FilmInstance item) async {
-    itemsList.add(item.update(id: const UuidV4().generate()));
+  Future<FilmInstance> add(FilmInstance item) async {
+    item = item.update(id: const UuidV4().generate());
+    itemsList.add(item);
     updateItems([...itemsList]);
-    save();
+    await save();
+    return item;
   }
 
   Future<void> delete(FilmInstance item) async {

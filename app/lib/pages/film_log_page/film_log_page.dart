@@ -62,7 +62,7 @@ class _FilmLogPageState extends State<FilmLogPage> {
     ));
     if (result == null) return;
     film = film.update(photos: [...film.photos, result]);
-    widget.repo.update(film);
+    await widget.repo.update(film);
     if (!mounted || !context.mounted) return;
     setState(() {});
   }
