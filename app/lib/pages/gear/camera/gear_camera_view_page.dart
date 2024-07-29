@@ -1,11 +1,9 @@
-import 'package:film_log/fmt/shutterspeed.dart';
 import 'package:film_log/model/camera.dart';
 import 'package:film_log/pages/gear/widgets/filmstock_format_edit_tile.dart';
 import 'package:film_log/pages/gear/widgets/gear_view_page.dart';
 import 'package:film_log/pages/gear/widgets/shutterspeed_edit_tile.dart';
 import 'package:film_log/pages/gear/widgets/text_edit_tile.dart';
 import 'package:film_log/service/camera_repo.dart';
-import 'package:film_log/widgets/shutter_list_widget.dart';
 import 'package:flutter/material.dart';
 
 class GearCameraViewPage extends StatelessWidget {

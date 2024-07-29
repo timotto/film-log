@@ -1,10 +1,8 @@
 import 'package:film_log/model/film_instance.dart';
 import 'package:film_log/pages/edit_film_page/edit_film_page.dart';
 import 'package:film_log/pages/film_log_page/film_log_page.dart';
-import 'package:film_log/pages/gear/widgets/gear_select_page.dart';
 import 'package:film_log/service/film_repo.dart';
 import 'package:film_log/service/repos.dart';
-import 'package:film_log/widgets/app_container.dart';
 import 'package:film_log/widgets/app_menu.dart';
 import 'package:flutter/material.dart';
 

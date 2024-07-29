@@ -28,19 +28,6 @@ class ShutterSpeedListWidget extends StatelessWidget {
       .map((value) => MapEntry(value, formatShutterSpeed(value)))
       .toList(growable: false);
 
-  // @override
-  // Widget build(BuildContext context) => ListView(
-  //       children: _values()
-  //           .map((value) => ListTile(
-  //                 title: Text(formatShutterSpeed(value)),
-  //                 onTap: () => onTap(value),
-  //               ))
-  //           .toList(growable: false),
-  //     );
-
-  List<double> _values() =>
-      shutterSpeeds().where(_inRange).toList(growable: false);
-
   bool _inRange(double value) {
     if (min != null && value < min!) return false;
     if (max != null && value > max!) return false;

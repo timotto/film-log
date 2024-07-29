@@ -1,5 +1,4 @@
 import 'package:film_log/model/film_stock.dart';
-import 'package:film_log/model/filmstock_format.dart';
 import 'package:film_log/pages/gear/widgets/double_edit_tile.dart';
 import 'package:film_log/pages/gear/widgets/filmstock_format_edit_tile.dart';
 import 'package:film_log/pages/gear/widgets/gear_view_page.dart';

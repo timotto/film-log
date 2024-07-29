@@ -1,7 +1,6 @@
 import 'package:film_log/model/fstop.dart';
 import 'package:film_log/pages/gear/widgets/aperture_edit_tile.dart';
 import 'package:film_log/pages/gear/widgets/double_edit_tile.dart';
-import 'package:film_log/pages/gear/widgets/gear_multiselect_page.dart';
 import 'package:film_log/pages/gear/widgets/gear_view_page.dart';
 import 'package:film_log/pages/gear/widgets/multiselect_edit_tile.dart';
 import 'package:film_log/pages/gear/widgets/preset_edit_tile.dart';
