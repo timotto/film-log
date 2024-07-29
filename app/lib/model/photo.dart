@@ -67,15 +67,35 @@ class Photo {
         notes: notes ?? this.notes,
       );
 
-  factory Photo.createNew(int frameNumber) => Photo(
+  Photo updateLocation(Location? value) => Photo(
+        id: id,
+        timestamp: timestamp,
+        frameNumber: frameNumber,
+        shutter: shutter,
+        aperture: aperture,
+        filters: filters,
+        lens: lens,
+        location: value,
+        notes: notes,
+      );
+
+  factory Photo.createNew(
+    int frameNumber, {
+    double? shutter,
+    double? aperture,
+    List<Filter>? filters,
+    Lens? lens,
+    Location? location,
+  }) =>
+      Photo(
         id: const UuidV4().generate(),
         timestamp: DateTime.timestamp(),
         frameNumber: frameNumber,
-        shutter: null,
-        aperture: null,
-        filters: [],
-        lens: null,
-        location: null,
+        shutter: shutter,
+        aperture: aperture,
+        filters: filters ?? [],
+        lens: lens,
+        location: location,
         notes: null,
       );
 

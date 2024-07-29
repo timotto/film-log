@@ -3,6 +3,7 @@ import 'package:film_log/model/photo.dart';
 import 'package:film_log/pages/edit_film_page/edit_film_page.dart';
 import 'package:film_log/pages/edit_photo_page/edit_photo_page.dart';
 import 'package:film_log/service/film_repo.dart';
+import 'package:film_log/service/location.dart';
 import 'package:film_log/service/repos.dart';
 import 'package:film_log/widgets/app_menu.dart';
 import 'package:flutter/material.dart';
@@ -52,7 +53,9 @@ class _FilmLogPageState extends State<FilmLogPage> {
     final frameNumber = film.photos.length + 1;
     final result = await Navigator.of(context).push(MaterialPageRoute(
       builder: (_) => EditPhotoPage(
-        photo: Photo.createNew(frameNumber),
+        photo: Photo.createNew(
+          frameNumber,
+        ),
         film: film,
         repos: widget.repos,
         create: true,

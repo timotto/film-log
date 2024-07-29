@@ -1,13 +1,16 @@
 import 'package:film_log/model/film_instance.dart';
 import 'package:film_log/model/filter.dart';
 import 'package:film_log/model/fstop.dart';
+import 'package:film_log/model/location.dart';
 import 'package:film_log/model/photo.dart';
 import 'package:film_log/pages/gear/widgets/aperture_edit_tile.dart';
 import 'package:film_log/pages/gear/widgets/lens_edit_tile.dart';
 import 'package:film_log/pages/gear/widgets/multiselect_edit_tile.dart';
 import 'package:film_log/pages/gear/widgets/shutterspeed_edit_tile.dart';
 import 'package:film_log/pages/gear/widgets/text_edit_tile.dart';
+import 'package:film_log/service/location.dart';
 import 'package:film_log/service/repos.dart';
+import 'package:film_log/widgets/location_list_tile.dart';
 import 'package:film_log/widgets/timestamp_list_tile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -39,8 +42,19 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
     photo = widget.photo;
     if (widget.create) {
       edit = true;
+      getLocation().then(_onLocation);
     }
     super.initState();
+  }
+
+  void _onLocation(Location? value) {
+    if (value == null) {
+      return;
+    }
+    photo = photo.update(location: value);
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   Future<void> _save(BuildContext context) async {
@@ -58,9 +72,7 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
     });
   }
 
-  void _toggleEdit() => setState(() {
-        edit = true;
-      });
+  void _toggleEdit() => setState(() => edit = true);
 
   bool Function(Filter)? _filterFilter() => photo.lens == null
       ? null
@@ -147,9 +159,11 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
         filter: _filterFilter(),
       );
 
-  Widget _locationEditTile(BuildContext context) => ListTile(
-        onTap: () {},
-        subtitle: const Text('Location'),
+  Widget _locationEditTile(BuildContext context) => LocationListTile(
+        label: 'Location',
+        value: photo.location,
+        edit: edit,
+        onUpdate: _onUpdate((value) => photo.updateLocation(value)),
       );
 
   Widget _notesEditTile(BuildContext context) => TextEditTile(

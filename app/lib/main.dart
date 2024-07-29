@@ -2,8 +2,6 @@ import 'package:film_log/pages/film_list_page/film_list_page.dart';
 import 'package:film_log/service/repos.dart';
 import 'package:flutter/material.dart';
 
-import 'pages/gear/gear_management_page/gear_management_page.dart';
-
 void main() {
   runApp(FilmLog());
 }
