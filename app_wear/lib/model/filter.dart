@@ -1,6 +1,7 @@
+import 'gear.dart';
 import 'lens.dart';
 
-class Filter {
+class Filter extends Gear<Filter> {
   Filter({
     required this.id,
     required this.label,
@@ -10,4 +11,7 @@ class Filter {
   final String id;
   final String label;
   final List<Lens> lenses;
+
+  @override
+  String itemId() => id;
 }

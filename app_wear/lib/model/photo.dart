@@ -1,3 +1,6 @@
+import 'package:film_log_wear/fmt/aperture.dart';
+import 'package:film_log_wear/fmt/shutter_speed.dart';
+
 import 'filter.dart';
 import 'lens.dart';
 import 'location.dart';
@@ -42,4 +45,14 @@ class Photo {
         filters: filters ?? this.filters,
         location: location ?? this.location,
       );
+
+  String? listItemSubTitle() {
+    List<String> parts = [
+      if (shutterSpeed != null) formatShutterSpeed(shutterSpeed!),
+      if (aperture != null) formatAperture(aperture!),
+      if (lens != null) lens!.label,
+    ];
+    if (parts.isEmpty) return null;
+    return parts.join(' ');
+  }
 }

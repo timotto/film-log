@@ -1,4 +1,6 @@
-class Camera {
+import 'gear.dart';
+
+class Camera extends Gear<Camera> {
   const Camera({
     required this.id,
     required this.label,
@@ -8,4 +10,7 @@ class Camera {
   final String id;
   final String label;
   final List<double> shutterSpeeds;
+
+  @override
+  String itemId() => id;
 }

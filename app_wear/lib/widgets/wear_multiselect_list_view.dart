@@ -1,6 +1,5 @@
 import 'package:film_log_wear/widgets/wear_list_tile.dart';
 import 'package:film_log_wear/widgets/wear_list_view.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class WearMultiSelectListView<T> extends StatefulWidget {
@@ -9,11 +8,13 @@ class WearMultiSelectListView<T> extends StatefulWidget {
     required this.selected,
     required this.values,
     required this.titleBuilder,
+    required this.onAccept,
   });
 
   final List<T> selected;
   final List<T> values;
   final String Function(T) titleBuilder;
+  final void Function(List<T>) onAccept;
 
   @override
   State<WearMultiSelectListView<T>> createState() =>
@@ -22,11 +23,18 @@ class WearMultiSelectListView<T> extends StatefulWidget {
 
 class _WearMultiSelectListViewState<T>
     extends State<WearMultiSelectListView<T>> {
+  List<T> values = [];
+
+  @override
+  void initState() {
+    values = [...widget.selected];
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) => WearListView(
         selectedIndex: _firstSelectedIndex(),
         children: [
-          _acceptButton(context),
           ..._children(context),
           _acceptButton(context),
         ],
@@ -43,13 +51,13 @@ class _WearMultiSelectListViewState<T>
       );
 
   Widget _acceptButton(BuildContext context) => IconButton(
-        onPressed: () => Navigator.of(context).pop(widget.selected),
+        onPressed: () => widget.onAccept(values),
         icon: const Icon(Icons.check),
       );
 
   int? _firstSelectedIndex() {
-    if (widget.selected.isEmpty) return null;
-    final indices = widget.selected
+    if (values.isEmpty) return null;
+    final indices = values
         .map((item) => widget.values.indexOf(item))
         .where((index) => index != -1)
         .toList(growable: false)
@@ -58,14 +66,14 @@ class _WearMultiSelectListViewState<T>
     return indices.first + 1;
   }
 
-  bool _isSelected(T item) => widget.selected.contains(item);
+  bool _isSelected(T item) => values.contains(item);
 
   void _toggleSelected(T item) {
     setState(() {
       if (_isSelected(item)) {
-        widget.selected.remove(item);
+        values.remove(item);
       } else {
-        widget.selected.add(item);
+        values.add(item);
       }
     });
   }

@@ -1,3 +1,4 @@
+import 'package:film_log_wear/widgets/swipe_dismiss.dart';
 import 'package:film_log_wear/widgets/wear_select_list_view.dart';
 import 'package:flutter/material.dart';
 
@@ -15,10 +16,12 @@ class EditShutterSpeedPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        body: WearSelectListView(
-          value: value,
-          values: values,
-          titleBuilder: formatShutterSpeed,
+        body: SwipeDismiss(
+          child: WearSelectListView(
+            value: value,
+            values: values,
+            titleBuilder: formatShutterSpeed,
+          ),
         ),
       );
 }

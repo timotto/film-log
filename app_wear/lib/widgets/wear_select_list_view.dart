@@ -28,7 +28,7 @@ class WearSelectListView<T> extends StatelessWidget {
       WearListTile(
         title: titleBuilder(value),
         selected: value == this.value,
-        onTap: () => Navigator.of(context).pop(value),
+        onTap: () => Navigator.pop(context, value),
       );
 
   int? _selectedIndex() {

@@ -13,6 +13,7 @@ import 'package:flutter_wear_os_connectivity/flutter_wear_os_connectivity.dart';
 import 'package:film_log_wear_data/model/add_photo.dart';
 
 import 'film_repo.dart';
+import 'wear/fake_state.dart';
 
 class WearDataService {
   WearDataService._();
@@ -139,6 +140,17 @@ class WearDataService {
       deviceId: _device!.id,
       path: '/film_log_add_photo',
     );
+  }
+
+  void fakeData() {
+    DataItem fakeItem = DataItem(
+      pathURI: Uri(),
+      data: Uint8List(1),
+      mapData: {
+        'data': jsonEncode(fakeState().toJson()),
+      },
+    );
+    _parseStateItem(fakeItem);
   }
 }
 

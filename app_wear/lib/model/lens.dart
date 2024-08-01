@@ -1,6 +1,7 @@
 import 'camera.dart';
+import 'gear.dart';
 
-class Lens {
+class Lens extends Gear<Lens> {
   Lens({
     required this.id,
     required this.label,
@@ -12,4 +13,7 @@ class Lens {
   final String label;
   final List<double> apertures;
   final List<Camera> cameras;
+
+  @override
+  String itemId() => id;
 }

@@ -1,4 +1,5 @@
 import 'package:film_log_wear/model/aperture.dart';
+import 'package:film_log_wear/model/gear.dart';
 import 'package:film_log_wear/model/photo.dart';
 import 'package:film_log_wear/model/shutter_speed.dart';
 import 'package:film_log_wear/pages/edit_aperture_page.dart';
@@ -7,6 +8,7 @@ import 'package:film_log_wear/pages/edit_lens_page.dart';
 import 'package:film_log_wear/pages/edit_shutter_speed_page.dart';
 import 'package:film_log_wear/service/filter_repo.dart';
 import 'package:film_log_wear/service/lens_repo.dart';
+import 'package:film_log_wear/widgets/swipe_dismiss.dart';
 import 'package:film_log_wear/widgets/wear_list_tile.dart';
 import 'package:film_log_wear/widgets/wear_list_view.dart';
 import 'package:flutter/material.dart';
@@ -22,16 +24,20 @@ class EditPhotoPage extends StatefulWidget {
     super.key,
     required this.film,
     required this.photo,
+    required this.edit,
   });
 
   final Film film;
   final Photo photo;
+  final bool edit;
 
   @override
   State<StatefulWidget> createState() => _EditPhotoPageState();
 }
 
 class _EditPhotoPageState extends State<EditPhotoPage> {
+  final _listKey = GlobalKey();
+
   late Photo photo;
 
   final _lensRepo = LensRepo();
@@ -65,7 +71,13 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
     ));
     if (result == null || !mounted || !context.mounted) return;
     setState(() {
-      photo = photo.update(lens: result);
+      final filtersToKeep = photo.filters
+          .where((filter) => contains(filter.lenses, result))
+          .toList(growable: false);
+      photo = photo.update(
+        lens: result,
+        filters: filtersToKeep,
+      );
     });
   }
 
@@ -107,50 +119,58 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
 
   List<Filter> _filters() => _filterRepo
       .value()
-      .where((filter) => filter.lenses
-          .where((lens) => lens.id == widget.photo.lens?.id)
-          .isNotEmpty)
+      .where((filter) =>
+          filter.lenses.where((lens) => lens.id == photo.lens?.id).isNotEmpty)
       .toList(growable: false);
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        body: WearListView(
-          itemExtend: 64,
-          selectedIndex: 1,
-          children: [
-            _acceptButton(context),
-            WearListTile(
-              title: 'Shutter speed',
-              subtitle: photo.shutterSpeed == null
-                  ? null
-                  : formatShutterSpeed(photo.shutterSpeed!),
-              onTap: () => _editShutterSpeed(context),
-            ),
-            WearListTile(
-              title: 'Lens',
-              subtitle: photo.lens?.label,
-              onTap: () => _editLens(context),
-            ),
-            WearListTile(
-              title: 'Aperture',
-              subtitle: photo.aperture == null
-                  ? null
-                  : formatAperture(photo.aperture!),
-              onTap: () => _editAperture(context),
-            ),
-            WearListTile(
-              title: 'Filters',
-              subtitle: photo.filters.isEmpty
-                  ? null
-                  : photo.filters.map((filter) => filter.label).join(', '),
-              onTap: () => _editFilters(context),
-            ),
-            WearListTile(
-              title: 'Location',
-              onTap: () => _editLocation(context),
-            ),
-            _acceptButton(context),
-          ],
+        body: SwipeDismiss(
+          child: WearListView(
+            // without this key the scroll position is lost on setState
+            key: _listKey,
+            itemExtend: 64,
+            selectedIndex: 1,
+            children: [
+              // _acceptButton(context),
+              WearListTile(
+                title: 'Frame number',
+                subtitle: '#${photo.frameNumber}',
+              ),
+              WearListTile(
+                title: 'Shutter speed',
+                subtitle: photo.shutterSpeed == null
+                    ? null
+                    : formatShutterSpeed(photo.shutterSpeed!),
+                onTap: _ifEdit(() => _editShutterSpeed(context)),
+              ),
+              WearListTile(
+                title: 'Lens',
+                subtitle: photo.lens?.label,
+                onTap: _ifEdit(() => _editLens(context)),
+              ),
+              WearListTile(
+                title: 'Aperture',
+                subtitle: photo.aperture == null
+                    ? null
+                    : formatAperture(photo.aperture!),
+                onTap: _ifEdit(() => _editAperture(context)),
+              ),
+              if (_filters().isNotEmpty)
+                WearListTile(
+                  title: 'Filters',
+                  subtitle: photo.filters.isEmpty
+                      ? null
+                      : photo.filters.map((filter) => filter.label).join(', '),
+                  onTap: _ifEdit(() => _editFilters(context)),
+                ),
+              WearListTile(
+                title: 'Location',
+                onTap: () => _editLocation(context),
+              ),
+              if (widget.edit) _acceptButton(context),
+            ],
+          ),
         ),
       );
 
@@ -158,4 +178,6 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
         onPressed: () => Navigator.of(context).pop(photo),
         icon: const Icon(Icons.check),
       );
+
+  VoidCallback? _ifEdit(VoidCallback cb) => widget.edit ? cb : null;
 }

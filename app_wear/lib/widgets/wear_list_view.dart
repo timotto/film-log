@@ -7,11 +7,13 @@ class WearListView extends StatefulWidget {
     required this.children,
     this.itemExtend = 48,
     this.selectedIndex,
+    this.controller,
   });
 
   final List<Widget> children;
   final double itemExtend;
   final int? selectedIndex;
+  final ScrollController? controller;
 
   @override
   State<WearListView> createState() => _WearListViewState();
@@ -22,9 +24,8 @@ class _WearListViewState extends State<WearListView> {
 
   @override
   void initState() {
-    final double initialScrollOffset = widget.selectedIndex == null
-        ? 0
-        : widget.itemExtend * widget.selectedIndex!;
+    final double initialScrollOffset =
+        widget.itemExtend * (widget.selectedIndex ?? 0);
 
     _controller = ScrollController(
       initialScrollOffset: initialScrollOffset,
@@ -41,7 +42,7 @@ class _WearListViewState extends State<WearListView> {
 
   @override
   Widget build(BuildContext context) => ListWheelScrollView(
-        controller: _controller,
+        controller: widget.controller ?? _controller,
         itemExtent: widget.itemExtend,
         diameterRatio: RenderListWheelViewport.defaultDiameterRatio,
         perspective: RenderListWheelViewport.defaultPerspective * 2,
