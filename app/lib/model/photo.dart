@@ -49,6 +49,7 @@ class Photo {
       ].join(' ');
 
   Photo update({
+    String? id,
     DateTime? timestamp,
     int? frameNumber,
     double? shutter,
@@ -60,7 +61,7 @@ class Photo {
     Thumbnail? thumbnail,
   }) =>
       Photo(
-        id: id,
+        id: id ?? this.id,
         timestamp: timestamp ?? this.timestamp,
         frameNumber: frameNumber ?? this.frameNumber,
         shutter: shutter ?? this.shutter,
@@ -71,6 +72,8 @@ class Photo {
         notes: notes ?? this.notes,
         thumbnail: thumbnail ?? this.thumbnail,
       );
+
+  Photo updateId() => update(id: const UuidV4().generate());
 
   Photo updateLocation(Location? value) => Photo(
         id: id,

@@ -1,5 +1,6 @@
 import 'package:film_log_wear/model/aperture.dart';
 import 'package:film_log_wear/model/gear.dart';
+import 'package:film_log_wear/model/location.dart';
 import 'package:film_log_wear/model/photo.dart';
 import 'package:film_log_wear/model/shutter_speed.dart';
 import 'package:film_log_wear/pages/edit_aperture_page.dart';
@@ -8,6 +9,7 @@ import 'package:film_log_wear/pages/edit_lens_page.dart';
 import 'package:film_log_wear/pages/edit_shutter_speed_page.dart';
 import 'package:film_log_wear/service/filter_repo.dart';
 import 'package:film_log_wear/service/lens_repo.dart';
+import 'package:film_log_wear/service/wear_data.dart';
 import 'package:film_log_wear/widgets/swipe_dismiss.dart';
 import 'package:film_log_wear/widgets/wear_list_tile.dart';
 import 'package:film_log_wear/widgets/wear_list_view.dart';
@@ -42,11 +44,24 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
 
   final _lensRepo = LensRepo();
   final _filterRepo = FilterRepo();
+  final _wearData = WearDataService();
 
   @override
   void initState() {
     photo = widget.photo;
+    if (widget.edit) {
+      _requestLocation();
+    }
     super.initState();
+  }
+
+  void _onLocation(Location? value) {
+    print('edit-photo-page::on-location ${value?.listItemSubtitle()}');
+    if (!mounted) return;
+    if (value == null) return;
+    setState(() {
+      photo = photo.update(location: value);
+    });
   }
 
   Future<void> _editShutterSpeed(BuildContext context) async {
@@ -108,7 +123,7 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
     });
   }
 
-  Future<void> _editLocation(BuildContext context) async {}
+  Future<void> _editLocation(BuildContext context) async => _requestLocation();
 
   List<Lens> _lenses() => _lensRepo
       .value()
@@ -122,6 +137,8 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
       .where((filter) =>
           filter.lenses.where((lens) => lens.id == photo.lens?.id).isNotEmpty)
       .toList(growable: false);
+
+  void _requestLocation() => _wearData.requestLocation(_onLocation);
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -166,6 +183,7 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
                 ),
               WearListTile(
                 title: 'Location',
+                subtitle: photo.location?.listItemSubtitle(),
                 onTap: () => _editLocation(context),
               ),
               if (widget.edit) _acceptButton(context),

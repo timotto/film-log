@@ -2,12 +2,14 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:film_log_wear/model/film.dart';
+import 'package:film_log_wear/model/location.dart';
 import 'package:film_log_wear/model/photo.dart';
 import 'package:film_log_wear/service/camera_repo.dart';
 import 'package:film_log_wear/service/filter_repo.dart';
 import 'package:film_log_wear/service/lens_repo.dart';
 import 'package:film_log_wear/service/wear/decode.dart';
 import 'package:film_log_wear/service/wear/encode.dart';
+import 'package:film_log_wear_data/model/location.dart' as w;
 import 'package:film_log_wear_data/model/state.dart';
 import 'package:flutter_wear_os_connectivity/flutter_wear_os_connectivity.dart';
 import 'package:film_log_wear_data/model/add_photo.dart';
@@ -55,6 +57,15 @@ class WearDataService {
           ),
         )
         .listen(_onServerState);
+
+    _wearOsConnectivity
+        .messageReceived(
+          pathURI: Uri(
+            scheme: 'wear',
+            path: '/film_log_set_location',
+          ),
+        )
+        .listen(_onSetLocation);
   }
 
   Future<void> _onCapabilityServerChanged(CapabilityInfo info) async {
@@ -77,7 +88,8 @@ class WearDataService {
       return;
     }
 
-    print('wear-data::load-state device=$device item=$dataItem parsing');
+    print(
+        'wear-data::load-state device=${device.id}/${device.name} item=$dataItem parsing');
     _parseStateItem(dataItem);
     _device = device;
   }
@@ -151,6 +163,38 @@ class WearDataService {
       },
     );
     _parseStateItem(fakeItem);
+  }
+
+  void Function(Location?)? _locationCb;
+
+  Future<void> requestLocation(void Function(Location?) cb) async {
+    if (_device == null) {
+      print('wear-data-service::request-location: error: no device');
+      return;
+    }
+
+    _locationCb = cb;
+
+    await _wearOsConnectivity.sendMessage(
+      Uint8List(0),
+      deviceId: _device!.id,
+      path: '/film_log_get_location',
+    );
+
+    print('wear-data-service::request-location: location requested');
+  }
+
+  void _onSetLocation(WearOSMessage message) {
+    print('wear-data-service::on-set-location');
+
+    final json = jsonDecode(String.fromCharCodes(message.data));
+    final wLoc = w.Location.fromJson(json);
+    final location = decodeLocation(wLoc)!;
+
+    print('wear-data-service::on-set-location: parsed: ${location.listItemSubtitle()}');
+    if (_locationCb != null) {
+      _locationCb!(location);
+    }
   }
 }
 

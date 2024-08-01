@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
+import 'package:film_log/service/location.dart';
 import 'package:film_log/service/repos.dart';
 import 'package:film_log/service/wear/decode.dart';
 import 'package:film_log/service/wear/encode.dart';
@@ -8,6 +10,11 @@ import 'package:film_log_wear_data/model/state.dart';
 import 'package:flutter_wear_os_connectivity/flutter_wear_os_connectivity.dart';
 
 import '../model/gear.dart';
+
+const _addPhotoPath = '/film_log_add_photo';
+const _getLocationPath = '/film_log_get_location';
+const _setLocationPath = '/film_log_set_location';
+const _serverStatePath = '/film_log_server_state';
 
 class WearDataService {
   WearDataService({required this.repos});
@@ -27,20 +34,30 @@ class WearDataService {
 
     _wearOsConnectivity
         .messageReceived(
-            pathURI: Uri(
-          scheme: 'wear',
-          path: '/film_log_add_photo',
-        ))
+          pathURI: Uri(
+            scheme: 'wear',
+            path: _addPhotoPath,
+          ),
+        )
         .listen(_onAddPhoto);
 
-    repos.filmRepo.addChangeListener(() => _syncState());
+    _wearOsConnectivity
+        .messageReceived(
+          pathURI: Uri(
+            scheme: 'wear',
+            path: _getLocationPath,
+          ),
+        )
+        .listen(_onGetLocation);
+
+    repos.addChangeListener(() => _syncState());
 
     await _syncState();
   }
 
   Future<void> _syncState() async {
     await _wearOsConnectivity.syncData(
-      path: '/film_log_server_state',
+      path: _serverStatePath,
       data: {'data': jsonEncode(_buildState().toJson())},
     );
   }
@@ -79,6 +96,7 @@ class WearDataService {
   }
 
   Future<void> _onAddPhoto(WearOSMessage message) async {
+    if (message.path != _addPhotoPath) return;
     final add =
         AddPhoto.fromJson(jsonDecode(String.fromCharCodes(message.data)));
 
@@ -88,7 +106,8 @@ class WearDataService {
         .firstOrNull;
 
     if (film == null) {
-      print('wear-data-service::on-add-photo error: no film with id ${add.filmId}');
+      print(
+          'wear-data-service::on-add-photo error: no film with id ${add.filmId}');
       return;
     }
 
@@ -96,10 +115,28 @@ class WearDataService {
       add.photo,
       lenses: repos.lensRepo.items(),
       filters: repos.filterRepo.items(),
-    );
+    ).update();
 
-    final updated = film.update(photos: [...film.photos, photo]);
+    final updated = film.addPhoto(photo);
     await repos.filmRepo.update(updated);
+  }
+
+  Future<void> _onGetLocation(WearOSMessage message) async {
+    if (message.path != _getLocationPath) return;
+
+    final location = await getLocation();
+    if (location == null) {
+      print('wear-data-service::on-get-location: error: location is null');
+      return;
+    }
+
+    final wLoc = encodeLocation(location)!;
+    final json = jsonEncode(wLoc.toJson());
+    await _wearOsConnectivity.sendMessage(
+      Uint8List.fromList(json.codeUnits),
+      deviceId: message.sourceNodeId,
+      path: _setLocationPath,
+    );
   }
 }
 

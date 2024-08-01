@@ -61,7 +61,7 @@ class _FilmInstancePageState extends State<FilmInstancePage> {
 
   List<Widget> _children(BuildContext context) => [
         ...film.photos.map((item) => _itemTile(context, item)),
-        _addButton(context),
+        if (film.canAddPhoto()) _addButton(context),
       ];
 
   Widget _itemTile(BuildContext context, Photo item) => WearListTile(

@@ -38,6 +38,7 @@ class FilmListPage extends StatelessWidget {
   List<Widget> _children(BuildContext context, List<Film> items) => items
       .map((item) => WearListTile(
             title: item.label,
+            subtitle: item.listItemSubtitle(),
             onTap: () => _select(context, item),
           ))
       .toList(growable: false);

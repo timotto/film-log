@@ -28,4 +28,13 @@ class Film {
       );
 
   bool canAddPhoto() => photos.length < maxPhotoCount;
+
+  String listItemSubtitle() {
+    final List<String> parts = [
+      '${photos.length} / $maxPhotoCount',
+      if (camera != null) camera!.label,
+    ];
+
+    return parts.join(' ');
+  }
 }

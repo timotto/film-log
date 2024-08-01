@@ -12,6 +12,10 @@ abstract class GearRepo<T extends Gear> {
 
   final String _storageKey;
 
+  final List<void Function()> _listeners = [];
+
+  void addChangeListener(void Function() cb) => _listeners.add(cb);
+
   Stream<List<T>> itemsStream() => itemsController.stream;
 
   List<T> items() => itemsList;
@@ -21,20 +25,20 @@ abstract class GearRepo<T extends Gear> {
     itemsList.add(item.withId(const UuidV4().generate()));
     print('gear-repo[$_storageKey]::add ${item.withId(const UuidV4().generate())}');
     updateItems([...itemsList]);
-    save();
+    await save();
   }
 
   Future<void> delete(T item) async {
     itemsList.removeWhere((i) => i.itemId() == item.itemId());
     updateItems([...itemsList]);
-    save();
+    await save();
   }
 
   Future<void> update(T item) async {
     itemsList.removeWhere((i) => i.itemId() == item.itemId());
     itemsList.add(item);
     updateItems([...itemsList]);
-    save();
+    await save();
   }
 
   @protected
@@ -91,5 +95,12 @@ abstract class GearRepo<T extends Gear> {
     print('gear-repo[$_storageKey]::save $jsonString');
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_storageKey, jsonString);
+    _notify();
+  }
+
+  void _notify() {
+    for (var cb in _listeners) {
+      cb();
+    }
   }
 }

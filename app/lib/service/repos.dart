@@ -1,10 +1,9 @@
-import 'package:film_log/service/film_repo.dart';
-import 'package:film_log/service/thumbnail_repo.dart';
-
 import 'camera_repo.dart';
+import 'film_repo.dart';
 import 'filmstock_repo.dart';
 import 'filter_repo.dart';
 import 'lens_repo.dart';
+import 'thumbnail_repo.dart';
 
 class Repos {
   Repos._() {
@@ -45,5 +44,13 @@ class Repos {
     } catch (e) {
       print('repos::load - failed $e');
     }
+  }
+
+  void addChangeListener(void Function() cb) {
+    cameraRepo.addChangeListener(cb);
+    lensRepo.addChangeListener(cb);
+    filmRepo.addChangeListener(cb);
+    filmstockRepo.addChangeListener(cb);
+    filmRepo.addChangeListener(cb);
   }
 }

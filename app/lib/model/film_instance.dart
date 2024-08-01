@@ -75,6 +75,10 @@ class FilmInstance {
         archive: archive ?? this.archive,
       );
 
+  FilmInstance addPhoto(Photo photo) => update(
+        photos: [...photos, photo.updateId()],
+      );
+
   factory FilmInstance.fromJson(
     Map<String, dynamic> json, {
     required List<FilmStock> filmStock,

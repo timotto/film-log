@@ -103,7 +103,7 @@ class _FilmLogPageWidget extends StatelessWidget {
       aperture: result.aperture,
       filters: result.filters,
     );
-    await repo.update(film.update(photos: [...film.photos, result]));
+    await repo.update(film.addPhoto(result));
   }
 
   Future<void> _archive(BuildContext context) async {
