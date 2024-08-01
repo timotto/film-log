@@ -13,7 +13,6 @@ import 'package:film_log/service/repos.dart';
 import 'package:film_log/widgets/location_list_tile.dart';
 import 'package:film_log/widgets/thumbnail_list_tile.dart';
 import 'package:film_log/widgets/timestamp_list_tile.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class EditPhotoPage extends StatefulWidget {
