@@ -1,6 +1,8 @@
 import 'dart:async';
 
-class ItemRepo<T> {
+import '../model/item.dart';
+
+class ItemRepo<T extends Item> {
   List<T> _value = [];
 
   final StreamController<List<T>> _controller = StreamController.broadcast();
@@ -13,4 +15,10 @@ class ItemRepo<T> {
     _value = [...value];
     _controller.add(_value);
   }
+
+  T? item(String id) =>
+      value().where((item) => item.itemId() == id).firstOrNull;
+
+  Stream<T?> itemStream(String id) => stream()
+      .map((values) => values.where((item) => item.itemId() == id).firstOrNull);
 }

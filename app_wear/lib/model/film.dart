@@ -1,7 +1,8 @@
 import 'camera.dart';
+import 'item.dart';
 import 'photo.dart';
 
-class Film {
+class Film extends Item<Film> {
   const Film({
     required this.id,
     required this.label,
@@ -37,4 +38,7 @@ class Film {
 
     return parts.join(' ');
   }
+
+  @override
+  String itemId() => id;
 }

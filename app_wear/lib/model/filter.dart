@@ -1,7 +1,7 @@
-import 'gear.dart';
+import 'item.dart';
 import 'lens.dart';
 
-class Filter extends Gear<Filter> {
+class Filter extends Item<Filter> {
   Filter({
     required this.id,
     required this.label,

@@ -1,6 +1,6 @@
-import 'gear.dart';
+import 'item.dart';
 
-class Camera extends Gear<Camera> {
+class Camera extends Item<Camera> {
   const Camera({
     required this.id,
     required this.label,

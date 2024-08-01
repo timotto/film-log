@@ -1,7 +1,7 @@
 import 'camera.dart';
-import 'gear.dart';
+import 'item.dart';
 
-class Lens extends Gear<Lens> {
+class Lens extends Item<Lens> {
   Lens({
     required this.id,
     required this.label,

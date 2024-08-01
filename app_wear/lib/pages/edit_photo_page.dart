@@ -1,5 +1,5 @@
 import 'package:film_log_wear/model/aperture.dart';
-import 'package:film_log_wear/model/gear.dart';
+import 'package:film_log_wear/model/item.dart';
 import 'package:film_log_wear/model/location.dart';
 import 'package:film_log_wear/model/photo.dart';
 import 'package:film_log_wear/model/shutter_speed.dart';

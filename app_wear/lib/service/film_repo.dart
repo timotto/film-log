@@ -1,6 +1,5 @@
-import 'package:film_log_wear/service/item_repo.dart';
-
 import '../model/film.dart';
+import 'item_repo.dart';
 
 class FilmRepo extends ItemRepo<Film> {
   FilmRepo._();
@@ -8,6 +7,4 @@ class FilmRepo extends ItemRepo<Film> {
   static final _sharedInstance = FilmRepo._();
 
   factory FilmRepo() => _sharedInstance;
-
-  void what() {}
 }
