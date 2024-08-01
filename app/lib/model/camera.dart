@@ -1,3 +1,5 @@
+import 'package:film_log/model/shutter_speed.dart' as s;
+
 import 'filmstock_format.dart';
 import 'gear.dart';
 
@@ -19,6 +21,12 @@ class Camera implements Gear<Camera> {
     required this.slowestShutterSpeed,
     required this.filmstockFormat,
   });
+
+  List<double> shutterSpeeds() => s
+      .shutterSpeeds()
+      .where((value) =>
+          value >= fastestShutterSpeed && value <= slowestShutterSpeed)
+      .toList(growable: false);
 
   @override
   Camera withId(String id) => update(id: id);

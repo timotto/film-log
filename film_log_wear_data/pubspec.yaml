@@ -1,0 +1,10 @@
+name: film_log_wear_data
+description: Film Log App Wear OS Data
+version: 0.1.0
+
+environment:
+  sdk: '>=3.4.4 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter

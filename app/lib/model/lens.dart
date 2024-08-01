@@ -57,6 +57,22 @@ class Lens implements Gear<Lens> {
         apertureMax: apertureMax ?? this.apertureMax,
       );
 
+  List<double> apertures() {
+    final List<double> values;
+    switch (fStopIncrements) {
+      case FStopIncrements.full:
+        values = fStopsWhole();
+      case FStopIncrements.half:
+        values = fStopsHalf();
+      case FStopIncrements.third:
+        values = fStopsThird();
+    }
+
+    return values
+        .where((value) => value >= apertureMin && value <= apertureMax)
+        .toList(growable: false);
+  }
+
   @override
   Lens withId(String id) => update(id: id);
 

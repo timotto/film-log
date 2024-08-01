@@ -17,29 +17,42 @@ import '../model/lens.dart';
 class FilmRepo {
   final _storageKey = 'film_repo';
 
+  final List<void Function()> _listeners = [];
+
+  void addChangeListener(void Function() cb) => _listeners.add(cb);
+
   Stream<List<FilmInstance>> itemsStream() => itemsController.stream;
 
   List<FilmInstance> items() => itemsList;
+
+  FilmInstance? item(String id) =>
+      items().where((item) => item.id == id).firstOrNull;
+
+  Stream<FilmInstance?> itemStream(String id) => itemsStream()
+      .map((items) => items.where((item) => item.id == id).firstOrNull);
 
   Future<FilmInstance> add(FilmInstance item) async {
     item = item.update(id: const UuidV4().generate());
     itemsList.add(item);
     updateItems([...itemsList]);
     await save();
+    _notify();
     return item;
   }
 
   Future<void> delete(FilmInstance item) async {
     itemsList.removeWhere((i) => i.itemId() == item.itemId());
     updateItems([...itemsList]);
-    save();
+    await save();
+    _notify();
   }
 
   Future<void> update(FilmInstance item) async {
     itemsList.removeWhere((i) => i.itemId() == item.itemId());
     itemsList.add(item);
     updateItems([...itemsList]);
-    save();
+    await save();
+    _notify();
   }
 
   final List<FilmInstance> itemsList = [];
@@ -114,5 +127,11 @@ class FilmRepo {
     final jsonString = jsonEncode(json);
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_storageKey, jsonString);
+  }
+
+  void _notify() {
+    for (var cb in _listeners) {
+      cb();
+    }
   }
 }
