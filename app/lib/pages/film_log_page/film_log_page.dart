@@ -2,11 +2,13 @@ import 'package:film_log/model/film_instance.dart';
 import 'package:film_log/model/photo.dart';
 import 'package:film_log/pages/edit_film_page/edit_film_page.dart';
 import 'package:film_log/pages/edit_photo_page/edit_photo_page.dart';
+import 'package:film_log/service/export.dart';
 import 'package:film_log/service/film_repo.dart';
 import 'package:film_log/service/lru.dart';
 import 'package:film_log/service/repos.dart';
 import 'package:film_log/widgets/app_menu.dart';
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 
 class FilmLogPage extends StatelessWidget {
   const FilmLogPage({
@@ -118,7 +120,14 @@ class _FilmLogPageWidget extends StatelessWidget {
     Navigator.of(context).pop();
   }
 
-  Future<void> _export(BuildContext context) async {}
+  Future<void> _export(BuildContext context) async {
+    ExportService(repos: repos).exportFilm(film, (filename) async {
+      await Share.shareXFiles(
+        [XFile(filename)],
+        text: 'Film Log export',
+      );
+    });
+  }
 
   Future<void> _selectItem(BuildContext context, Photo photo) async {
     await Navigator.of(context).push(MaterialPageRoute(

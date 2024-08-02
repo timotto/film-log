@@ -1,4 +1,6 @@
-abstract class Gear<T> {
+import 'json.dart';
+
+abstract class Gear<T> extends ToJson {
   T withId(String id);
 
   String itemId();
@@ -11,5 +13,6 @@ abstract class Gear<T> {
 
   bool validate();
 
+  @override
   Map<String, dynamic> toJson();
 }

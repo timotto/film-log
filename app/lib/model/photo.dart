@@ -1,6 +1,7 @@
 import 'package:film_log/fmt/aperture.dart';
 import 'package:film_log/fmt/shutterspeed.dart';
 import 'package:film_log/fmt/timestamp.dart';
+import 'package:film_log/model/json.dart';
 import 'package:film_log/model/thumbnail.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:uuid/v4.dart';
@@ -9,7 +10,7 @@ import 'filter.dart';
 import 'lens.dart';
 import 'location.dart';
 
-class Photo {
+class Photo implements ToJson {
   final String id;
   final DateTime timestamp;
   final int frameNumber;
@@ -152,6 +153,7 @@ class Photo {
             : null,
       );
 
+  @override
   Map<String, dynamic> toJson() => {
         'id': id,
         'timestamp': timestamp.toIso8601String(),
@@ -161,6 +163,20 @@ class Photo {
         if (filters.isNotEmpty)
           'filters': filters.map((f) => f.id).toList(growable: false),
         if (lens != null) 'lens': lens!.id,
+        if (location != null) 'location': location!.toJson(),
+        if (notes != null) 'notes': notes,
+        if (thumbnail != null) 'thumbnail': thumbnail!.toJson(),
+      };
+
+  Map<String, dynamic> toJsonExport() => {
+        'id': id,
+        'timestamp': timestamp.toIso8601String(),
+        'frameNumber': frameNumber,
+        if (shutter != null) 'shutter': shutter,
+        if (aperture != null) 'aperture': aperture,
+        if (filters.isNotEmpty)
+          'filters': filters.map((f) => f.toJson()).toList(growable: false),
+        if (lens != null) 'lens': lens!.toJson(),
         if (location != null) 'location': location!.toJson(),
         if (notes != null) 'notes': notes,
         if (thumbnail != null) 'thumbnail': thumbnail!.toJson(),

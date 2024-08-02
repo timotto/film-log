@@ -1,12 +1,13 @@
 import 'package:film_log/model/film_stock.dart';
 import 'package:film_log/model/filter.dart';
+import 'package:film_log/model/json.dart';
 import 'package:uuid/v4.dart';
 
 import 'camera.dart';
 import 'lens.dart';
 import 'photo.dart';
 
-class FilmInstance {
+class FilmInstance implements ToJson {
   final String id;
   final String name;
   final DateTime inserted;
@@ -108,6 +109,7 @@ class FilmInstance {
         archive: json['archive'] ?? false,
       );
 
+  @override
   Map<String, dynamic> toJson() => {
         'id': id,
         'name': name,
@@ -116,6 +118,18 @@ class FilmInstance {
         'actualIso': actualIso,
         if (camera != null) 'camera': camera!.id,
         'photos': photos.map((p) => p.toJson()).toList(growable: false),
+        'maxPhotoCount': maxPhotoCount,
+        if (archive) 'archive': archive,
+      };
+
+  Map<String, dynamic> toJsonExport() => {
+        'id': id,
+        'name': name,
+        'inserted': inserted.toIso8601String(),
+        if (stock != null) 'stock': stock!.toJson(),
+        'actualIso': actualIso,
+        if (camera != null) 'camera': camera!.toJson(),
+        'photos': photos.map((p) => p.toJsonExport()).toList(growable: false),
         'maxPhotoCount': maxPhotoCount,
         if (archive) 'archive': archive,
       };

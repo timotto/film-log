@@ -1,4 +1,6 @@
-class Location {
+import 'package:film_log/model/json.dart';
+
+class Location implements ToJson {
   final double? latitude;
   final double? longitude;
   final double? height;
@@ -20,6 +22,7 @@ class Location {
         accuracy: json['accuracy'],
       );
 
+  @override
   Map<String, dynamic> toJson() => {
         if (latitude != null) 'latitude': latitude,
         if (longitude != null) 'longitude': longitude,
