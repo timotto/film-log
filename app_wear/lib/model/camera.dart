@@ -13,4 +13,7 @@ class Camera extends Item<Camera> {
 
   @override
   String itemId() => id;
+
+  @override
+  String sortKey() => label;
 }

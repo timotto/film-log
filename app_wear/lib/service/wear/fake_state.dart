@@ -1,3 +1,6 @@
+import 'package:film_log_wear/service/film_repo.dart';
+import 'package:film_log_wear/model/photo.dart' as m;
+
 import 'package:film_log_wear_data/model/camera.dart';
 import 'package:film_log_wear_data/model/film.dart';
 import 'package:film_log_wear_data/model/filter.dart';
@@ -26,6 +29,15 @@ State fakeState() => State(
           ],
           maxPhotoCount: 10,
           lensIdList: ['l1', 'l2'],
+        ),
+        Film(
+          id: 'f2',
+          name: 'Editing',
+          inserted: DateTime.timestamp(),
+          cameraId: 'c1',
+          photos: [],
+          maxPhotoCount: 10,
+          lensIdList: ['l1'],
         ),
       ],
       filters: [
@@ -67,3 +79,38 @@ State fakeState() => State(
         ),
       ],
     );
+
+Future<void> fakeEditFilm({
+  required FilmRepo repo,
+  String filmId = 'f2',
+}) async {
+  wait() async => await Future.delayed(const Duration(seconds: 3));
+
+  run() async {
+    final film = repo.item(filmId);
+    if (film == null) return false;
+    if (!film.canAddPhoto()) return false;
+    final frameNumber = film.photos.length;
+
+    final updated = film.addPhoto(
+      m.Photo(
+        id: '',
+        recorded: DateTime.timestamp(),
+        frameNumber: frameNumber,
+        shutterSpeed: 1/250,
+        aperture: 8,
+        lens: null,
+        filters: [],
+        location: null,
+      ),
+    );
+    repo.update(updated);
+    return true;
+  }
+
+  while (true) {
+    await wait();
+    final ok = await run();
+    if (!ok) break;
+  }
+}

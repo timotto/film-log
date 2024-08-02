@@ -59,7 +59,7 @@ class FilmListPage extends StatelessWidget {
 
   Future<void> _select(BuildContext context, Film item) async {
     await Navigator.of(context).push(MaterialPageRoute(
-      builder: (_) => FilmInstancePage(film: item),
+      builder: (_) => FilmInstancePage(filmId: item.id),
     ));
   }
 

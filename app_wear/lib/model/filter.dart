@@ -14,4 +14,7 @@ class Filter extends Item<Filter> {
 
   @override
   String itemId() => id;
+
+  @override
+  String sortKey() => label;
 }

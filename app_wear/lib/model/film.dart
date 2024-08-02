@@ -41,4 +41,7 @@ class Film extends Item<Film> {
 
   @override
   String itemId() => id;
+
+  @override
+  String sortKey() => inserted.toIso8601String();
 }

@@ -2,7 +2,7 @@ import 'dart:async';
 
 import '../model/item.dart';
 
-class ItemRepo<T extends Item> {
+class ItemRepo<T extends Item<T>> {
   List<T> _value = [];
 
   final StreamController<List<T>> _controller = StreamController.broadcast();
@@ -13,7 +13,13 @@ class ItemRepo<T extends Item> {
 
   void set(List<T> value) {
     _value = [...value];
+    _value.sort(Item.compare);
     _controller.add(_value);
+  }
+
+  void update(T item) {
+    final value = [..._value].where((v) => v.itemId() != item.itemId());
+    set([...value, item]);
   }
 
   T? item(String id) =>

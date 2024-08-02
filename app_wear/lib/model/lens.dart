@@ -16,4 +16,7 @@ class Lens extends Item<Lens> {
 
   @override
   String itemId() => id;
+
+  @override
+  String sortKey() => label;
 }

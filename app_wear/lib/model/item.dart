@@ -2,6 +2,11 @@ abstract class Item<T> {
   const Item();
 
   String itemId();
+
+  String sortKey();
+
+  static int compare<T extends Item<T>>(Item<T> a, Item<T> b) =>
+      a.sortKey().compareTo(b.sortKey());
 }
 
 bool intersects<T extends Item>(List<T> a, List<T> b) =>

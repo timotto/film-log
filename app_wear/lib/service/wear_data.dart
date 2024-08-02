@@ -163,6 +163,7 @@ class WearDataService {
       },
     );
     _parseStateItem(fakeItem);
+    fakeEditFilm(repo: _filmRepo);
   }
 
   void Function(Location?)? _locationCb;

@@ -1,14 +1,52 @@
 import 'package:film_log_wear/model/film.dart';
 import 'package:film_log_wear/model/photo.dart';
 import 'package:film_log_wear/pages/edit_photo_page.dart';
+import 'package:film_log_wear/service/film_repo.dart';
 import 'package:film_log_wear/service/wear_data.dart';
 import 'package:film_log_wear/widgets/swipe_dismiss.dart';
 import 'package:film_log_wear/widgets/wear_list_tile.dart';
 import 'package:film_log_wear/widgets/wear_list_view.dart';
 import 'package:flutter/material.dart';
 
-class FilmInstancePage extends StatefulWidget {
-  const FilmInstancePage({super.key, required this.film});
+class FilmInstancePage extends StatelessWidget {
+  FilmInstancePage({super.key, required this.filmId});
+
+  final _repo = FilmRepo();
+  final String filmId;
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+        body: SwipeDismiss(
+          child: StreamBuilder(
+            stream: _repo.itemStream(filmId),
+            initialData: _repo.item(filmId),
+            builder: (context, film) {
+              if (!film.hasData) {
+                return _loading(context);
+              }
+              if (film.data == null) {
+                return _notFound(context);
+              }
+              return _content(context, film.data!);
+            },
+          ),
+        ),
+      );
+
+  Widget _content(BuildContext context, Film film) =>
+      _FilmInstancePageWidget(film: film);
+
+  Widget _loading(BuildContext context) => const Center(
+        child: Text('Loading...'),
+      );
+
+  Widget _notFound(BuildContext context) => const Center(
+        child: Text('Film not found'),
+      );
+}
+
+class _FilmInstancePageWidget extends StatefulWidget {
+  const _FilmInstancePageWidget({required this.film});
 
   final Film film;
 
@@ -16,22 +54,24 @@ class FilmInstancePage extends StatefulWidget {
   State<StatefulWidget> createState() => _FilmInstancePageState();
 }
 
-class _FilmInstancePageState extends State<FilmInstancePage> {
+class _FilmInstancePageState extends State<_FilmInstancePageWidget> {
   final double itemExtend = 48;
 
   final _listKey = GlobalKey();
 
   final _wearData = WearDataService();
 
+  final _repo = FilmRepo();
+
   late final ScrollController _controller;
 
-  late Film film;
+  int _lastCount = 0;
+  bool _scroll = false;
 
   @override
   void initState() {
-    film = widget.film;
     _controller = ScrollController(
-      initialScrollOffset: itemExtend * film.photos.length,
+      initialScrollOffset: itemExtend * widget.film.photos.length,
     );
     super.initState();
   }
@@ -42,26 +82,37 @@ class _FilmInstancePageState extends State<FilmInstancePage> {
     super.dispose();
   }
 
+  void _maybeScrollToEnd() {
+    if (!_scroll) return;
+    if (widget.film.photos.length == _lastCount) return;
+    _scroll = false;
+    WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToEnd());
+  }
+
   void _scrollToEnd() {
-    final double offset = itemExtend * film.photos.length;
-    _controller.jumpTo(offset);
+    final double offset = itemExtend * widget.film.photos.length;
+    _controller.animateTo(
+      offset,
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeInOut,
+    );
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        body: SwipeDismiss(
-          child: WearListView(
-            controller: _controller,
-            key: _listKey,
-            itemExtend: itemExtend,
-            children: _children(context),
-          ),
-        ),
-      );
+  Widget build(BuildContext context) {
+    _maybeScrollToEnd();
+
+    return WearListView(
+      controller: _controller,
+      key: _listKey,
+      itemExtend: itemExtend,
+      children: _children(context),
+    );
+  }
 
   List<Widget> _children(BuildContext context) => [
-        ...film.photos.map((item) => _itemTile(context, item)),
-        if (film.canAddPhoto()) _addButton(context),
+        ...widget.film.photos.map((item) => _itemTile(context, item)),
+        if (widget.film.canAddPhoto()) _addButton(context),
       ];
 
   Widget _itemTile(BuildContext context, Photo item) => WearListTile(
@@ -78,17 +129,18 @@ class _FilmInstancePageState extends State<FilmInstancePage> {
   Future<void> _add(BuildContext context) async {
     final Photo? result = await Navigator.of(context).push(MaterialPageRoute(
       builder: (_) => EditPhotoPage(
-        film: film,
+        film: widget.film,
         photo: _nextPhoto(),
         edit: true,
       ),
     ));
 
     if (result == null || !mounted || !context.mounted) return;
-    setState(() {
-      film = film.addPhoto(result);
-    });
-    _scrollToEnd();
+    _lastCount = widget.film.photos.length;
+    _scroll = true;
+
+    final film = widget.film.addPhoto(result);
+    _repo.update(film);
     _wearData.sendPhoto(
       photo: result,
       film: widget.film,
@@ -98,7 +150,7 @@ class _FilmInstancePageState extends State<FilmInstancePage> {
   Future<void> _show(BuildContext context, Photo item) async {
     await Navigator.of(context).push(MaterialPageRoute(
       builder: (_) => EditPhotoPage(
-        film: film,
+        film: widget.film,
         photo: item,
         edit: false,
       ),
@@ -106,10 +158,10 @@ class _FilmInstancePageState extends State<FilmInstancePage> {
   }
 
   Photo _nextPhoto() {
-    Photo? lastPhoto = film.photos.lastOrNull;
+    Photo? lastPhoto = widget.film.photos.lastOrNull;
     return Photo(
       id: '',
-      frameNumber: film.photos.length + 1,
+      frameNumber: widget.film.photos.length + 1,
       recorded: DateTime.timestamp(),
       filters: lastPhoto == null ? [] : [...lastPhoto.filters],
       lens: lastPhoto?.lens,
