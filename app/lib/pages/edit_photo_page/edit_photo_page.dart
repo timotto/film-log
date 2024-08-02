@@ -77,11 +77,6 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
       }
     }
 
-    print('save photo');
-    print('old item:');
-    print(widget.photo.toJson());
-    print('new item:');
-    print(photo.toJson());
     widget.film.photos.removeWhere((item) => item.id == photo.id);
     widget.film.photos.add(photo);
     widget.film.photos.sort((a, b) => a.frameNumber.compareTo(b.frameNumber));

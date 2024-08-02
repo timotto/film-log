@@ -21,9 +21,7 @@ abstract class GearRepo<T extends Gear> {
   List<T> items() => itemsList;
 
   Future<void> add(T item) async {
-    print('gear-repo[$_storageKey]::add $item');
     itemsList.add(item.withId(const UuidV4().generate()));
-    print('gear-repo[$_storageKey]::add ${item.withId(const UuidV4().generate())}');
     updateItems([...itemsList]);
     await save();
   }
@@ -92,7 +90,6 @@ abstract class GearRepo<T extends Gear> {
   Future<void> save() async {
     final json = _toJson();
     final jsonString = jsonEncode(json);
-    print('gear-repo[$_storageKey]::save $jsonString');
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_storageKey, jsonString);
     _notify();
