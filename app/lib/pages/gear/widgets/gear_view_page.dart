@@ -48,7 +48,8 @@ class _GearViewPageState<T extends Gear> extends State<GearViewPage<T>> {
   }
 
   Future<void> _save() async {
-    if (widget.create ?? false) {
+    final create = widget.create ?? false;
+    if (create) {
       await widget.repo.add(item);
     } else {
       await widget.repo.update(item);
@@ -56,6 +57,10 @@ class _GearViewPageState<T extends Gear> extends State<GearViewPage<T>> {
     setState(() {
       edit = !edit;
     });
+    if (create) {
+      if (!mounted || !context.mounted) return;
+      Navigator.of(context).pop();
+    }
   }
 
   Future<void> _delete(BuildContext context) async {
