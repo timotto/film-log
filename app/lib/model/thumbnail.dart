@@ -7,9 +7,9 @@ class Thumbnail {
         id: json['id'],
       );
 
-  Map<String,dynamic> toJson() => {
-    'id': id,
-  };
+  Map<String, dynamic> toJson() => {
+        'id': id,
+      };
 
   bool equals(Thumbnail other) => id == other.id;
 }

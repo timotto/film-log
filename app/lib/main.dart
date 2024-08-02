@@ -40,7 +40,7 @@ class _FilmLogState extends State<FilmLog> {
       ),
       home: FutureBuilder(
         future: _init(),
-        builder: (_,__) => FilmListPage(
+        builder: (_, __) => FilmListPage(
           repo: _repos.filmRepo,
           repos: _repos,
         ),

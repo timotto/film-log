@@ -31,7 +31,6 @@ Future<l.Location?> getLocation() async {
         accuracy: data.accuracy,
       );
     }
-  } catch (_) {
-  }
+  } catch (_) {}
   return null;
 }

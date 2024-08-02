@@ -25,28 +25,25 @@ class LensEditTile extends StatelessWidget {
 
   Future<void> _onTap(BuildContext context) async {
     final result = await Navigator.of(context).push(MaterialPageRoute(
-      builder: (_) =>
-          GearSelectPage<Lens>(
-            label: label,
-            value: value,
-            repo: repo,
-            filter: _filter(),
-          ),
+      builder: (_) => GearSelectPage<Lens>(
+        label: label,
+        value: value,
+        repo: repo,
+        filter: _filter(),
+      ),
     ));
     if (result != null) {
       onUpdate(result);
     }
   }
 
-  bool Function(Lens)? _filter() =>
-      camera == null ? null : (item) =>
-      item.cameras
-          .where((item) => item.id == camera?.id)
-          .isNotEmpty;
+  bool Function(Lens)? _filter() => camera == null
+      ? null
+      : (item) =>
+          item.cameras.where((item) => item.id == camera?.id).isNotEmpty;
 
   @override
-  Widget build(BuildContext context) =>
-      ListTile(
+  Widget build(BuildContext context) => ListTile(
         title: Text(value?.listItemTitle() ?? ''),
         subtitle: Text(label),
         trailing: edit ? const Icon(Icons.edit) : null,

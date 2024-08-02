@@ -11,17 +11,17 @@ class DeveloperSettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      title: const Text('Developer settings'),
-    ),
-    body: ListView(
-      children: [
-        ListTile(
-          onTap: () => _deleteAllData(context),
-          title: const Text('Delete all data'),
-          leading: const Icon(Icons.delete_forever),
-        )
-      ],
-    ),
-  );
+        appBar: AppBar(
+          title: const Text('Developer settings'),
+        ),
+        body: ListView(
+          children: [
+            ListTile(
+              onTap: () => _deleteAllData(context),
+              title: const Text('Delete all data'),
+              leading: const Icon(Icons.delete_forever),
+            )
+          ],
+        ),
+      );
 }

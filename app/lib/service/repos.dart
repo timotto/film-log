@@ -26,20 +26,20 @@ class Repos {
     try {
       print('repos::load');
       await Future.wait([
-            cameraRepo.load(),
-            filmstockRepo.load(),
-            thumbnailRepo.load(),
-          ]);
+        cameraRepo.load(),
+        filmstockRepo.load(),
+        thumbnailRepo.load(),
+      ]);
 
       await lensRepo.load();
       await filterRepo.load();
 
       await filmRepo.load(
-            cameraRepo: cameraRepo,
-            filmstockRepo: filmstockRepo,
-            filterRepo: filterRepo,
-            lensRepo: lensRepo,
-          );
+        cameraRepo: cameraRepo,
+        filmstockRepo: filmstockRepo,
+        filterRepo: filterRepo,
+        lensRepo: lensRepo,
+      );
       print('repos::load - complete');
     } catch (e) {
       print('repos::load - failed $e');

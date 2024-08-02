@@ -33,7 +33,8 @@ class GearSelectPage<T extends Gear> extends StatelessWidget {
         body: StreamBuilder(
           stream: repo.itemsStream(),
           initialData: repo.items(),
-          builder: (context, items) => _body(context, _filter(items.data ?? [])),
+          builder: (context, items) =>
+              _body(context, _filter(items.data ?? [])),
         ),
       );
 

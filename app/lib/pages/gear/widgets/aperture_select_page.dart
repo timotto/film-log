@@ -19,13 +19,13 @@ class ApertureSelectPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: Text(label)),
-    body: FStopListWidget(
-      increments: increments,
-      value: value,
-      min: min,
-      max: max,
-      onTap: (value) => Navigator.of(context).pop(value),
-    ),
-  );
+        appBar: AppBar(title: Text(label)),
+        body: FStopListWidget(
+          increments: increments,
+          value: value,
+          min: min,
+          max: max,
+          onTap: (value) => Navigator.of(context).pop(value),
+        ),
+      );
 }

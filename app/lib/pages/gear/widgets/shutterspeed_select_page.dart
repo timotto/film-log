@@ -16,12 +16,12 @@ class ShutterSpeedSelectPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: Text(label)),
-    body: ShutterSpeedListWidget(
-      min: min,
-      max: max,
-      value: value,
-      onTap: (value) => Navigator.of(context).pop(value),
-    ),
-  );
+        appBar: AppBar(title: Text(label)),
+        body: ShutterSpeedListWidget(
+          min: min,
+          max: max,
+          value: value,
+          onTap: (value) => Navigator.of(context).pop(value),
+        ),
+      );
 }

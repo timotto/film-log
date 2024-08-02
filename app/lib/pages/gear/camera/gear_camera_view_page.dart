@@ -47,14 +47,18 @@ class GearCameraViewPage extends StatelessWidget {
             edit: edit,
             value: item.fastestShutterSpeed,
             max: item.slowestShutterSpeed,
-            onUpdate: onUpdate((value) => item.update(fastestShutterSpeed: value)),
+            onUpdate: onUpdate((value) => item.update(
+                  fastestShutterSpeed: value,
+                )),
           ),
           ShutterSpeedEditTile(
             label: 'Max shutter speed',
             edit: edit,
             value: item.slowestShutterSpeed,
             min: item.fastestShutterSpeed,
-            onUpdate: onUpdate((value) => item.update(slowestShutterSpeed: value)),
+            onUpdate: onUpdate((value) => item.update(
+                  slowestShutterSpeed: value,
+                )),
           ),
           FilmstockFormatEditTile(
             label: 'Film format',
