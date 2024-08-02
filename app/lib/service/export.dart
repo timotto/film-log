@@ -50,15 +50,11 @@ class ExportService {
             items: repos.lensRepo.items(),
           );
 
-          await _writeJsonFile(
+          await _writeItemsJsonFile(
             dir: dir,
             filename: 'films.json',
-            data: {
-              'films': repos.filmRepo
-                  .items()
-                  .map((item) => item.toJsonExport())
-                  .toList(growable: false),
-            },
+            key: 'films',
+            items: repos.filmRepo.items(),
           );
 
           for (var film in repos.filmRepo.items()) {

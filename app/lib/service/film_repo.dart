@@ -69,6 +69,12 @@ class FilmRepo {
     itemsController.add(items);
   }
 
+  Future<void> replaceItems(List<FilmInstance> items) async {
+    updateItems(items);
+    await save();
+    _notify();
+  }
+
   Map<String, dynamic> _toJson() => {
         'items': itemsList.map((item) => item.toJson()).toList(growable: false),
       };

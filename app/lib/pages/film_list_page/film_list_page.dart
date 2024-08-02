@@ -1,6 +1,7 @@
 import 'package:film_log/model/film_instance.dart';
 import 'package:film_log/pages/edit_film_page/edit_film_page.dart';
 import 'package:film_log/pages/film_log_page/film_log_page.dart';
+import 'package:film_log/pages/import_page/import_page.dart';
 import 'package:film_log/service/export.dart';
 import 'package:film_log/service/film_repo.dart';
 import 'package:film_log/service/lru.dart';
@@ -79,6 +80,14 @@ class FilmListPage extends StatelessWidget {
     });
   }
 
+  Future<void> _importAll(BuildContext context) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => ImportPage(repos: repos),
+      ),
+    );
+  }
+
   List<FilmInstance> _filter(List<FilmInstance> items) =>
       items.where((item) => item.archive == archive).toList(growable: false);
 
@@ -100,6 +109,11 @@ class FilmListPage extends StatelessWidget {
                   onPressed: () => _exportAll(context),
                   leadingIcon: const Icon(Icons.send),
                   child: const Text('Export all data'),
+                ),
+                MenuItemButton(
+                  onPressed: () => _importAll(context),
+                  leadingIcon: const Icon(Icons.file_open),
+                  child: const Text('Import data'),
                 ),
               ],
             ),

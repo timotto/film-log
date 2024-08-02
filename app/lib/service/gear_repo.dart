@@ -56,6 +56,11 @@ abstract class GearRepo<T extends Gear> {
     itemsController.add(items);
   }
 
+  Future<void> replaceItems(List<T> items) async {
+    updateItems(items);
+    await save();
+  }
+
   @protected
   T itemFromJson(Map<String, dynamic> json);
 

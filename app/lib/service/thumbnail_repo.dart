@@ -31,6 +31,23 @@ class ThumbnailRepo {
     await file(thumbnail).delete();
   }
 
+  Future<void> deleteAll() async {
+    await _dir.delete(recursive: true);
+    await _dir.create(recursive: true);
+  }
+
+  Future<Thumbnail> import({
+    required String temporaryFile,
+    required String id,
+  }) async {
+    final tmpFile = File(temporaryFile);
+    final dst = _filename(id);
+    await tmpFile.copy(dst);
+    await tmpFile.delete();
+
+    return Thumbnail(id: id);
+  }
+
   File file(Thumbnail thumbnail) => File(_filename(thumbnail.id));
 
   String _filename(String id) => p.join(_dir.path, id);
