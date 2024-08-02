@@ -64,8 +64,11 @@ class _EditTextDialog extends State<EditTextDialog> {
           decoration: InputDecoration(
             labelText: widget.label,
           ),
-          keyboardType: widget.multiline ? TextInputType.multiline : null,
+          keyboardType:
+              widget.multiline ? TextInputType.multiline : TextInputType.text,
           maxLines: widget.multiline ? 5 : 1,
+          textCapitalization: TextCapitalization.words,
+          autofocus: true,
         ),
         actions: [
           TextButton(
