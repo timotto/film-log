@@ -1,29 +1,6 @@
 import 'package:flutter/material.dart';
 
 class EditDoubleDialog extends StatefulWidget {
-  static Future<double?> show(
-    BuildContext context, {
-    required String label,
-    double? min,
-    double? max,
-    required double value,
-    required String Function(double) valueToString,
-    required double? Function(String) stringToValue,
-  }) async {
-    final result = await showDialog(
-      context: context,
-      builder: (context) => EditDoubleDialog(
-        label: label,
-        min: min,
-        max: max,
-        value: value,
-        valueToString: valueToString,
-        stringToValue: stringToValue,
-      ),
-    );
-    return result;
-  }
-
   const EditDoubleDialog({
     super.key,
     required this.label,

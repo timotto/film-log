@@ -1,23 +1,6 @@
 import 'package:flutter/material.dart';
 
 class EditTextDialog extends StatefulWidget {
-  static Future<String?> show(
-    BuildContext context, {
-    required String label,
-    required String value,
-    required bool multiline,
-  }) async {
-    final result = await showDialog(
-      context: context,
-      builder: (context) => EditTextDialog(
-        label: label,
-        value: value,
-        multiline: multiline,
-      ),
-    );
-    return result;
-  }
-
   const EditTextDialog({
     super.key,
     required this.label,

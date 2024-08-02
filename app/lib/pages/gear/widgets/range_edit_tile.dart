@@ -22,13 +22,16 @@ class RangeEditTile extends StatelessWidget {
   final void Function(RangeValues) onUpdate;
 
   Future<void> _onTap(BuildContext context) async {
-    final result = await RangeEditDialog.show(
-      context,
-      label: label,
-      limits: limits,
-      values: values,
-      valuesToString: valuesToStringFn,
+    final result = await showDialog(
+      context: context,
+      builder: (context) => RangeEditDialog(
+        label: label,
+        limits: limits,
+        values: values,
+        valuesToString: valuesToStringFn,
+      ),
     );
+
     if (result != null) onUpdate(result);
   }
 

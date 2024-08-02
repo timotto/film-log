@@ -1,24 +1,6 @@
 import 'package:flutter/material.dart';
 
 class RangeEditDialog extends StatefulWidget {
-  static Future<RangeValues?> show(
-    BuildContext context, {
-    required String label,
-    required RangeValues limits,
-    required RangeValues values,
-    required String Function(RangeValues) valuesToString,
-  }) async {
-    return await showDialog(
-      context: context,
-      builder: (context) => RangeEditDialog(
-        label: label,
-        limits: limits,
-        values: values,
-        valuesToString: valuesToString,
-      ),
-    );
-  }
-
   const RangeEditDialog({
     super.key,
     required this.label,

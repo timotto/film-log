@@ -24,15 +24,18 @@ class DoubleEditTile extends StatelessWidget {
   final void Function(double) onUpdate;
 
   Future<void> _onTap(BuildContext context) async {
-    final result = await EditDoubleDialog.show(
-      context,
-      label: label,
-      value: value,
-      min: min,
-      max: max,
-      valueToString: valueToString,
-      stringToValue: stringToValue,
+    final result = await showDialog(
+      context: context,
+      builder: (context) => EditDoubleDialog(
+        label: label,
+        value: value,
+        min: min,
+        max: max,
+        valueToString: valueToString,
+        stringToValue: stringToValue,
+      ),
     );
+
     if (result == null) return;
     onUpdate(result);
   }

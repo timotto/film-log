@@ -18,12 +18,15 @@ class TextEditTile extends StatelessWidget {
   final void Function(String) onUpdate;
 
   Future<void> _onTap(BuildContext context) async {
-    final result = await EditTextDialog.show(
-      context,
-      label: label,
-      value: value,
-      multiline: multiline,
+    final result = await showDialog(
+      context: context,
+      builder: (context) => EditTextDialog(
+        label: label,
+        value: value,
+        multiline: multiline,
+      ),
     );
+
     if (result == null) return;
     onUpdate(result);
   }
