@@ -9,7 +9,7 @@ import 'package:film_log_wear/pages/edit_lens_page.dart';
 import 'package:film_log_wear/pages/edit_shutter_speed_page.dart';
 import 'package:film_log_wear/service/filter_repo.dart';
 import 'package:film_log_wear/service/lens_repo.dart';
-import 'package:film_log_wear/service/wear_data.dart';
+import 'package:film_log_wear/service/location.dart';
 import 'package:film_log_wear/widgets/swipe_dismiss.dart';
 import 'package:film_log_wear/widgets/wear_list_tile.dart';
 import 'package:film_log_wear/widgets/wear_list_view.dart';
@@ -44,7 +44,6 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
 
   final _lensRepo = LensRepo();
   final _filterRepo = FilterRepo();
-  final _wearData = WearDataService();
 
   @override
   void initState() {
@@ -138,7 +137,10 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
           filter.lenses.where((lens) => lens.id == photo.lens?.id).isNotEmpty)
       .toList(growable: false);
 
-  void _requestLocation() => _wearData.requestLocation(_onLocation);
+  Future<void> _requestLocation() async {
+    final result = await getLocation();
+    _onLocation(result);
+  }
 
   @override
   Widget build(BuildContext context) => Scaffold(

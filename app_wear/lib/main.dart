@@ -3,6 +3,7 @@ import 'package:film_log_wear/model/photo.dart';
 import 'package:film_log_wear/pages/film_list_page.dart';
 import 'package:film_log_wear/service/wear_data.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_wear_os_location/flutter_wear_os_location.dart';
 
 import 'model/filter.dart';
 import 'model/lens.dart';
@@ -19,6 +20,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  final _location = FlutterWearOsLocation();
   final _wearData = WearDataService();
 
   final photo = Photo(
@@ -45,6 +47,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     _wearData.setup().then((_) {});
+    _location.ensurePermission().then((_) {});
     super.initState();
   }
 

@@ -1,7 +1,5 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
-import 'package:film_log/service/location.dart';
 import 'package:film_log/service/repos.dart';
 import 'package:film_log/service/wear/decode.dart';
 import 'package:film_log/service/wear/encode.dart';
@@ -12,8 +10,6 @@ import 'package:flutter_wear_os_connectivity/flutter_wear_os_connectivity.dart';
 import '../model/gear.dart';
 
 const _addPhotoPath = '/film_log_add_photo';
-const _getLocationPath = '/film_log_get_location';
-const _setLocationPath = '/film_log_set_location';
 const _serverStatePath = '/film_log_server_state';
 
 class WearDataService {
@@ -40,17 +36,6 @@ class WearDataService {
           ),
         )
         .listen(_onAddPhoto);
-
-    _wearOsConnectivity
-        .messageReceived(
-          pathURI: Uri(
-            scheme: 'wear',
-            path: _getLocationPath,
-          ),
-        )
-        .listen(_onGetLocation);
-
-    repos.addChangeListener(() => _syncState());
 
     await _syncState();
   }
@@ -119,24 +104,6 @@ class WearDataService {
 
     final updated = film.addPhoto(photo);
     await repos.filmRepo.update(updated);
-  }
-
-  Future<void> _onGetLocation(WearOSMessage message) async {
-    if (message.path != _getLocationPath) return;
-
-    final location = await getLocation();
-    if (location == null) {
-      print('wear-data-service::on-get-location: error: location is null');
-      return;
-    }
-
-    final wLoc = encodeLocation(location)!;
-    final json = jsonEncode(wLoc.toJson());
-    await _wearOsConnectivity.sendMessage(
-      Uint8List.fromList(json.codeUnits),
-      deviceId: message.sourceNodeId,
-      path: _setLocationPath,
-    );
   }
 }
 
