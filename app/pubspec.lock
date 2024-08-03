@@ -189,10 +189,9 @@ packages:
   flutter_wear_os_connectivity:
     dependency: "direct main"
     description:
-      name: flutter_wear_os_connectivity
-      sha256: e94b7c2b2ade5b5abbda8137adab48d98b418660bf292f5e729797130364a9c9
-      url: "https://pub.dev"
-    source: hosted
+      path: "../flutter_wear_os_connectivity"
+      relative: true
+    source: path
     version: "1.0.0"
   flutter_web_plugins:
     dependency: transitive
@@ -343,6 +342,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.0.3"
+  logging:
+    dependency: "direct main"
+    description:
+      name: logging
+      sha256: "623a88c9594aa774443aa3eb2d41807a48486b5613e67599fb4c41c0ad47c340"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.0"
   matcher:
     dependency: transitive
     description:
