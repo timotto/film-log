@@ -1,4 +1,3 @@
-import 'package:film_log/pages/developer_settings_page/developer_settings_page.dart';
 import 'package:film_log/pages/gear/gear_management_page/gear_management_page.dart';
 import 'package:film_log/service/repos.dart';
 import 'package:flutter/material.dart';
@@ -30,12 +29,6 @@ class AppMenu extends StatelessWidget {
     ));
   }
 
-  void _developerSettings(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (_) => const DeveloperSettingsPage(),
-    ));
-  }
-
   @override
   Widget build(BuildContext context) => MenuAnchor(
         controller: _controller,
@@ -43,13 +36,8 @@ class AppMenu extends StatelessWidget {
           ...(menuItems ?? []),
           MenuItemButton(
             onPressed: () => _manageGear(context),
-            leadingIcon: const Icon(Icons.settings),
+            leadingIcon: const Icon(Icons.camera_alt),
             child: const Text('Manage gear'),
-          ),
-          MenuItemButton(
-            onPressed: () => _developerSettings(context),
-            leadingIcon: const Icon(Icons.build),
-            child: const Text('Developer settings'),
           ),
         ],
         child: IconButton(

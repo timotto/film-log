@@ -2,6 +2,7 @@ import 'package:film_log/model/film_instance.dart';
 import 'package:film_log/pages/edit_film_page/edit_film_page.dart';
 import 'package:film_log/pages/film_log_page/film_log_page.dart';
 import 'package:film_log/pages/import_page/import_page.dart';
+import 'package:film_log/pages/manage_data_page/manage_data_page.dart';
 import 'package:film_log/service/export.dart';
 import 'package:film_log/service/film_repo.dart';
 import 'package:film_log/service/lru.dart';
@@ -71,19 +72,10 @@ class FilmListPage extends StatelessWidget {
     ));
   }
 
-  Future<void> _exportAll(BuildContext context) async {
-    await ExportService(repos: repos).exportAll((filename) async {
-      await Share.shareXFiles(
-        [XFile(filename)],
-        text: 'Film Log full export',
-      );
-    });
-  }
-
-  Future<void> _importAll(BuildContext context) async {
+  Future<void> _manageData(BuildContext context) async {
     await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => ImportPage(repos: repos),
+        builder: (_) => ManageDataPage(repos: repos),
       ),
     );
   }
@@ -106,14 +98,9 @@ class FilmListPage extends StatelessWidget {
                     child: const Text('Film archive'),
                   ),
                 MenuItemButton(
-                  onPressed: () => _exportAll(context),
-                  leadingIcon: const Icon(Icons.send),
-                  child: const Text('Export all data'),
-                ),
-                MenuItemButton(
-                  onPressed: () => _importAll(context),
-                  leadingIcon: const Icon(Icons.file_open),
-                  child: const Text('Import data'),
+                  onPressed: () => _manageData(context),
+                  leadingIcon: const Icon(Icons.file_copy),
+                  child: const Text('Manage data'),
                 ),
               ],
             ),
