@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:film_log/config/playstore_url.dart';
 import 'package:film_log/model/film_instance.dart';
+import 'package:film_log/model/wear_os_device.dart' as m;
 import 'package:film_log/service/repos.dart';
 import 'package:film_log/service/wear/decode.dart';
 import 'package:film_log/service/wear/encode.dart';
@@ -193,6 +195,45 @@ class WearDataService {
     }
 
     await _parsePendingItems(dataItems);
+  }
+
+  Future<List<m.WearOsDevice>> findDevicesWithoutWearOsApp() async {
+    final List<m.WearOsDevice> result = [];
+
+    Set<String> alreadyInstalled = {};
+    final capabilities =
+        await _wearOsConnectivity.findCapabilityByName(clientCapabilityName);
+    if (capabilities != null) {
+      for (var device in capabilities.associatedDevices) {
+        alreadyInstalled.add(device.id);
+      }
+    }
+
+    final allDevices = await _wearOsConnectivity.getConnectedDevices();
+    for (var device in allDevices) {
+      if (!device.isNearby) {
+        continue;
+      }
+      if (alreadyInstalled.contains(device.id)) {
+        continue;
+      }
+
+      result.add(m.WearOsDevice(
+        id: device.id,
+        name: device.name,
+      ));
+    }
+
+    return result;
+  }
+
+  Future<void> installWearOsApp(List<m.WearOsDevice> devices) async {
+    await Future.wait(
+      devices.map((device) => _wearOsConnectivity.startRemoteActivity(
+            url: wearOSAppPlayStoreUrl,
+            deviceId: device.id,
+          )),
+    );
   }
 }
 
