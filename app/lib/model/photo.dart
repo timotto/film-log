@@ -74,7 +74,8 @@ class Photo implements ToJson {
         thumbnail: thumbnail ?? this.thumbnail,
       );
 
-  Photo updateId() => update(id: const UuidV4().generate());
+  Photo ensureId() =>
+      id.isNotEmpty ? this : update(id: const UuidV4().generate());
 
   Photo updateLocation(Location? value) => Photo(
         id: id,

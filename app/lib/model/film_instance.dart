@@ -77,7 +77,7 @@ class FilmInstance implements ToJson {
       );
 
   FilmInstance addPhoto(Photo photo) => update(
-        photos: [...photos, photo.updateId()],
+        photos: [...photos.where((p) => p.id != photo.id), photo.ensureId()],
       );
 
   factory FilmInstance.fromJson(

@@ -12,9 +12,9 @@ abstract class GearRepo<T extends Gear> {
 
   final String _storageKey;
 
-  final List<void Function()> _listeners = [];
+  VoidCallback? _listener;
 
-  void addChangeListener(void Function() cb) => _listeners.add(cb);
+  void addChangeListener(void Function() cb) => _listener = cb;
 
   Stream<List<T>> itemsStream() => itemsController.stream;
 
@@ -101,8 +101,8 @@ abstract class GearRepo<T extends Gear> {
   }
 
   void _notify() {
-    for (var cb in _listeners) {
-      cb();
+    if (_listener != null) {
+      _listener!();
     }
   }
 }

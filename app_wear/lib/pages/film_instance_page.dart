@@ -7,6 +7,7 @@ import 'package:film_log_wear/widgets/swipe_dismiss.dart';
 import 'package:film_log_wear/widgets/wear_list_tile.dart';
 import 'package:film_log_wear/widgets/wear_list_view.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/v4.dart';
 
 class FilmInstancePage extends StatelessWidget {
   FilmInstancePage({super.key, required this.filmId});
@@ -160,7 +161,7 @@ class _FilmInstancePageState extends State<_FilmInstancePageWidget> {
   Photo _nextPhoto() {
     Photo? lastPhoto = widget.film.photos.lastOrNull;
     return Photo(
-      id: '',
+      id: const UuidV4().generate(),
       frameNumber: widget.film.photos.length + 1,
       recorded: DateTime.timestamp(),
       filters: lastPhoto == null ? [] : [...lastPhoto.filters],

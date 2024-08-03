@@ -3,6 +3,8 @@ import 'film.dart';
 import 'filter.dart';
 import 'lens.dart';
 
+/// The [State] object is synchronized by the phone app and listened to by
+/// the Wear OS app. It contains the known state of the phone app.
 class State {
   const State({
     required this.films,

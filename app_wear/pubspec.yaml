@@ -42,6 +42,7 @@ dependencies:
     path: ../film_log_wear_data
   flutter_wear_os_location:
     path: ../flutter_wear_os_location
+  uuid: ^4.4.2
 
 dev_dependencies:
   flutter_test:

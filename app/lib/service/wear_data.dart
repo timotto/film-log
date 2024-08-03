@@ -1,16 +1,16 @@
 import 'dart:convert';
 
+import 'package:film_log/model/film_instance.dart';
 import 'package:film_log/service/repos.dart';
 import 'package:film_log/service/wear/decode.dart';
 import 'package:film_log/service/wear/encode.dart';
-import 'package:film_log_wear_data/model/add_photo.dart';
+import 'package:film_log_wear_data/api/capabilities.dart';
+import 'package:film_log_wear_data/api/data_paths.dart';
+import 'package:film_log_wear_data/model/pending.dart';
 import 'package:film_log_wear_data/model/state.dart';
 import 'package:flutter_wear_os_connectivity/flutter_wear_os_connectivity.dart';
 
 import '../model/gear.dart';
-
-const _addPhotoPath = '/film_log_add_photo';
-const _serverStatePath = '/film_log_server_state';
 
 class WearDataService {
   WearDataService({required this.repos});
@@ -24,27 +24,31 @@ class WearDataService {
     _initialized = true;
 
     await _wearOsConnectivity.configureWearableAPI();
-
-    await _wearOsConnectivity.registerNewCapability('film_log_server');
-    await _wearOsConnectivity.registerNewCapability('film_log_add_photo');
+    await _wearOsConnectivity.registerNewCapability(serverCapabilityName);
 
     _wearOsConnectivity
-        .messageReceived(
+        .dataChanged(
           pathURI: Uri(
             scheme: 'wear',
-            path: _addPhotoPath,
+            host: '*',
+            path: syncPendingPath,
           ),
         )
-        .listen(_onAddPhoto);
+        .listen(_onClientPending);
 
     await _syncState();
+    await _findPending();
+    repos.addChangeListener(_syncState);
   }
 
   Future<void> _syncState() async {
+    final state = _buildState();
     await _wearOsConnectivity.syncData(
-      path: _serverStatePath,
-      data: {'data': jsonEncode(_buildState().toJson())},
+      path: syncStatePath,
+      data: {'data': jsonEncode(state.toJson())},
     );
+
+    print('wear-data-service::sync-state: sent: films=${state.films.length} cameras=${state.cameras.length}');
   }
 
   State _buildState() {
@@ -80,30 +84,104 @@ class WearDataService {
     );
   }
 
-  Future<void> _onAddPhoto(WearOSMessage message) async {
-    if (message.path != _addPhotoPath) return;
-    final add =
-        AddPhoto.fromJson(jsonDecode(String.fromCharCodes(message.data)));
-
-    final film = repos.filmRepo
-        .items()
-        .where((film) => film.id == add.filmId)
-        .firstOrNull;
-
-    if (film == null) {
-      print(
-          'wear-data-service::on-add-photo error: no film with id ${add.filmId}');
+  Future<void> _findPending() async {
+    final info =
+    await _wearOsConnectivity.findCapabilityByName(clientCapabilityName);
+    if (info == null) {
+      print('wear-data-service::find-pending: null info');
       return;
     }
 
-    final photo = decodePhoto(
-      add.photo,
-      lenses: repos.lensRepo.items(),
-      filters: repos.filterRepo.items(),
-    ).update();
+    print('wear-data-service::find-pending: ${info.associatedDevices.length} devices');
 
-    final updated = film.addPhoto(photo);
-    await repos.filmRepo.update(updated);
+    for (var device in info.associatedDevices) {
+      await _loadPending(device);
+    }
+  }
+
+  Future<void> _loadPending(WearOsDevice device) async {
+    final dataItem = await _wearOsConnectivity.findDataItemOnURIPath(
+      pathURI: syncPendingUri(host: device.id),
+    );
+
+    if (dataItem == null) {
+      print('wear-data-service::load-pending device=$device null data');
+      return;
+    }
+
+    print(
+        'wear-data-service::load-pending device=${device.id}/${device.name} item=$dataItem parsing');
+    await _parsePendingItems([dataItem]);
+  }
+
+  Future<void> _parsePendingItems(List<DataItem> dataItems) async {
+    print('wear-data-service::parse-pending-items: received ${dataItems.length} items');
+
+    final List<FilmInstance> updates = [];
+
+    for(var dataItem in dataItems) {
+      final data = dataItem.mapData['data'];
+      if (data == null) {
+        print('wear-data-service::parse-pending-items: null data');
+        continue;
+      }
+
+      final pending = Pending.fromJson(jsonDecode(data));
+      if (pending.isEmpty) {
+        print('wear-data-service::parse-pending-items: no changes');
+        continue;
+      }
+
+      final byFilm = pending.addPhotosByFilm;
+      for(var filmId in byFilm.keys) {
+        var film = repos.filmRepo
+            .items()
+            .where((film) => film.id == filmId)
+            .firstOrNull;
+
+        if (film == null) {
+          print('wear-data-service::parse-pending-items: error: invalid film-id: $filmId');
+          continue;
+        }
+
+        final photos = byFilm[filmId]!;
+        for(var p in photos) {
+          final photo = decodePhoto(
+            p,
+            lenses: repos.lensRepo.items(),
+            filters: repos.filterRepo.items(),
+          );
+
+          film = film!.addPhoto(photo);
+        }
+
+        updates.add(film!);
+      }
+    }
+
+    if (updates.isEmpty) {
+      print('wear-data-service::parse-pending-items: no updates');
+      return;
+    }
+
+    await repos.filmRepo.updateAll(updates);
+    print('wear-data-service::parse-pending-items: success: ${updates.length} updates');
+  }
+
+  Future<void> _onClientPending(List<DataEvent> events) async {
+    print('wear-data-service::on-client-pending: received ${events.length} events');
+
+    final List<DataItem> dataItems = [];
+    for(var event in events) {
+      if (event.type != DataEventType.changed) {
+        print('wear-data-service::on-client-pending: bad event type: ${event.type}');
+        continue;
+      }
+
+      dataItems.add(event.dataItem);
+    }
+
+    await _parsePendingItems(dataItems);
   }
 }
 

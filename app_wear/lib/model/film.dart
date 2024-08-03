@@ -25,7 +25,7 @@ class Film extends Item<Film> {
         inserted: inserted,
         maxPhotoCount: maxPhotoCount,
         camera: camera,
-        photos: [...photos, photo],
+        photos: [...photos.where((p) => p.id != photo.id), photo],
       );
 
   bool canAddPhoto() => photos.length < maxPhotoCount;

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:film_log/model/film_instance.dart';
 import 'package:film_log/service/camera_repo.dart';
@@ -17,9 +18,9 @@ import '../model/lens.dart';
 class FilmRepo {
   final _storageKey = 'film_repo';
 
-  final List<void Function()> _listeners = [];
+  VoidCallback? _listener;
 
-  void addChangeListener(void Function() cb) => _listeners.add(cb);
+  void addChangeListener(void Function() cb) => _listener = cb;
 
   Stream<List<FilmInstance>> itemsStream() => itemsController.stream;
 
@@ -36,7 +37,6 @@ class FilmRepo {
     itemsList.add(item);
     updateItems([...itemsList]);
     await save();
-    _notify();
     return item;
   }
 
@@ -44,7 +44,6 @@ class FilmRepo {
     itemsList.removeWhere((i) => i.itemId() == item.itemId());
     updateItems([...itemsList]);
     await save();
-    _notify();
   }
 
   Future<void> update(FilmInstance item) async {
@@ -52,7 +51,15 @@ class FilmRepo {
     itemsList.add(item);
     updateItems([...itemsList]);
     await save();
-    _notify();
+  }
+
+  Future<void> updateAll(List<FilmInstance> items) async {
+    for(var item in items) {
+      itemsList.removeWhere((i) => i.itemId() == item.itemId());
+      itemsList.add(item);
+    }
+    updateItems([...itemsList]);
+    await save();
   }
 
   final List<FilmInstance> itemsList = [];
@@ -72,7 +79,6 @@ class FilmRepo {
   Future<void> replaceItems(List<FilmInstance> items) async {
     updateItems(items);
     await save();
-    _notify();
   }
 
   Map<String, dynamic> _toJson() => {
@@ -133,11 +139,12 @@ class FilmRepo {
     final jsonString = jsonEncode(json);
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_storageKey, jsonString);
+    _notify();
   }
 
   void _notify() {
-    for (var cb in _listeners) {
-      cb();
+    if (_listener != null) {
+      _listener!();
     }
   }
 }
