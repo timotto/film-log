@@ -7,21 +7,30 @@ import 'package:film_log_wear/model/photo.dart';
 import 'package:film_log_wear/service/camera_repo.dart';
 import 'package:film_log_wear/service/filter_repo.dart';
 import 'package:film_log_wear/service/lens_repo.dart';
-import 'package:film_log_wear/service/wear/decode.dart';
-import 'package:film_log_wear/service/wear/encode.dart';
+import 'package:film_log_wear/service/sync.dart';
 import 'package:film_log_wear_data/api/capabilities.dart';
 import 'package:film_log_wear_data/api/data_paths.dart';
-import 'package:film_log_wear_data/model/add_photo.dart';
 import 'package:film_log_wear_data/model/pending.dart';
 import 'package:film_log_wear_data/model/state.dart';
 import 'package:flutter_wear_os_connectivity/flutter_wear_os_connectivity.dart';
+import 'package:logging/logging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'film_repo.dart';
 import 'wear/fake_state.dart';
 
+final _log = Logger('wear-data-service');
+
 class WearDataService {
-  WearDataService._();
+  WearDataService._() {
+    _sync = SyncService(
+      filmRepo: _filmRepo,
+      cameraRepo: _cameraRepo,
+      filterRepo: _filterRepo,
+      lensRepo: _lensRepo,
+      publishPending: (value) => _sendPending(value),
+    );
+  }
 
   static final _sharedInstance = WearDataService._();
 
@@ -33,9 +42,9 @@ class WearDataService {
   final _cameraRepo = CameraRepo();
   final _filterRepo = FilterRepo();
   final _lensRepo = LensRepo();
-  late final SharedPreferences _prefs;
+  late SyncService _sync;
 
-  Pending _pending = const Pending(addPhotos: []);
+  late final SharedPreferences _prefs;
 
   bool _initialized = false;
   final _initializedController = StreamController<bool>.broadcast();
@@ -52,10 +61,6 @@ class WearDataService {
       await _wearOsConnectivity.registerNewCapability(clientCapabilityName);
 
       _wearOsConnectivity
-          .capabilityChanged(capabilityName: serverCapabilityName)
-          .listen(_onCapabilityServerChanged);
-
-      _wearOsConnectivity
           .dataChanged(
             pathURI: syncStateUri(),
           )
@@ -67,16 +72,6 @@ class WearDataService {
     } finally {
       _initialized = true;
       _initializedController.add(true);
-    }
-  }
-
-  Future<void> _onCapabilityServerChanged(CapabilityInfo info) async {
-    print('wear-data::on-capability-server-changed $info');
-    for (var device in info.associatedDevices) {
-      if (!device.isNearby) continue;
-
-      print('wear-data::on-capability-server-changed device=$device checking');
-      await _loadState(device);
     }
   }
 
@@ -96,16 +91,16 @@ class WearDataService {
     );
 
     if (dataItem == null) {
-      print('wear-data::load-state device=$device null data');
+      _log.fine('wear-data::load-state device=$device null data');
       return;
     }
 
-    print('wear-data::load-state device=${device.id}/${device.name}');
+    _log.finer('wear-data::load-state device=${device.id}/${device.name}');
     await _parseStateDataItem(dataItem);
   }
 
   Future<void> _onServerState(List<DataEvent> events) async {
-    print('wear-data::on-server-state events.length=${events.length}');
+    _log.finer('wear-data::on-server-state events.length=${events.length}');
     for (var value in events) {
       await _parseStateDataItem(value.dataItem);
     }
@@ -120,64 +115,24 @@ class WearDataService {
   }
 
   Future<void> _readStateInfo(State state) async {
-    final cameras =
-        _neverNull(state.cameras.map(decodeCamera)).toList(growable: false);
-
-    final lenses = _neverNull(state.lenses.map((item) => decodeLens(
-          item,
-          cameras: cameras,
-        ))).toList(growable: false);
-
-    final filters = _neverNull(state.filters.map((item) => decodeFilter(
-          item,
-          lenses: lenses,
-        ))).toList(growable: false);
-
-    final films = state.films
-        .map((item) => decodeFilm(
-              item,
-              cameras: cameras,
-              filters: filters,
-              lenses: lenses,
-            ))
-        .toList(growable: false);
-
-    _filmRepo.set(films);
-    _cameraRepo.set(cameras);
-    _filterRepo.set(filters);
-    _lensRepo.set(lenses);
-
-    print(
-        'wear-data-service::parse-state-item: success: films=${films.length} cameras=${cameras.length} filters=${filters.length} lenses=${lenses.length}');
-
-    final pending = _pending.withState(state);
-    if (!pending.equals(_pending)) {
-      _pending = pending;
-      await _sendPending();
-    }
+    await _sync.importState(state);
   }
 
   Future<void> sendPhoto({
     required Photo photo,
     required Film film,
   }) async {
-    final add = AddPhoto(
-      filmId: film.id,
-      photo: encodePhoto(photo),
-    );
-    _pending = _pending.addItem(add);
-
-    await _sendPending();
+    await _sync.addPhoto(photo: photo, filmId: film.id);
   }
 
-  Future<void> _sendPending() async {
+  Future<void> _sendPending(Pending pending) async {
     await _wearOsConnectivity.syncData(
       path: syncPendingPath,
-      data: {'data': jsonEncode(_pending.toJson())},
+      data: {'data': jsonEncode(pending.toJson())},
     );
 
-    print(
-        'wear-data-service::send-pending: success: ${_pending.addPhotos.length} items');
+    _log.finer(
+        'wear-data-service::send-pending: success: ${pending.addPhotos.length} items');
   }
 
   Future<void> _restorePending() async {
@@ -185,45 +140,20 @@ class WearDataService {
 
     final dataItems = await _wearOsConnectivity.findDataItemsOnURIPath(
         pathURI: syncPendingUri());
-    print(
+    _log.finer(
         'wear-data-service::restore-pending: found ${dataItems.length} items');
     for (var dataItem in dataItems) {
       if (dataItem.pathURI.host != localDevice.id) {
-        print(
+        _log.fine(
             'wear-data-service::restore-pending: ignoring foreign item for ${dataItem.pathURI.host}');
         continue;
       }
 
       final String data = dataItem.mapData['data'];
       final pending = Pending.fromJson(jsonDecode(data));
-      print(
+      _log.finer(
           'wear-data-service::restore-pending: restored ${pending.addPhotos.length} items');
-      _pending = pending;
-    }
-
-    _syncPendingToLocal();
-  }
-
-  void _syncPendingToLocal() {
-    final byFilm = _pending.addPhotosByFilm;
-    for (var filmId in byFilm.keys) {
-      var film = _filmRepo.item(filmId);
-      if (film == null) {
-        print(
-            'wear-data-service::sync-pending-to-local: unknown film-id: $filmId');
-        continue;
-      }
-
-      final photos = byFilm[filmId]!;
-      for (var item in photos) {
-        final photo = decodePhoto(
-          item,
-          lenses: _lensRepo.value(),
-          filters: _filterRepo.value(),
-        );
-        film = film!.addPhoto(photo);
-      }
-      _filmRepo.update(film!);
+      _sync.pending = pending;
     }
   }
 
@@ -257,7 +187,6 @@ class WearDataService {
   Future<void> _writeStoredState(State state) async {
     final json = jsonEncode(state.toJson());
     await _prefs.setString('state', json);
-    print('wear-data::write-stored-state: success');
   }
 
   void fakeData() {
@@ -272,6 +201,3 @@ class WearDataService {
     fakeEditFilm(repo: _filmRepo);
   }
 }
-
-Iterable<T> _neverNull<T>(Iterable<T?> items) =>
-    items.where((item) => item != null).map((item) => item!);

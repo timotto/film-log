@@ -1,5 +1,6 @@
 import 'package:film_log_wear/fmt/aperture.dart';
 import 'package:film_log_wear/fmt/shutter_speed.dart';
+import 'package:film_log_wear/model/util.dart';
 
 import 'filter.dart';
 import 'lens.dart';
@@ -25,6 +26,17 @@ class Photo {
     required this.filters,
     required this.location,
   });
+
+  Map<String, dynamic> toJson() => {
+    'id':id,
+    'frameNumber':frameNumber,
+    'recorded':recorded.toIso8601String(),
+    'shutterSpeed':shutterSpeed,
+    'aperture':aperture,
+    'lens':lens?.toJson(),
+    'filters':filters.map((f) => f.toJson()).toList(),
+    'location':location?.toJson(),
+  };
 
   Photo update({
     DateTime? recorded,
@@ -55,4 +67,28 @@ class Photo {
     if (parts.isEmpty) return null;
     return parts.join(' ');
   }
+
+  @override
+  bool operator ==(Object other) =>
+      other is Photo &&
+      id == other.id &&
+      frameNumber == other.frameNumber &&
+      recorded == other.recorded &&
+      shutterSpeed == other.shutterSpeed &&
+      aperture == other.aperture &&
+      lens == other.lens &&
+      sameList(filters, other.filters) &&
+      location == other.location;
+
+  @override
+  int get hashCode => Object.hashAll([
+        id,
+        frameNumber,
+        recorded,
+        shutterSpeed,
+        aperture,
+        lens,
+        ...filters,
+        location,
+      ]);
 }

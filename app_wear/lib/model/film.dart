@@ -1,3 +1,5 @@
+import 'package:film_log_wear/model/util.dart';
+
 import 'camera.dart';
 import 'item.dart';
 import 'photo.dart';
@@ -18,6 +20,15 @@ class Film extends Item<Film> {
   final int maxPhotoCount;
   final Camera? camera;
   final List<Photo> photos;
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'label': label,
+        'inserted': inserted.toIso8601String(),
+        'maxPhotoCount': maxPhotoCount,
+        'camera': camera?.toJson(),
+        'photos': photos.map((p) => p.toJson()).toList(),
+      };
 
   Film addPhoto(Photo photo) => Film(
         id: id,
@@ -44,4 +55,24 @@ class Film extends Item<Film> {
 
   @override
   String sortKey() => inserted.toIso8601String();
+
+  @override
+  bool operator ==(Object other) =>
+      other is Film &&
+      id == other.id &&
+      label == other.label &&
+      inserted == other.inserted &&
+      maxPhotoCount == other.maxPhotoCount &&
+      camera == other.camera &&
+      sameList(photos, other.photos);
+
+  @override
+  int get hashCode => Object.hashAll([
+        id,
+        label,
+        inserted,
+        maxPhotoCount,
+        camera,
+        ...photos,
+      ]);
 }

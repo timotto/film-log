@@ -16,4 +16,13 @@ class Location {
         'latitude': latitude,
         'longitude': longitude,
       };
+
+  @override
+  bool operator ==(Object other) =>
+      other is Location &&
+      latitude == other.latitude &&
+      longitude == other.longitude;
+
+  @override
+  int get hashCode => Object.hashAll([latitude, longitude]);
 }

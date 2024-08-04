@@ -18,4 +18,11 @@ class AddPhoto {
         'filmId': filmId,
         'photo': photo.toJson(),
       };
+
+  @override
+  bool operator ==(Object other) =>
+      other is AddPhoto && filmId == other.filmId && photo == other.photo;
+
+  @override
+  int get hashCode => Object.hashAll([filmId, photo]);
 }

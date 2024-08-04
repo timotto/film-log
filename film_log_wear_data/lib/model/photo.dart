@@ -1,6 +1,7 @@
 import 'package:film_log_wear_data/model/json.dart';
 
 import 'location.dart';
+import 'util.dart';
 
 class Photo {
   const Photo({
@@ -32,6 +33,30 @@ class Photo {
       lensId == other.lensId &&
       _sameList(filterIdList, other.filterIdList) &&
       _sameLocation(location, other.location);
+
+  @override
+  bool operator ==(Object other) =>
+      other is Photo &&
+      id == other.id &&
+      recorded == other.recorded &&
+      frameNumber == other.frameNumber &&
+      shutterSpeed == other.shutterSpeed &&
+      aperture == other.aperture &&
+      lensId == other.lensId &&
+      sameList(filterIdList, other.filterIdList) &&
+      location == other.location;
+
+  @override
+  int get hashCode => Object.hashAll([
+        id,
+        recorded,
+        frameNumber,
+        shutterSpeed,
+        aperture,
+        lensId,
+        ...filterIdList,
+        location
+      ]);
 
   factory Photo.fromJson(Map<String, dynamic> json) => Photo(
         id: json['id'],

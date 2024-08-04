@@ -3,6 +3,7 @@ import 'package:film_log_wear/pages/startup_page.dart';
 import 'package:film_log_wear/service/wear_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_wear_os_location/flutter_wear_os_location.dart';
+import 'package:logging/logging.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,6 +22,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
+    _setupLogging();
     _wearData.setup().then((_) {});
     _location.ensurePermission().then((_) {});
     super.initState();
@@ -46,5 +48,18 @@ class _MyAppState extends State<MyApp> {
             (initialized.data ?? false) ? FilmListPage() : const StartupPage(),
       ),
     );
+  }
+
+  void _setupLogging() {
+    Logger.root.level = Level.ALL;
+    Logger.root.onRecord.listen((record) {
+      final List<String> parts = [
+        record.level.name,
+        record.time.toString(),
+        record.message,
+        if (record.error != null) record.error!.toString(),
+      ];
+      print(parts.join(': '));
+    });
   }
 }
