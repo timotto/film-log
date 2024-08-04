@@ -1,12 +1,8 @@
-import 'package:film_log_wear/model/aperture.dart';
-import 'package:film_log_wear/model/photo.dart';
 import 'package:film_log_wear/pages/film_list_page.dart';
+import 'package:film_log_wear/pages/startup_page.dart';
 import 'package:film_log_wear/service/wear_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_wear_os_location/flutter_wear_os_location.dart';
-
-import 'model/filter.dart';
-import 'model/lens.dart';
 
 void main() {
   runApp(const MyApp());
@@ -22,27 +18,6 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final _location = FlutterWearOsLocation();
   final _wearData = WearDataService();
-
-  final photo = Photo(
-    id: '1',
-    frameNumber: 1,
-    recorded: DateTime.timestamp(),
-    shutterSpeed: 1 / 250,
-    aperture: 8,
-    lens: null,
-    filters: [],
-    location: null,
-  );
-
-  final List<Lens> lenses = [
-    Lens(id: '1', label: '55mm', apertures: aperturesWhole(), cameras: []),
-    Lens(id: '2', label: '90mm', apertures: aperturesWhole(), cameras: []),
-  ];
-
-  final List<Filter> filters = [
-    Filter(id: '1', label: 'Red', lenses: []),
-    Filter(id: '2', label: 'IR', lenses: []),
-  ];
 
   @override
   void initState() {
@@ -64,7 +39,12 @@ class _MyAppState extends State<MyApp> {
         ),
         useMaterial3: true,
       ),
-      home: FilmListPage(),
+      home: StreamBuilder(
+        stream: _wearData.initializedStream(),
+        initialData: _wearData.initialized(),
+        builder: (context, initialized) =>
+            (initialized.data ?? false) ? FilmListPage() : const StartupPage(),
+      ),
     );
   }
 }

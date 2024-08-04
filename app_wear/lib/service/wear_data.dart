@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
@@ -14,6 +15,7 @@ import 'package:film_log_wear_data/model/add_photo.dart';
 import 'package:film_log_wear_data/model/pending.dart';
 import 'package:film_log_wear_data/model/state.dart';
 import 'package:flutter_wear_os_connectivity/flutter_wear_os_connectivity.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'film_repo.dart';
 import 'wear/fake_state.dart';
@@ -31,32 +33,41 @@ class WearDataService {
   final _cameraRepo = CameraRepo();
   final _filterRepo = FilterRepo();
   final _lensRepo = LensRepo();
+  late final SharedPreferences _prefs;
 
   Pending _pending = const Pending(addPhotos: []);
 
+  bool _initialized = false;
+  final _initializedController = StreamController<bool>.broadcast();
+
+  bool initialized() => _initialized;
+
+  Stream<bool> initializedStream() => _initializedController.stream;
+
   Future<void> setup() async {
-    await _wearOsConnectivity.configureWearableAPI();
-    await _wearOsConnectivity.registerNewCapability(clientCapabilityName);
+    _prefs = await SharedPreferences.getInstance();
 
-    final info =
-        await _wearOsConnectivity.findCapabilityByName(serverCapabilityName);
-    if (info != null) {
-      for (var device in info.associatedDevices) {
-        await _loadState(device);
-      }
+    try {
+      await _wearOsConnectivity.configureWearableAPI();
+      await _wearOsConnectivity.registerNewCapability(clientCapabilityName);
+
+      _wearOsConnectivity
+          .capabilityChanged(capabilityName: serverCapabilityName)
+          .listen(_onCapabilityServerChanged);
+
+      _wearOsConnectivity
+          .dataChanged(
+            pathURI: syncStateUri(),
+          )
+          .listen(_onServerState);
+
+      await _loadStoredState();
+      await _discoverState();
+      await _restorePending();
+    } finally {
+      _initialized = true;
+      _initializedController.add(true);
     }
-
-    _wearOsConnectivity
-        .capabilityChanged(capabilityName: serverCapabilityName)
-        .listen(_onCapabilityServerChanged);
-
-    _wearOsConnectivity
-        .dataChanged(
-          pathURI: syncStateUri(),
-        )
-        .listen(_onServerState);
-
-    await _restorePending();
   }
 
   Future<void> _onCapabilityServerChanged(CapabilityInfo info) async {
@@ -66,6 +77,16 @@ class WearDataService {
 
       print('wear-data::on-capability-server-changed device=$device checking');
       await _loadState(device);
+    }
+  }
+
+  Future<void> _discoverState() async {
+    final info =
+        await _wearOsConnectivity.findCapabilityByName(serverCapabilityName);
+    if (info != null) {
+      for (var device in info.associatedDevices) {
+        await _loadState(device);
+      }
     }
   }
 
@@ -79,22 +100,26 @@ class WearDataService {
       return;
     }
 
-    print(
-        'wear-data::load-state device=${device.id}/${device.name} item=$dataItem parsing');
-    await _parseStateItem(dataItem);
+    print('wear-data::load-state device=${device.id}/${device.name}');
+    await _parseStateDataItem(dataItem);
   }
 
   Future<void> _onServerState(List<DataEvent> events) async {
     print('wear-data::on-server-state events.length=${events.length}');
     for (var value in events) {
-      await _parseStateItem(value.dataItem);
+      await _parseStateDataItem(value.dataItem);
     }
   }
 
-  Future<void> _parseStateItem(DataItem dataItem) async {
+  Future<void> _parseStateDataItem(DataItem dataItem) async {
     final String data = dataItem.mapData['data'];
     final state = State.fromJson(jsonDecode(data));
 
+    await _readStateInfo(state);
+    await _writeStoredState(state);
+  }
+
+  Future<void> _readStateInfo(State state) async {
     final cameras =
         _neverNull(state.cameras.map(decodeCamera)).toList(growable: false);
 
@@ -204,7 +229,7 @@ class WearDataService {
 
   Future<bool> openPhoneApp() async {
     final info =
-    await _wearOsConnectivity.findCapabilityByName(serverCapabilityName);
+        await _wearOsConnectivity.findCapabilityByName(serverCapabilityName);
     if (info == null) {
       print('wear-data-service::open-phone-app: error: null info');
       return false;
@@ -222,6 +247,19 @@ class WearDataService {
     return true;
   }
 
+  Future<void> _loadStoredState() async {
+    final json = _prefs.getString('state');
+    if (json == null) return;
+    final state = State.fromJson(jsonDecode(json));
+    await _readStateInfo(state);
+  }
+
+  Future<void> _writeStoredState(State state) async {
+    final json = jsonEncode(state.toJson());
+    await _prefs.setString('state', json);
+    print('wear-data::write-stored-state: success');
+  }
+
   void fakeData() {
     DataItem fakeItem = DataItem(
       pathURI: Uri(),
@@ -230,7 +268,7 @@ class WearDataService {
         'data': jsonEncode(fakeState().toJson()),
       },
     );
-    _parseStateItem(fakeItem);
+    _parseStateDataItem(fakeItem);
     fakeEditFilm(repo: _filmRepo);
   }
 }
