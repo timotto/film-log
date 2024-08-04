@@ -1,5 +1,6 @@
 import 'package:film_log/pages/gear/gear_management_page/gear_management_page.dart';
 import 'package:film_log/service/repos.dart';
+import 'package:film_log/widgets/about_app_dialog.dart';
 import 'package:flutter/material.dart';
 
 class AppMenu extends StatelessWidget {
@@ -29,6 +30,13 @@ class AppMenu extends StatelessWidget {
     ));
   }
 
+  Future<void> _aboutApp(BuildContext context) async {
+    await showDialog(
+      context: context,
+      builder: (_) => const AboutAppDialog(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) => MenuAnchor(
         controller: _controller,
@@ -38,6 +46,11 @@ class AppMenu extends StatelessWidget {
             onPressed: () => _manageGear(context),
             leadingIcon: const Icon(Icons.camera_alt),
             child: const Text('Manage gear'),
+          ),
+          MenuItemButton(
+            onPressed: () => _aboutApp(context),
+            leadingIcon: const Icon(Icons.info),
+            child: const Text('About this app'),
           ),
         ],
         child: IconButton(
