@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 
 import '../fmt/aperture.dart';
 import '../fmt/shutter_speed.dart';
+import '../fmt/timestamp.dart';
 import '../model/film.dart';
 import '../model/filter.dart';
 import '../model/lens.dart';
@@ -137,6 +138,9 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
           filter.lenses.where((lens) => lens.id == photo.lens?.id).isNotEmpty)
       .toList(growable: false);
 
+  Iterable<DateTime> _allTimestamps() =>
+      widget.film.photos.map((photo) => photo.recorded);
+
   Future<void> _requestLocation() async {
     final result = await getLocation();
     _onLocation(result);
@@ -156,26 +160,30 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
                 title: 'Frame number',
                 subtitle: '#${photo.frameNumber}',
               ),
-              WearListTile(
-                title: 'Shutter speed',
-                subtitle: photo.shutterSpeed == null
-                    ? null
-                    : formatShutterSpeed(photo.shutterSpeed!),
-                onTap: _ifEdit(() => _editShutterSpeed(context)),
-              ),
-              WearListTile(
-                title: 'Lens',
-                subtitle: photo.lens?.label,
-                onTap: _ifEdit(() => _editLens(context)),
-              ),
-              WearListTile(
-                title: 'Aperture',
-                subtitle: photo.aperture == null
-                    ? null
-                    : formatAperture(photo.aperture!),
-                onTap: _ifEdit(() => _editAperture(context)),
-              ),
-              if (_filters().isNotEmpty)
+              if (_ifEditOrNotNull(photo.shutterSpeed))
+                WearListTile(
+                  title: 'Shutter speed',
+                  subtitle: photo.shutterSpeed == null
+                      ? null
+                      : formatShutterSpeed(photo.shutterSpeed!),
+                  onTap: _ifEdit(() => _editShutterSpeed(context)),
+                ),
+              if (_ifEditOrNotNull(photo.lens))
+                WearListTile(
+                  title: 'Lens',
+                  subtitle: photo.lens?.label,
+                  onTap: _ifEdit(() => _editLens(context)),
+                ),
+              if (_ifEditOrNotNull(photo.aperture))
+                WearListTile(
+                  title: 'Aperture',
+                  subtitle: photo.aperture == null
+                      ? null
+                      : formatAperture(photo.aperture!),
+                  onTap: _ifEdit(() => _editAperture(context)),
+                ),
+              if ((widget.edit && _filters().isNotEmpty) ||
+                  (photo.filters.isNotEmpty))
                 WearListTile(
                   title: 'Filters',
                   subtitle: photo.filters.isEmpty
@@ -183,11 +191,21 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
                       : photo.filters.map((filter) => filter.label).join(', '),
                   onTap: _ifEdit(() => _editFilters(context)),
                 ),
-              WearListTile(
-                title: 'Location',
-                subtitle: photo.location?.listItemSubtitle(),
-                onTap: () => _editLocation(context),
-              ),
+              if (!widget.edit)
+                WearListTile(
+                  title: 'Timestamp',
+                  subtitle: formatTimestamp(
+                    context,
+                    photo.recorded,
+                    others: _allTimestamps(),
+                  ),
+                ),
+              if (_ifEditOrNotNull(photo.location))
+                WearListTile(
+                  title: 'Location',
+                  subtitle: photo.location?.listItemSubtitle(),
+                  onTap: () => _editLocation(context),
+                ),
               if (widget.edit) _acceptButton(context),
             ],
           ),
@@ -200,4 +218,6 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
       );
 
   VoidCallback? _ifEdit(VoidCallback cb) => widget.edit ? cb : null;
+
+  bool _ifEditOrNotNull<T>(T? item) => widget.edit || item != null;
 }

@@ -33,6 +33,7 @@ class FilmListPage extends StatelessWidget {
 
   Widget _list(BuildContext context, List<Film> items) => WearListView(
         key: _listKey,
+        selectedIndex: items.length,
         children: [
           ..._children(context, items),
           _addButton(context),
