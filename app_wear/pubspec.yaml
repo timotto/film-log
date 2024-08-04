@@ -36,7 +36,9 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6
   wearable_rotary: ^2.0.2
-  flutter_wear_os_connectivity: ^1.0.0
+#  flutter_wear_os_connectivity: ^1.0.0
+  flutter_wear_os_connectivity:
+    path: ../flutter_wear_os_connectivity
   wear_plus: ^1.2.0
   film_log_wear_data:
     path: ../film_log_wear_data

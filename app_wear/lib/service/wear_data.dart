@@ -202,6 +202,26 @@ class WearDataService {
     }
   }
 
+  Future<bool> openPhoneApp() async {
+    final info =
+    await _wearOsConnectivity.findCapabilityByName(serverCapabilityName);
+    if (info == null) {
+      print('wear-data-service::open-phone-app: error: null info');
+      return false;
+    }
+
+    for (var device in info.associatedDevices) {
+      if (!device.isNearby) continue;
+
+      await _wearOsConnectivity.startRemoteActivity(
+        url: "filmLog://MainActivity",
+        deviceId: device.id,
+      );
+    }
+
+    return true;
+  }
+
   void fakeData() {
     DataItem fakeItem = DataItem(
       pathURI: Uri(),

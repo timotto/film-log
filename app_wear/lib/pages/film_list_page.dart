@@ -1,6 +1,6 @@
 import 'package:film_log_wear/model/film.dart';
 import 'package:film_log_wear/pages/film_instance_page.dart';
-import 'package:film_log_wear/service/wear_data.dart';
+import 'package:film_log_wear/widgets/open_on_phone_button.dart';
 import 'package:film_log_wear/widgets/swipe_dismiss.dart';
 import 'package:film_log_wear/widgets/wear_list_tile.dart';
 import 'package:film_log_wear/widgets/wear_list_view.dart';
@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../service/film_repo.dart';
+import 'add_film_page.dart';
 
 class FilmListPage extends StatelessWidget {
   FilmListPage({super.key});
@@ -32,7 +33,10 @@ class FilmListPage extends StatelessWidget {
 
   Widget _list(BuildContext context, List<Film> items) => WearListView(
         key: _listKey,
-        children: _children(context, items),
+        children: [
+          ..._children(context, items),
+          _addButton(context),
+        ],
       );
 
   List<Widget> _children(BuildContext context, List<Film> items) => items
@@ -43,28 +47,28 @@ class FilmListPage extends StatelessWidget {
           ))
       .toList(growable: false);
 
-  Widget _empty(BuildContext context) => Center(
+  Widget _empty(BuildContext context) => const Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('There are no films'),
-            ElevatedButton.icon(
-              onPressed: () => _openOnPhone(context),
-              icon: const Icon(Icons.open_in_new),
-              label: const Text('Open on Phone'),
-            ),
+            Text('No films available'),
+            OpenOnPhoneButton(),
           ],
         ),
+      );
+
+  Widget _addButton(BuildContext context) => IconButton(
+        onPressed: () => Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => const AddFilmPage(),
+          ),
+        ),
+        icon: const Icon(Icons.add),
       );
 
   Future<void> _select(BuildContext context, Film item) async {
     await Navigator.of(context).push(MaterialPageRoute(
       builder: (_) => FilmInstancePage(filmId: item.id),
     ));
-  }
-
-  Future<void> _openOnPhone(BuildContext context) async {
-    final data = WearDataService();
-    data.fakeData();
   }
 }
