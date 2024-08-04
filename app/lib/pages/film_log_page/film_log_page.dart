@@ -83,28 +83,26 @@ class _FilmLogPageWidget extends StatelessWidget {
   }
 
   Future<void> _addPhoto(BuildContext context) async {
+    final lastPhoto = film.photos.lastOrNull;
+
     final frameNumber = film.photos.length + 1;
     final Photo? result = await Navigator.of(context).push(MaterialPageRoute(
       builder: (_) => EditPhotoPage(
         photo: Photo.createNew(
           frameNumber,
-          lens: _lru.lens,
-          shutter: _lru.shutter,
-          aperture: _lru.aperture,
-          filters: _lru.filters,
+          lens: lastPhoto?.lens,
+          shutter: lastPhoto?.shutter,
+          aperture: lastPhoto?.aperture,
+          filters: lastPhoto?.filters,
         ),
         film: film,
         repos: repos,
         create: true,
       ),
     ));
+
     if (result == null) return;
-    _lru.setPhoto(
-      lens: result.lens,
-      shutter: result.shutter,
-      aperture: result.aperture,
-      filters: result.filters,
-    );
+
     await repo.update(film.addPhoto(result));
   }
 
