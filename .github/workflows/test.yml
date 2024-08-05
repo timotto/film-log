@@ -1,0 +1,46 @@
+name: Test & Build
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test_and_build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Download nice offline-first/flutter_wear_os_connectivity fork
+      uses: actions/checkout@v4
+      with:
+        repository: offline-first/flutter_wear_os_connectivity
+        path: flutter_wear_os_connectivity
+
+    - name: Setup Java
+      uses: actions/setup-java@v3
+      with:
+        distribution: corretto
+        java-version: "17"
+        cache: gradle
+
+    - name: Setup Flutter SDK
+      uses: flutter-actions/setup-flutter@v3
+      with:
+        channel: stable
+        version: "3.22.3"
+        cache: "true"
+        cache-sdk: "true"
+
+    - name: Test & build phone app
+      working-directory: app
+      run: |-
+        flutter pub get
+        flutter test
+        flutter build appbundle --debug
+
+    - name: Test & build Wear OS app
+      working-directory: app_wear
+      run: |-
+        flutter pub get
+        flutter test
+        flutter build appbundle --debug
