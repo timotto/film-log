@@ -51,11 +51,13 @@ void main() {
         MockFlutterWearOsLocationPlatform();
     FlutterWearOsLocationPlatform.instance = fakePlatform;
 
-    expect(await flutterWearOsLocationPlugin.getLocation(), const Location(
-      latitude: 50.0870393,
-      longitude: 14.4204258,
-      altitude: 10,
-      accuracy: 2,
-    ));
+    expect(
+        await flutterWearOsLocationPlugin.getLocation(),
+        const Location(
+          latitude: 50.0870393,
+          longitude: 14.4204258,
+          altitude: 10,
+          accuracy: 2,
+        ));
   });
 }

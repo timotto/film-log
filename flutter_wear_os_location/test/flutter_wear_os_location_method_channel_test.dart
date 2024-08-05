@@ -6,11 +6,13 @@ import 'package:flutter_wear_os_location/model/location.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  MethodChannelFlutterWearOsLocation platform = MethodChannelFlutterWearOsLocation();
+  MethodChannelFlutterWearOsLocation platform =
+      MethodChannelFlutterWearOsLocation();
   const MethodChannel channel = MethodChannel('flutter_wear_os_location');
 
   setUp(() {
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(
       channel,
       (MethodCall methodCall) async {
         switch (methodCall.method) {
@@ -38,7 +40,8 @@ void main() {
   });
 
   tearDown(() {
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(channel, null);
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(channel, null);
   });
 
   test('getPlatformVersion', () async {
@@ -50,11 +53,13 @@ void main() {
   });
 
   test('getLocation', () async {
-    expect(await platform.getLocation(), const Location(
-      latitude: 50.0870393,
-      longitude: 14.4204258,
-      altitude: 10,
-      accuracy: 2,
-    ));
+    expect(
+        await platform.getLocation(),
+        const Location(
+          latitude: 50.0870393,
+          longitude: 14.4204258,
+          altitude: 10,
+          accuracy: 2,
+        ));
   });
 }

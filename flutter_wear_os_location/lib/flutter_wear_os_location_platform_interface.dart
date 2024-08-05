@@ -9,7 +9,8 @@ abstract class FlutterWearOsLocationPlatform extends PlatformInterface {
 
   static final Object _token = Object();
 
-  static FlutterWearOsLocationPlatform _instance = MethodChannelFlutterWearOsLocation();
+  static FlutterWearOsLocationPlatform _instance =
+      MethodChannelFlutterWearOsLocation();
 
   /// The default instance of [FlutterWearOsLocationPlatform] to use.
   ///
