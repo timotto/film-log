@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:film_log/config/playstore_url.dart';
 import 'package:film_log/model/film_instance.dart';
 import 'package:film_log/model/wear_os_device.dart' as m;
 import 'package:film_log/service/repos.dart';
@@ -8,6 +7,7 @@ import 'package:film_log/service/wear/decode.dart';
 import 'package:film_log/service/wear/encode.dart';
 import 'package:film_log_wear_data/api/capabilities.dart';
 import 'package:film_log_wear_data/api/data_paths.dart';
+import 'package:film_log_wear_data/config/playstore_url.dart';
 import 'package:film_log_wear_data/model/pending.dart';
 import 'package:film_log_wear_data/model/state.dart';
 import 'package:flutter_wear_os_connectivity/flutter_wear_os_connectivity.dart';
@@ -230,7 +230,7 @@ class WearDataService {
   Future<void> installWearOsApp(List<m.WearOsDevice> devices) async {
     await Future.wait(
       devices.map((device) => _wearOsConnectivity.startRemoteActivity(
-            url: wearOSAppPlayStoreUrl,
+            url: playStoreUrl,
             deviceId: device.id,
           )),
     );

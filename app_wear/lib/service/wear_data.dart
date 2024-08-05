@@ -4,12 +4,14 @@ import 'dart:typed_data';
 
 import 'package:film_log_wear/model/film.dart';
 import 'package:film_log_wear/model/photo.dart';
+import 'package:film_log_wear/model/wear_os_device.dart' as m;
 import 'package:film_log_wear/service/camera_repo.dart';
 import 'package:film_log_wear/service/filter_repo.dart';
 import 'package:film_log_wear/service/lens_repo.dart';
 import 'package:film_log_wear/service/sync.dart';
 import 'package:film_log_wear_data/api/capabilities.dart';
 import 'package:film_log_wear_data/api/data_paths.dart';
+import 'package:film_log_wear_data/config/playstore_url.dart';
 import 'package:film_log_wear_data/model/pending.dart';
 import 'package:film_log_wear_data/model/state.dart';
 import 'package:flutter_wear_os_connectivity/flutter_wear_os_connectivity.dart';
@@ -165,6 +167,7 @@ class WearDataService {
       return false;
     }
 
+    var opened = false;
     for (var device in info.associatedDevices) {
       if (!device.isNearby) continue;
 
@@ -172,9 +175,49 @@ class WearDataService {
         url: "filmLog://MainActivity",
         deviceId: device.id,
       );
+      opened = true;
     }
 
-    return true;
+    return opened;
+  }
+
+  Future<List<m.WearOsDevice>> findDevicesWithoutWearOsApp() async {
+    final List<m.WearOsDevice> result = [];
+
+    Set<String> alreadyInstalled = {};
+    final capabilities =
+    await _wearOsConnectivity.findCapabilityByName(clientCapabilityName);
+    if (capabilities != null) {
+      for (var device in capabilities.associatedDevices) {
+        alreadyInstalled.add(device.id);
+      }
+    }
+
+    final allDevices = await _wearOsConnectivity.getConnectedDevices();
+    for (var device in allDevices) {
+      if (!device.isNearby) {
+        continue;
+      }
+      if (alreadyInstalled.contains(device.id)) {
+        continue;
+      }
+
+      result.add(m.WearOsDevice(
+        id: device.id,
+        name: device.name,
+      ));
+    }
+
+    return result;
+  }
+
+  Future<void> installWearOsApp(List<m.WearOsDevice> devices) async {
+    await Future.wait(
+      devices.map((device) => _wearOsConnectivity.startRemoteActivity(
+        url: playStoreUrl,
+        deviceId: device.id,
+      )),
+    );
   }
 
   Future<void> _loadStoredState() async {

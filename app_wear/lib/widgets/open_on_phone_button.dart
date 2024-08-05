@@ -14,6 +14,15 @@ class OpenOnPhoneButton extends StatelessWidget {
 
   Future<void> _openOnPhone(BuildContext context) async {
     final data = WearDataService();
-    await data.openPhoneApp();
+    if (await data.openPhoneApp()) {
+      return;
+    }
+
+    final devices = await data.findDevicesWithoutWearOsApp();
+    if (devices.isEmpty) {
+      return;
+    }
+
+    await data.installWearOsApp(devices);
   }
 }
