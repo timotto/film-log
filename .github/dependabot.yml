@@ -1,0 +1,21 @@
+version: 2
+
+updates:
+- package-ecosystem: pub
+  directory: /app
+  schedule:
+    interval: daily
+  commit-message:
+    prefix: "🤖 "
+- package-ecosystem: pub
+  directory: /app_wear
+  schedule:
+    interval: daily
+  commit-message:
+    prefix: "🤖 "
+- package-ecosystem: pub
+  directory: /flutter_wear_os_location
+  schedule:
+    interval: daily
+  commit-message:
+    prefix: "🤖 "
