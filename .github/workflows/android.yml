@@ -1,0 +1,106 @@
+name: Android Build & Deploy
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Download nice offline-first/flutter_wear_os_connectivity fork
+      uses: actions/checkout@v4
+      with:
+        repository: offline-first/flutter_wear_os_connectivity
+        path: flutter_wear_os_connectivity
+
+    - name: Decode secrets
+      run: |-
+        mkdir /tmp/secrets
+        
+        cat > /tmp/secrets/service-account.json <<EOT
+        ${{ secrets.SERVICE_ACCOUNT_JSON }}
+        EOT
+        
+        echo -n "${{ secrets.ANDROID_RELEASE_KEYSTORE }}" \
+        | base64 -d \
+        > /tmp/secrets/release.keystore
+        
+        echo "${{ secrets.KEY_PROPERTIES }}" \
+        > /tmp/secrets/key.properties
+        
+        cp /tmp/secrets/service-account.json app/android/
+        cp /tmp/secrets/service-account.json app_wear/android/
+        cp /tmp/secrets/key.properties app/android/
+        cp /tmp/secrets/key.properties app_wear/android/
+
+    - name: List current Google Play Tracks
+      # must run before actions/setup-java, otherwise this action inherits JAVA_HOME env and won't work
+      uses: vacxe/google-play-cli@master
+      with:
+        template: custom-script
+        service-account-json: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+        package-name: io.timotto.film_log
+        custom-script: "google-play-cli tracks list > google-play-tracks.json"
+
+    - name: Compute build number
+      run: |-
+        latestVersionCode() {
+          cat google-play-tracks.json \
+          | jq -r '.tracks[] | select(.track == "'"$1"'") | .releases[] | select(.status == "completed") | .versionCodes[]' \
+          | sort -n \
+          | tail -n1
+        }
+
+        versionCodePhone="$(latestVersionCode "internal")"
+        versionCodeWear="$(latestVersionCode "wear:internal")"
+        
+        [ -n "$versionCodePhone" ] || versionCodePhone=1
+        [ -n "$versionCodeWear" ] || versionCodeWear=2
+        
+        echo $(( $versionCodePhone + 2 )) > /tmp/next-version-code-phone
+        echo $(( $versionCodeWear + 2 )) > /tmp/next-version-code-wear
+
+    - name: Set up ruby env
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 2.7.2
+        bundler-cache: true
+
+    - name: Setup Java
+      uses: actions/setup-java@v3
+      with:
+        distribution: corretto
+        java-version: "17"
+        cache: gradle
+
+    - name: Setup Flutter SDK
+      uses: flutter-actions/setup-flutter@v3
+      with:
+        channel: stable
+        version: "3.22.3"
+        cache: "true"
+        cache-sdk: "true"
+
+    - name: Build phone app
+      working-directory: app
+      run: |-
+        flutter pub get
+        flutter test
+        flutter build appbundle --build-number "$(cat /tmp/next-version-code-phone)"
+
+    - name: Build Wear OS app
+      working-directory: app_wear
+      run: |-
+        flutter pub get
+        flutter test
+        flutter build appbundle --build-number "$(cat /tmp/next-version-code-wear)"
+
+    #- name: Publish phone app
+    #  working-directory: app/android
+    #  run: bundle exec fastlane android internal
+
+    #- name: Publish Wear OS app
+    #  working-directory: app_wear/android
+    #  run: bundle exec fastlane android internal
