@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class RangeEditDialog extends StatefulWidget {
   const RangeEditDialog({
@@ -54,11 +55,11 @@ class _RangeEditDialogState extends State<RangeEditDialog> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context).buttonCancel),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(values),
-            child: const Text('OK'),
+            child: Text(AppLocalizations.of(context).buttonOK),
           ),
         ],
       );

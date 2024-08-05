@@ -14,6 +14,7 @@ import 'package:film_log_wear/widgets/swipe_dismiss.dart';
 import 'package:film_log_wear/widgets/wear_list_tile.dart';
 import 'package:film_log_wear/widgets/wear_list_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../fmt/aperture.dart';
 import '../fmt/shutter_speed.dart';
@@ -157,12 +158,14 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
             children: [
               // _acceptButton(context),
               WearListTile(
-                title: 'Frame number',
+                title:
+                    AppLocalizations.of(context).editPhotoTileTitleFrameNumber,
                 subtitle: '#${photo.frameNumber}',
               ),
               if (_ifEditOrNotNull(photo.shutterSpeed))
                 WearListTile(
-                  title: 'Shutter speed',
+                  title: AppLocalizations.of(context)
+                      .editPhotoTileTitleShutterSpeed,
                   subtitle: photo.shutterSpeed == null
                       ? null
                       : formatShutterSpeed(photo.shutterSpeed!),
@@ -170,13 +173,14 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
                 ),
               if (_ifEditOrNotNull(photo.lens))
                 WearListTile(
-                  title: 'Lens',
+                  title: AppLocalizations.of(context).editPhotoTileTitleLens,
                   subtitle: photo.lens?.label,
                   onTap: _ifEdit(() => _editLens(context)),
                 ),
               if (_ifEditOrNotNull(photo.aperture))
                 WearListTile(
-                  title: 'Aperture',
+                  title:
+                      AppLocalizations.of(context).editPhotoTileTitleAperture,
                   subtitle: photo.aperture == null
                       ? null
                       : formatAperture(photo.aperture!),
@@ -185,7 +189,7 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
               if ((widget.edit && _filters().isNotEmpty) ||
                   (photo.filters.isNotEmpty))
                 WearListTile(
-                  title: 'Filters',
+                  title: AppLocalizations.of(context).editPhotoTileTitleFilters,
                   subtitle: photo.filters.isEmpty
                       ? null
                       : photo.filters.map((filter) => filter.label).join(', '),
@@ -193,7 +197,8 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
                 ),
               if (!widget.edit)
                 WearListTile(
-                  title: 'Timestamp',
+                  title:
+                      AppLocalizations.of(context).editPhotoTileTitleTimestamp,
                   subtitle: formatTimestamp(
                     context,
                     photo.recorded,
@@ -202,7 +207,8 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
                 ),
               if (_ifEditOrNotNull(photo.location))
                 WearListTile(
-                  title: 'Location',
+                  title:
+                      AppLocalizations.of(context).editPhotoTileTitleLocation,
                   subtitle: photo.location?.listItemSubtitle(),
                   onTap: () => _editLocation(context),
                 ),

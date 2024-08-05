@@ -3,6 +3,7 @@ import 'package:film_log_wear/pages/startup_page.dart';
 import 'package:film_log_wear/service/wear_data.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_wear_os_location/flutter_wear_os_location.dart';
 import 'package:logging/logging.dart';
 
@@ -32,7 +33,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Film Log',
+      title: AppLocalizations.of(context).appTitle,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         visualDensity: VisualDensity.compact,
@@ -42,6 +43,8 @@ class _MyAppState extends State<MyApp> {
         ),
         useMaterial3: true,
       ),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       home: StreamBuilder(
         stream: _wearData.initializedStream(),
         initialData: _wearData.initialized(),

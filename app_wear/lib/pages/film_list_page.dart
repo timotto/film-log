@@ -6,6 +6,7 @@ import 'package:film_log_wear/widgets/wear_list_tile.dart';
 import 'package:film_log_wear/widgets/wear_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../service/film_repo.dart';
 import 'add_film_page.dart';
@@ -48,11 +49,11 @@ class FilmListPage extends StatelessWidget {
           ))
       .toList(growable: false);
 
-  Widget _empty(BuildContext context) => const Center(
+  Widget _empty(BuildContext context) => Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('No films available'),
+            Text(AppLocalizations.of(context).filmListNoFilms),
             OpenOnPhoneButton(),
           ],
         ),

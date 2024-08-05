@@ -1,0 +1,176 @@
+{
+  "appTitle": "Film Log",
+
+  "pageTitleFilmInstanceList": "Films",
+  "pageTitleFilmInstanceListArchive": "Archived films",
+  "pageTitleEditFilm": "Edit film",
+  "pageTitleEditFilmCreate": "Create film",
+  "pageTitleEditPhoto": "Edit photo",
+  "pageTitleEditPhotoCreate": "Add photo",
+  "pageTitleImport": "Import",
+  "pageTitleManageData": "Manage app data",
+  "pageTitleGear": "Gear",
+
+  "buttonOK": "OK",
+  "buttonCancel": "Cancel",
+  "buttonDelete": "Delete",
+  "buttonInstall": "Install",
+  "buttonClear": "Clear",
+  "buttonCamera": "Camera",
+  "buttonGallery": "Gallery",
+  "buttonChangeTime": "Change time",
+  "buttonChangeDate": "Change date",
+
+  "menuItemFilmInstanceArchive": "Archived films",
+  "menuItemManageData": "Manage data",
+  "menuItemManageExport": "Export",
+  "menuItemManageArchive": "Archive",
+  "menuItemManageDelete": "Delete",
+  "menuItemManageGear": "Manage gear",
+  "menuItemAboutApp": "About this app",
+
+  "notificationWearOsAppAvailable": "Wear OS App available",
+
+  "filmInstanceListEmpty": "You don't have any films.",
+  "filmInstanceListArchiveEmpty": "There are no archived films.",
+
+  "editFilmTileLabelName": "Name",
+  "editFilmTileLabelTimestamp": "Inserted",
+  "editFilmTileLabelCamera": "Camera",
+  "editFilmTileLabelFilmStock": "Film stock",
+  "editFilmTileLabelActualISO": "Actual ISO",
+  "editFilmTileLabelFrameCount": "Frames",
+
+  "editPhotoTileLabelTimestamp": "Timestamp",
+  "editPhotoTileLabelShutterSpeed": "Shutter speed",
+  "editPhotoTileLabelLens": "Lens",
+  "editPhotoTileLabelAperture": "Aperture",
+  "editPhotoTileLabelFilters": "Filters",
+  "editPhotoTileLabelLocation": "Location",
+  "editPhotoTileLabelNotes": "Notes",
+  "editPhotoTileLabelThumbnail": "Thumbnail",
+
+  "filmLogPageLoading": "Loading...",
+  "filmLogPageFilmNotFound": "Film not found",
+  "filmLogPageExportActionText": "Film Log export",
+  "filmLogPageNoPhotos": "There are no photos yet",
+
+  "importPageTileWarning": "Importing an archive will replace all your current data, gear and films.",
+  "importPageTileSelectArchive": "Select archive to import",
+  "importPageButtonImportData": "Import data",
+  "importPageFilePickerTitle": "Select archive",
+  "importPageFileOpenError": "Cannot open archive",
+
+  "manageDataTileExportDataTitle": "Export data",
+  "manageDataTileExportDataSubtitle": "Store all data contained in the app in a ZIP archive.",
+  "manageDataTileImportDataTitle": "Import data",
+  "manageDataTileImportDataSubtitle": "Restore app data from a ZIP archive.",
+  "manageDataTileDeleteTitle": "Delete everything",
+  "manageDataExportPickerTitle": "Film Log full export",
+
+  "dialogDeleteAllDataTitle": "Delete all data",
+  "dialogDeleteAllDataContent": "Are you sure you want to delete all data?",
+
+  "aboutAppContent": "This app is intended for film photography users. It allows you to record time and place of each frame as well as the settings you used on your camera.",
+
+  "countCameras": "{count, plural, =0{no cameras} =1{1 camera} other{{count} cameras}}",
+  "@countCameras": {
+    "description": "Number of imported cameras",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "countLenses": "{count, plural, =0{no lenses} =1{1 lens} other{{count} lenses}}",
+  "@countLenses": {
+    "description": "Number of imported lenses",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "countFilters": "{count, plural, =0{no filters} =1{1 filter} other{{count} filters}}",
+  "@countFilters": {
+    "description": "Number of imported filters",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "countFilmStocks": "{count, plural, =0{no film stocks} =1{1 film stock} other{{count} film stocks}}",
+  "@countFilmStocks": {
+    "description": "Number of imported film stocks",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "countFilmInstances": "{count, plural, =0{no films} =1{1 film} other{{count} films}}",
+  "@countFilmInstances": {
+    "description": "Number of imported films",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "countPhotos": "{count, plural, =0{no photos} =1{1 photo} other{{count} photos}}",
+  "@countPhotos": {
+    "description": "Number of imported photos",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+
+  "gearTitleTitleCameras": "Cameras",
+  "gearTitleTitleLenses": "Lenses",
+  "gearTitleTitleFilters": "Filters",
+  "gearTitleTitleFilmStock": "Film stock",
+  "gearTitleTitleName": "Name",
+  "gearTitleTitleManufacturer": "Manufacturer",
+  "gearTitleTitleProduct": "Product",
+  "gearTitleTitleMinShutterSpeed": "Min shutter speed",
+  "gearTitleTitleMaxShutterSpeed": "Max shutter speed",
+  "gearTitleTitleFilmFormat": "Film format",
+  "gearTitleTitleFilmType": "Film type",
+  "gearTitleTitleFilmISO": "ISO",
+  "gearTitleTitleLenses": "Lenses",
+  "gearTitleTitleLensType": "Lens type",
+  "gearTitleTitleCameras": "Cameras",
+  "gearTitleTitleFStopIncrements": "F-Stop increments",
+  "gearTitleTitleFocalLength": "Focal length",
+  "gearTitleTitleFocalLengthMin": "Min focal length",
+  "gearTitleTitleFocalLengthMax": "Max focal length",
+  "gearTitleTitleApertureMin": "Min aperture",
+  "gearTitleTitleApertureMax": "Max aperture",
+
+  "labelFilmTypeColor": "Color",
+  "labelFilmTypeBWPanchromatic": "B&W Panchromatic",
+  "labelFilmTypeBWOrthochromatic": "B&W Orthochromatic",
+  "labelFilmTypeBWInfrared": "B&W Infrared",
+
+  "labelLensTypePrime": "Prime",
+  "labelLensTypeZoom": "Zoom",
+
+  "labelFStopIncrementsFull": "Full",
+  "labelFStopIncrementsHalf": "1/2",
+  "labelFStopIncrementsThird": "1/3",
+
+  "gearPageEmptyCameras": "You don't have any cameras",
+  "gearPageEmptyLenses": "You don't have any lenses",
+  "gearPageEmptyFilters": "You don't have any filters",
+  "gearPageEmptyFilmStock": "You don't have any film stock"
+
+}

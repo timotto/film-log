@@ -14,6 +14,7 @@ import 'package:film_log/widgets/location_list_tile.dart';
 import 'package:film_log/widgets/thumbnail_list_tile.dart';
 import 'package:film_log/widgets/timestamp_list_tile.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EditPhotoPage extends StatefulWidget {
   const EditPhotoPage({
@@ -102,7 +103,11 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: Text(widget.create ? 'Add photo' : 'Edit photo'),
+          title: Text(
+            widget.create
+                ? AppLocalizations.of(context).pageTitleEditPhotoCreate
+                : AppLocalizations.of(context).pageTitleEditPhoto,
+          ),
           actions: [
             if (!edit)
               IconButton(
@@ -132,14 +137,14 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
       );
 
   Widget _timestampEditTile(BuildContext context) => TimestampListTile(
-        label: 'Timestamp',
+        label: AppLocalizations.of(context).editPhotoTileLabelTimestamp,
         value: photo.timestamp,
         edit: edit,
         onUpdate: _onUpdate((value) => photo.update(timestamp: value)),
       );
 
   Widget _shutterSpeedEditTile(BuildContext context) => ShutterSpeedEditTile(
-        label: 'Shutter speed',
+        label: AppLocalizations.of(context).editPhotoTileLabelShutterSpeed,
         edit: edit,
         value: photo.shutter,
         min: widget.film.camera?.fastestShutterSpeed,
@@ -148,7 +153,7 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
       );
 
   Widget _lensEditTile(BuildContext context) => LensEditTile(
-        label: 'Lens',
+        label: AppLocalizations.of(context).editPhotoTileLabelLens,
         value: photo.lens,
         camera: widget.film.camera,
         repo: widget.repos.lensRepo,
@@ -157,7 +162,7 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
       );
 
   Widget _apertureEditTile(BuildContext context) => ApertureEditTile(
-        label: 'Aperture',
+        label: AppLocalizations.of(context).editPhotoTileLabelAperture,
         edit: edit,
         value: photo.aperture,
         min: photo.lens?.apertureMin,
@@ -167,7 +172,7 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
       );
 
   Widget _filtersEditTile(BuildContext context) => MultiselectEditTile(
-        label: 'Filters',
+        label: AppLocalizations.of(context).editPhotoTileLabelFilters,
         values: photo.filters,
         repo: widget.repos.filterRepo,
         edit: edit,
@@ -178,14 +183,14 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
       );
 
   Widget _locationEditTile(BuildContext context) => LocationListTile(
-        label: 'Location',
+        label: AppLocalizations.of(context).editPhotoTileLabelLocation,
         value: photo.location,
         edit: edit,
         onUpdate: _onUpdate((value) => photo.updateLocation(value)),
       );
 
   Widget _notesEditTile(BuildContext context) => TextEditTile(
-        label: 'Notes',
+        label: AppLocalizations.of(context).editPhotoTileLabelNotes,
         value: photo.notes ?? '',
         edit: edit,
         multiline: true,
@@ -195,7 +200,7 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
       );
 
   Widget _thumbnailEditTile(BuildContext context) => ThumbnailListTile(
-        label: 'Thumbnail',
+        label: AppLocalizations.of(context).editPhotoTileLabelThumbnail,
         edit: edit,
         value: photo.thumbnail,
         repo: widget.repos.thumbnailRepo,

@@ -1,5 +1,6 @@
 import 'package:film_log/fmt/timestamp.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EditTimestampDialog extends StatefulWidget {
   const EditTimestampDialog({
@@ -75,11 +76,11 @@ class _EditTimestampDialogState extends State<EditTimestampDialog> {
         actions: [
           TextButton(
             onPressed: () => _cancel(context),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context).buttonCancel),
           ),
           TextButton(
             onPressed: () => _ok(context),
-            child: const Text('OK'),
+            child: Text(AppLocalizations.of(context).buttonOK),
           ),
         ],
         content: Column(
@@ -87,12 +88,12 @@ class _EditTimestampDialogState extends State<EditTimestampDialog> {
           children: [
             ListTile(
               subtitle: Text(formatTime(context, value)),
-              title: const Text('Change time'),
+              title: Text(AppLocalizations.of(context).buttonChangeTime),
               onTap: () => _editTime(context),
             ),
             ListTile(
               subtitle: Text(formateDate(context, value)),
-              title: const Text('Change date'),
+              title: Text(AppLocalizations.of(context).buttonChangeDate),
               onTap: () => _editDate(context),
             ),
           ],

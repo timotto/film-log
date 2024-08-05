@@ -1,8 +1,8 @@
+import 'package:film_log/model/wear_os_device.dart';
 import 'package:film_log/service/wear_data.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:logging/logging.dart';
-
-import '../model/wear_os_device.dart';
 
 class WearCompanionChecker extends StatefulWidget {
   const WearCompanionChecker({
@@ -41,9 +41,11 @@ class _WearCompanionCheckerState extends State<WearCompanionChecker> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Wear OS App available'),
+          content: Text(
+            AppLocalizations.of(context).notificationWearOsAppAvailable,
+          ),
           action: SnackBarAction(
-            label: 'Install',
+            label: AppLocalizations.of(context).buttonInstall,
             onPressed: () => _install(context, devices),
           ),
         ),

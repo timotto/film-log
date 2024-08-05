@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EditDoubleDialog extends StatefulWidget {
   const EditDoubleDialog({
@@ -56,11 +57,11 @@ class _EditDoubleDialogState extends State<EditDoubleDialog> {
         actions: [
           TextButton(
             onPressed: () => _onCancel(context),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context).buttonCancel),
           ),
           TextButton(
             onPressed: () => _onOk(context),
-            child: const Text('OK'),
+            child: Text(AppLocalizations.of(context).buttonOK),
           ),
         ],
       );

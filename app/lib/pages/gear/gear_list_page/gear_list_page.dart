@@ -8,12 +8,14 @@ class GearListPage<T extends Gear> extends StatelessWidget {
   const GearListPage({
     super.key,
     required this.label,
+    required this.labelEmpty,
     required this.repo,
     required this.itemPageBuilder,
     required this.itemCreator,
   });
 
   final String label;
+  final String labelEmpty;
   final GearRepo<T> repo;
   final Widget Function(BuildContext, T, {bool? create}) itemPageBuilder;
   final T Function() itemCreator;
@@ -59,6 +61,6 @@ class GearListPage<T extends Gear> extends StatelessWidget {
       );
 
   Widget _empty(BuildContext context) => Center(
-        child: Text('You don\'t have any $label'),
+        child: Text(labelEmpty),
       );
 }

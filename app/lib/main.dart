@@ -4,6 +4,7 @@ import 'package:film_log/service/wear_data.dart';
 import 'package:film_log/widgets/wear_companion_checker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:logging/logging.dart';
 
 void main() {
@@ -40,11 +41,13 @@ class _FilmLogState extends State<FilmLog> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Film Log',
+      title: AppLocalizations.of(context).appTitle,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       home: WearCompanionChecker(
         wearDataService: _wearData,
         child: FutureBuilder(

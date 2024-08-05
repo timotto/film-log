@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:film_log/model/thumbnail.dart';
 import 'package:film_log/service/thumbnail_repo.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:image_picker/image_picker.dart';
 
 class EditThumbnailDialog extends StatefulWidget {
@@ -82,15 +83,15 @@ class _EditThumbnailDialogState extends State<EditThumbnailDialog> {
         actions: [
           TextButton(
             onPressed: () => _onClear(context),
-            child: const Text('Clear'),
+            child: Text(AppLocalizations.of(context).buttonClear),
           ),
           TextButton(
             onPressed: () => _onCancel(context),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context).buttonCancel),
           ),
           TextButton(
             onPressed: () => _onOk(context),
-            child: const Text('OK'),
+            child: Text(AppLocalizations.of(context).buttonOK),
           ),
         ],
         content: Column(
@@ -102,11 +103,11 @@ class _EditThumbnailDialogState extends State<EditThumbnailDialog> {
               children: [
                 TextButton(
                   onPressed: () => _pick(context, source: ImageSource.gallery),
-                  child: const Text('Gallery'),
+                  child: Text(AppLocalizations.of(context).buttonGallery),
                 ),
                 TextButton(
                   onPressed: () => _pick(context, source: ImageSource.camera),
-                  child: const Text('Camera'),
+                  child: Text(AppLocalizations.of(context).buttonCamera),
                 ),
               ],
             ),

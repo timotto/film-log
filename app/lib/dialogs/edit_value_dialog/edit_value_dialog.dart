@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 typedef ValueToStringFn<T> = String Function(T);
 typedef StringToValueFn<T> = T? Function(String);
@@ -75,11 +76,11 @@ class _EditValueDialog<T> extends State<EditValueDialog<T>> {
         actions: [
           TextButton(
             onPressed: () => _onCancel(context),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context).buttonCancel),
           ),
           TextButton(
             onPressed: () => _onOk(context),
-            child: const Text('OK'),
+            child: Text(AppLocalizations.of(context).buttonOK),
           ),
         ],
       );

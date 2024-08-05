@@ -2,6 +2,7 @@ import 'package:film_log/pages/import_page/import_page.dart';
 import 'package:film_log/service/export.dart';
 import 'package:film_log/service/repos.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:share_plus/share_plus.dart';
 
 class ManageDataPage extends StatelessWidget {
@@ -12,25 +13,34 @@ class ManageDataPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: const Text('Manage data'),
+          title: Text(AppLocalizations.of(context).pageTitleManageData),
         ),
         body: ListView(
           children: [
             ListTile(
-              title: const Text('Export data'),
-              subtitle: const Text(
-                  'Store all data contained in the app in a ZIP archive.'),
+              title: Text(
+                AppLocalizations.of(context).manageDataTileExportDataTitle,
+              ),
+              subtitle: Text(
+                AppLocalizations.of(context).manageDataTileExportDataSubtitle,
+              ),
               leading: const Icon(Icons.send),
               onTap: () => _export(context),
             ),
             ListTile(
-              title: const Text('Import data'),
-              subtitle: const Text('Restore app data from a ZIP archive.'),
+              title: Text(
+                AppLocalizations.of(context).manageDataTileImportDataTitle,
+              ),
+              subtitle: Text(
+                AppLocalizations.of(context).manageDataTileImportDataSubtitle,
+              ),
               leading: const Icon(Icons.file_open),
               onTap: () => _import(context),
             ),
             ListTile(
-              title: const Text('Delete everything'),
+              title: Text(
+                AppLocalizations.of(context).manageDataTileDeleteTitle,
+              ),
               leading: const Icon(Icons.delete_forever),
               onTap: () => _delete(context),
             ),
@@ -42,7 +52,7 @@ class ManageDataPage extends StatelessWidget {
     await ExportService(repos: repos).exportAll((filename) async {
       await Share.shareXFiles(
         [XFile(filename)],
-        text: 'Film Log full export',
+        text: AppLocalizations.of(context).manageDataExportPickerTitle,
       );
     });
   }
@@ -59,18 +69,18 @@ class ManageDataPage extends StatelessWidget {
     final result = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text('Delete all data'),
-        content: const Text('Are you sure you want to delete all data?'),
+        title: Text(AppLocalizations.of(context).dialogDeleteAllDataTitle),
+        content: Text(AppLocalizations.of(context).dialogDeleteAllDataContent),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context).buttonCancel),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text(
-              'Delete',
-              style: TextStyle(color: Colors.red),
+            child: Text(
+              AppLocalizations.of(context).buttonDelete,
+              style: const TextStyle(color: Colors.red),
             ),
           ),
         ],

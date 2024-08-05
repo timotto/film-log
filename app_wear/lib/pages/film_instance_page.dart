@@ -7,6 +7,7 @@ import 'package:film_log_wear/widgets/swipe_dismiss.dart';
 import 'package:film_log_wear/widgets/wear_list_tile.dart';
 import 'package:film_log_wear/widgets/wear_list_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:uuid/v4.dart';
 
 class FilmInstancePage extends StatelessWidget {
@@ -37,12 +38,12 @@ class FilmInstancePage extends StatelessWidget {
   Widget _content(BuildContext context, Film film) =>
       _FilmInstancePageWidget(film: film);
 
-  Widget _loading(BuildContext context) => const Center(
-        child: Text('Loading...'),
+  Widget _loading(BuildContext context) => Center(
+        child: Text(AppLocalizations.of(context).filmInstanceLoading),
       );
 
-  Widget _notFound(BuildContext context) => const Center(
-        child: Text('Film not found'),
+  Widget _notFound(BuildContext context) => Center(
+        child: Text(AppLocalizations.of(context).filmInstanceFilmNotFound),
       );
 }
 

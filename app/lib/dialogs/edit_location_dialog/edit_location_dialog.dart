@@ -1,6 +1,7 @@
 import 'package:film_log/model/location.dart';
 import 'package:film_log/service/location.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EditLocationDialog extends StatefulWidget {
   const EditLocationDialog({super.key, required this.label, this.value});
@@ -73,15 +74,15 @@ class _EditLocationDialogState extends State<EditLocationDialog> {
         actions: [
           TextButton(
             onPressed: () => _onClear(context),
-            child: const Text('Clear'),
+            child: Text(AppLocalizations.of(context).buttonClear),
           ),
           TextButton(
             onPressed: () => _onCancel(context),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context).buttonCancel),
           ),
           TextButton(
             onPressed: value != null ? () => _onOk(context) : null,
-            child: const Text('OK'),
+            child: Text(AppLocalizations.of(context).buttonOK),
           ),
         ],
         content: Column(

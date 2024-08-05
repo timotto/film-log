@@ -1,6 +1,6 @@
+import 'package:film_log_wear/service/wear_data.dart';
 import 'package:flutter/material.dart';
-
-import '../service/wear_data.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class OpenOnPhoneButton extends StatelessWidget {
   const OpenOnPhoneButton({super.key});
@@ -9,7 +9,7 @@ class OpenOnPhoneButton extends StatelessWidget {
   Widget build(BuildContext context) => ElevatedButton.icon(
         onPressed: () => _openOnPhone(context),
         icon: const Icon(Icons.open_in_new),
-        label: const Text('Open on Phone'),
+        label: Text(AppLocalizations.of(context).openOnPhone),
       );
 
   Future<void> _openOnPhone(BuildContext context) async {

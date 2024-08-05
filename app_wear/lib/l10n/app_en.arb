@@ -1,0 +1,21 @@
+{
+  "appTitle": "Film Log",
+
+  "addFilmUsePhone": "Use your phone to add a new film",
+  "openOnPhone": "Open on Phone",
+
+  "editPhotoTileTitleFrameNumber": "Frame number",
+  "editPhotoTileTitleShutterSpeed": "Shutter speed",
+  "editPhotoTileTitleLens": "Lens",
+  "editPhotoTileTitleAperture": "Aperture",
+  "editPhotoTileTitleFilters": "Filters",
+  "editPhotoTileTitleTimestamp": "Timestamp",
+  "editPhotoTileTitleLocation": "Location",
+
+  "filmInstanceLoading": "Loading...",
+  "filmInstanceFilmNotFound": "Film not found",
+
+  "filmListNoFilms": "No films available",
+
+  "startUpPageStarting": "Starting..."
+}

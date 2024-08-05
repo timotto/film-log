@@ -6,6 +6,7 @@ import 'package:film_log/pages/gear/widgets/preset_edit_tile.dart';
 import 'package:film_log/pages/gear/widgets/text_edit_tile.dart';
 import 'package:film_log/service/filmstock_repo.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class GearFilmstockViewPage extends StatelessWidget {
   const GearFilmstockViewPage({
@@ -31,19 +32,19 @@ class GearFilmstockViewPage extends StatelessWidget {
           OnUpdateFn<FilmStock> onUpdate) =>
       [
         TextEditTile(
-          label: 'Manufacturer',
+          label: AppLocalizations.of(context).gearTitleTitleManufacturer,
           value: item.manufacturer,
           edit: edit,
           onUpdate: onUpdate((value) => item.update(manufacturer: value)),
         ),
         TextEditTile(
-          label: 'Product',
+          label: AppLocalizations.of(context).gearTitleTitleProduct,
           value: item.product,
           edit: edit,
           onUpdate: onUpdate((value) => item.update(product: value)),
         ),
         DoubleEditTile(
-          label: 'ISO',
+          label: AppLocalizations.of(context).gearTitleTitleFilmISO,
           value: item.iso,
           edit: edit,
           valueToString: (v) => v.toStringAsFixed(0),
@@ -51,18 +52,22 @@ class GearFilmstockViewPage extends StatelessWidget {
           onUpdate: onUpdate((value) => item.update(iso: value)),
         ),
         FilmstockFormatEditTile(
-          label: 'Format',
+          label: AppLocalizations.of(context).gearTitleTitleFilmFormat,
           value: item.format,
           edit: edit,
           onUpdate: onUpdate((value) => item.update(format: value)),
         ),
         PresetEditTile(
-          label: 'Type',
-          values: const <FilmStockType, String>{
-            FilmStockType.color: 'Color',
-            FilmStockType.blackAndWhitePanchromatic: 'B&W Panchromatic',
-            FilmStockType.blackAndWhiteOrthochromatic: 'B&W Orthochromatic',
-            FilmStockType.blackAndWhiteInfrared: 'B&W Infrared',
+          label: AppLocalizations.of(context).gearTitleTitleFilmType,
+          values: <FilmStockType, String>{
+            FilmStockType.color:
+                AppLocalizations.of(context).labelFilmTypeColor,
+            FilmStockType.blackAndWhitePanchromatic:
+                AppLocalizations.of(context).labelFilmTypeBWPanchromatic,
+            FilmStockType.blackAndWhiteOrthochromatic:
+                AppLocalizations.of(context).labelFilmTypeBWOrthochromatic,
+            FilmStockType.blackAndWhiteInfrared:
+                AppLocalizations.of(context).labelFilmTypeBWInfrared,
           },
           value: item.type,
           edit: edit,

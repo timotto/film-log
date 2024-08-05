@@ -4,10 +4,10 @@ import 'package:film_log/pages/edit_film_page/edit_film_page.dart';
 import 'package:film_log/pages/edit_photo_page/edit_photo_page.dart';
 import 'package:film_log/service/export.dart';
 import 'package:film_log/service/film_repo.dart';
-import 'package:film_log/service/lru.dart';
 import 'package:film_log/service/repos.dart';
 import 'package:film_log/widgets/app_menu.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:share_plus/share_plus.dart';
 
 class FilmLogPage extends StatelessWidget {
@@ -43,15 +43,15 @@ class FilmLogPage extends StatelessWidget {
         repos: repos,
       );
 
-  Widget _loading(BuildContext context) => const Scaffold(
+  Widget _loading(BuildContext context) => Scaffold(
         body: Center(
-          child: Text('Loading...'),
+          child: Text(AppLocalizations.of(context).filmLogPageLoading),
         ),
       );
 
-  Widget _notFound(BuildContext context) => const Scaffold(
+  Widget _notFound(BuildContext context) => Scaffold(
         body: Center(
-          child: Text('Film not found'),
+          child: Text(AppLocalizations.of(context).filmLogPageFilmNotFound),
         ),
       );
 }
@@ -66,8 +66,6 @@ class _FilmLogPageWidget extends StatelessWidget {
   final FilmInstance film;
   final FilmRepo repo;
   final Repos repos;
-
-  final _lru = LruService();
 
   Future<void> _editFilm(BuildContext context) async {
     final result = await Navigator.of(context).push(MaterialPageRoute(
@@ -122,7 +120,7 @@ class _FilmLogPageWidget extends StatelessWidget {
     ExportService(repos: repos).exportFilm(film, (filename) async {
       await Share.shareXFiles(
         [XFile(filename)],
-        text: 'Film Log export',
+        text: AppLocalizations.of(context).filmLogPageExportActionText,
       );
     });
   }
@@ -155,18 +153,18 @@ class _FilmLogPageWidget extends StatelessWidget {
                 MenuItemButton(
                   onPressed: () => _export(context),
                   leadingIcon: const Icon(Icons.send),
-                  child: const Text('Export'),
+                  child: Text(AppLocalizations.of(context).menuItemManageExport),
                 ),
                 if (!film.archive)
                   MenuItemButton(
                     onPressed: () => _archive(context),
                     leadingIcon: const Icon(Icons.archive),
-                    child: const Text('Archive'),
+                    child: Text(AppLocalizations.of(context).menuItemManageArchive),
                   ),
                 MenuItemButton(
                   onPressed: () => _delete(context),
                   leadingIcon: const Icon(Icons.delete),
-                  child: const Text('Delete'),
+                  child: Text(AppLocalizations.of(context).menuItemManageDelete),
                 ),
               ],
             ),
@@ -190,8 +188,8 @@ class _FilmLogPageWidget extends StatelessWidget {
             .toList(growable: false),
       );
 
-  Widget _empty(BuildContext context) => const Center(
-        child: Text('There are no photos yet'),
+  Widget _empty(BuildContext context) =>  Center(
+        child: Text(AppLocalizations.of(context).filmLogPageNoPhotos),
       );
 
   Widget _photoListTile(BuildContext context, Photo item) => ListTile(

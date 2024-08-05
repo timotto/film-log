@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EditTextDialog extends StatefulWidget {
   const EditTextDialog({
@@ -56,11 +57,11 @@ class _EditTextDialog extends State<EditTextDialog> {
         actions: [
           TextButton(
             onPressed: () => _onCancel(context),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context).buttonCancel),
           ),
           TextButton(
             onPressed: () => _onOk(context),
-            child: const Text('OK'),
+            child: Text(AppLocalizations.of(context).buttonOK),
           ),
         ],
       );

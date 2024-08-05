@@ -1,11 +1,11 @@
+import 'package:film_log/model/filter.dart';
 import 'package:film_log/pages/gear/widgets/gear_view_page.dart';
 import 'package:film_log/pages/gear/widgets/multiselect_edit_tile.dart';
 import 'package:film_log/pages/gear/widgets/text_edit_tile.dart';
 import 'package:film_log/service/filter_repo.dart';
 import 'package:film_log/service/lens_repo.dart';
 import 'package:flutter/material.dart';
-
-import '../../../model/filter.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class GearFilterViewPage extends StatelessWidget {
   const GearFilterViewPage({
@@ -33,25 +33,25 @@ class GearFilterViewPage extends StatelessWidget {
           OnUpdateFn<Filter> onUpdate) =>
       [
         TextEditTile(
-          label: 'Name',
+          label: AppLocalizations.of(context).gearTitleTitleName,
           value: item.name,
           edit: edit,
           onUpdate: onUpdate((value) => item.update(name: value)),
         ),
         TextEditTile(
-          label: 'Manufacturer',
+          label: AppLocalizations.of(context).gearTitleTitleManufacturer,
           value: item.manufacturer,
           edit: edit,
           onUpdate: onUpdate((value) => item.update(manufacturer: value)),
         ),
         TextEditTile(
-          label: 'Product',
+          label: AppLocalizations.of(context).gearTitleTitleProduct,
           value: item.product,
           edit: edit,
           onUpdate: onUpdate((value) => item.update(product: value)),
         ),
         MultiselectEditTile(
-          label: 'Lenses',
+          label: AppLocalizations.of(context).gearTitleTitleLenses,
           values: item.lenses,
           repo: lensRepo,
           edit: edit,

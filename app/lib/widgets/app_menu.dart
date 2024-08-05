@@ -2,6 +2,7 @@ import 'package:film_log/pages/gear/gear_management_page/gear_management_page.da
 import 'package:film_log/service/repos.dart';
 import 'package:film_log/widgets/about_app_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AppMenu extends StatelessWidget {
   AppMenu({super.key, required this.repos, this.menuItems});
@@ -45,12 +46,12 @@ class AppMenu extends StatelessWidget {
           MenuItemButton(
             onPressed: () => _manageGear(context),
             leadingIcon: const Icon(Icons.camera_alt),
-            child: const Text('Manage gear'),
+            child: Text(AppLocalizations.of(context).menuItemManageGear),
           ),
           MenuItemButton(
             onPressed: () => _aboutApp(context),
             leadingIcon: const Icon(Icons.info),
-            child: const Text('About this app'),
+            child: Text(AppLocalizations.of(context).menuItemAboutApp),
           ),
         ],
         child: IconButton(

@@ -1,15 +1,13 @@
 import 'package:film_log/model/film_instance.dart';
 import 'package:film_log/pages/edit_film_page/edit_film_page.dart';
 import 'package:film_log/pages/film_log_page/film_log_page.dart';
-import 'package:film_log/pages/import_page/import_page.dart';
 import 'package:film_log/pages/manage_data_page/manage_data_page.dart';
-import 'package:film_log/service/export.dart';
 import 'package:film_log/service/film_repo.dart';
 import 'package:film_log/service/lru.dart';
 import 'package:film_log/service/repos.dart';
 import 'package:film_log/widgets/app_menu.dart';
 import 'package:flutter/material.dart';
-import 'package:share_plus/share_plus.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class FilmListPage extends StatelessWidget {
   FilmListPage({
@@ -86,7 +84,11 @@ class FilmListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: Text(archive ? 'Film archive' : 'Films'),
+          title: Text(
+            archive
+                ? AppLocalizations.of(context).pageTitleFilmInstanceListArchive
+                : AppLocalizations.of(context).pageTitleFilmInstanceList,
+          ),
           actions: [
             AppMenu(
               repos: repos,
@@ -95,12 +97,14 @@ class FilmListPage extends StatelessWidget {
                   MenuItemButton(
                     onPressed: () => _showArchive(context),
                     leadingIcon: const Icon(Icons.archive),
-                    child: const Text('Film archive'),
+                    child: Text(
+                      AppLocalizations.of(context).menuItemFilmInstanceArchive,
+                    ),
                   ),
                 MenuItemButton(
                   onPressed: () => _manageData(context),
                   leadingIcon: const Icon(Icons.file_copy),
-                  child: const Text('Manage data'),
+                  child: Text(AppLocalizations.of(context).menuItemManageData),
                 ),
               ],
             ),
@@ -134,7 +138,11 @@ class FilmListPage extends StatelessWidget {
             .toList(growable: false),
       );
 
-  Widget _empty(BuildContext context) => const Center(
-        child: Text('You don\'t have any Films'),
+  Widget _empty(BuildContext context) => Center(
+        child: Text(
+          archive
+              ? AppLocalizations.of(context).filmInstanceListArchiveEmpty
+              : AppLocalizations.of(context).filmInstanceListEmpty,
+        ),
       );
 }

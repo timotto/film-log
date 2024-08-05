@@ -6,6 +6,7 @@ import 'package:film_log/pages/gear/widgets/text_edit_tile.dart';
 import 'package:film_log/service/repos.dart';
 import 'package:film_log/widgets/timestamp_list_tile.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EditFilmPage extends StatefulWidget {
   const EditFilmPage({
@@ -42,7 +43,11 @@ class _EditFilmPageState extends State<EditFilmPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: Text(widget.create ? 'Add film' : 'Edit film'),
+          title: Text(
+            widget.create
+                ? AppLocalizations.of(context).pageTitleEditFilmCreate
+                : AppLocalizations.of(context).pageTitleEditFilm,
+          ),
           actions: [
             IconButton(
               onPressed: film.validate() ? () => _save(context) : null,
@@ -53,26 +58,26 @@ class _EditFilmPageState extends State<EditFilmPage> {
         body: ListView(
           children: [
             TextEditTile(
-              label: 'Name',
+              label: AppLocalizations.of(context).editFilmTileLabelName,
               value: film.name,
               edit: true,
               onUpdate: _onUpdate((value) => film.update(name: value)),
             ),
             TimestampListTile(
-              label: 'Inserted',
+              label: AppLocalizations.of(context).editFilmTileLabelTimestamp,
               value: film.inserted,
               edit: true,
               onUpdate: _onUpdate((value) => film.update(inserted: value)),
             ),
             CameraEditTile(
-              label: 'Camera',
+              label: AppLocalizations.of(context).editFilmTileLabelCamera,
               value: film.camera,
               repo: widget.repos.cameraRepo,
               edit: true,
               onUpdate: _onUpdate((value) => film.update(camera: value)),
             ),
             FilmstockEditTile(
-              label: 'Film stock',
+              label: AppLocalizations.of(context).editFilmTileLabelFilmStock,
               value: film.stock,
               repo: widget.repos.filmstockRepo,
               format: film.camera?.filmstockFormat,
@@ -83,7 +88,7 @@ class _EditFilmPageState extends State<EditFilmPage> {
                   )),
             ),
             DoubleEditTile(
-              label: 'Actual iso',
+              label: AppLocalizations.of(context).editFilmTileLabelActualISO,
               value: film.actualIso,
               edit: true,
               valueToString: (v) => v.toStringAsFixed(0),
@@ -91,7 +96,7 @@ class _EditFilmPageState extends State<EditFilmPage> {
               onUpdate: _onUpdate((value) => film.update(actualIso: value)),
             ),
             DoubleEditTile(
-              label: 'Frames',
+              label: AppLocalizations.of(context).editFilmTileLabelFrameCount,
               value: film.maxPhotoCount.toDouble(),
               edit: true,
               valueToString: (v) => v.toStringAsFixed(0),
