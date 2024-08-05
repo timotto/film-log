@@ -31,6 +31,12 @@ jobs:
         cache: "true"
         cache-sdk: "true"
 
+    - name: Test flutter_wear_os_location
+      working-directory: flutter_wear_os_location
+      run: |-
+        flutter pub get
+        flutter test
+
     - name: Test & build phone app
       working-directory: app
       run: |-
