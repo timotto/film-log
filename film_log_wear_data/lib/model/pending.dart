@@ -37,33 +37,6 @@ class Pending {
     return result;
   }
 
-  Pending withState(State state) {
-    final List<AddPhoto> missing = [];
-
-    for (var addPhoto in addPhotos) {
-      final film =
-          state.films.where((film) => film.id == addPhoto.filmId).firstOrNull;
-      if (film == null) {
-        print(
-            'pending::with-state: warning: add-photo with unknown film id: ${addPhoto.filmId}');
-        // TODO delete this photo?
-        missing.add(addPhoto);
-        continue;
-      }
-
-      final photo = film.photos
-          .where((photo) => photo.id == addPhoto.photo.id)
-          .firstOrNull;
-
-      if (photo == null) {
-        missing.add(addPhoto);
-        continue;
-      }
-    }
-
-    return Pending(addPhotos: missing);
-  }
-
   factory Pending.fromJson(Map<String, dynamic> json) => Pending(
         addPhotos: (json['addPhotos'] as List<dynamic>)
             .map((j) => AddPhoto.fromJson(j))
