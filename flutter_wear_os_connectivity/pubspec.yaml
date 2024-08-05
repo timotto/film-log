@@ -1,0 +1,26 @@
+name: flutter_wear_os_connectivity
+description: A plugin that provides a wrapper that enables Flutter apps to communicate with apps running on WearOS.
+version: 1.0.0
+homepage: https://github.com/ssttonn/flutter_wear_os_connectivity
+
+environment:
+  sdk: ">=2.17.6 <3.0.0"
+  flutter: ">=2.5.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_smart_watch_platform_interface: ^0.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: com.sstonn.flutter_wear_os_connectivity
+        pluginClass: FlutterWearOsConnectivityPlugin
+        dartPluginClass: FlutterWearOsConnectivity
+

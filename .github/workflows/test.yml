@@ -10,12 +10,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Download nice offline-first/flutter_wear_os_connectivity fork
-      uses: actions/checkout@v4
-      with:
-        repository: offline-first/flutter_wear_os_connectivity
-        path: flutter_wear_os_connectivity
-
     - name: Setup Java
       uses: actions/setup-java@v3
       with:
