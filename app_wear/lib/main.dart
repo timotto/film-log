@@ -1,6 +1,7 @@
 import 'package:film_log_wear/pages/film_list_page.dart';
 import 'package:film_log_wear/pages/startup_page.dart';
 import 'package:film_log_wear/service/wear_data.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_wear_os_location/flutter_wear_os_location.dart';
 import 'package:logging/logging.dart';
@@ -51,7 +52,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _setupLogging() {
-    Logger.root.level = Level.ALL;
+    Logger.root.level = kReleaseMode ? Level.INFO : Level.ALL;
     Logger.root.onRecord.listen((record) {
       final List<String> parts = [
         record.level.name,

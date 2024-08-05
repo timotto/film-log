@@ -2,6 +2,7 @@ import 'package:film_log/pages/film_list_page/film_list_page.dart';
 import 'package:film_log/service/repos.dart';
 import 'package:film_log/service/wear_data.dart';
 import 'package:film_log/widgets/wear_companion_checker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 
@@ -58,7 +59,7 @@ class _FilmLogState extends State<FilmLog> {
   }
 
   void _setupLogging() {
-    Logger.root.level = Level.ALL;
+    Logger.root.level = kReleaseMode ? Level.INFO : Level.ALL;
     Logger.root.onRecord.listen((record) {
       final List<String> parts = [
         record.level.name,
