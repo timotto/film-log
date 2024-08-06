@@ -38,7 +38,12 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         visualDensity: VisualDensity.compact,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.deepPurple,
+          seedColor: const Color.fromARGB(
+            0xff,
+            0xff,
+            0x98,
+            0x00,
+          ),
           brightness: Brightness.dark,
         ),
         useMaterial3: true,

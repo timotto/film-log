@@ -43,7 +43,14 @@ class _FilmLogState extends State<FilmLog> {
     return MaterialApp(
       onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color.fromARGB(
+            0xff,
+            0xff,
+            0x98,
+            0x00,
+          ),
+        ),
         useMaterial3: true,
       ),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
