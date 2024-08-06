@@ -1,0 +1,176 @@
+{
+  "appTitle": "Film Log",
+
+  "pageTitleFilmInstanceList": "Filme",
+  "pageTitleFilmInstanceListArchive": "Film Archiv",
+  "pageTitleEditFilm": "Film bearbeiten",
+  "pageTitleEditFilmCreate": "Neuer Film",
+  "pageTitleEditPhoto": "Foto bearbeiten",
+  "pageTitleEditPhotoCreate": "Neues Foto",
+  "pageTitleImport": "Import",
+  "pageTitleManageData": "Daten verwalten",
+  "pageTitleGear": "Ausrüstung",
+
+  "buttonOK": "OK",
+  "buttonCancel": "Abbrechen",
+  "buttonDelete": "Löschen",
+  "buttonInstall": "Installieren",
+  "buttonClear": "Löschen",
+  "buttonCamera": "Kamera",
+  "buttonGallery": "Gallerie",
+  "buttonChangeTime": "Uhrzeit ändern",
+  "buttonChangeDate": "Datum ändern",
+
+  "menuItemFilmInstanceArchive": "Film Archiv",
+  "menuItemManageData": "Daten verwalten",
+  "menuItemManageExport": "Export",
+  "menuItemManageArchive": "Archivieren",
+  "menuItemManageDelete": "Löschen",
+  "menuItemManageGear": "Ausrüstung verwalten",
+  "menuItemAboutApp": "Über diese App",
+
+  "notificationWearOsAppAvailable": "Wear OS App verfügbar",
+
+  "filmInstanceListEmpty": "Du hast noch keine Filme.",
+  "filmInstanceListArchiveEmpty": "Du hast keine archivierten Filme.",
+
+  "editFilmTileLabelName": "Name",
+  "editFilmTileLabelTimestamp": "Eingelegt",
+  "editFilmTileLabelCamera": "Kamera",
+  "editFilmTileLabelFilmStock": "Film Sorte",
+  "editFilmTileLabelActualISO": "Tatsächliche ISO",
+  "editFilmTileLabelFrameCount": "Fotos",
+
+  "editPhotoTileLabelTimestamp": "Zeitstempel",
+  "editPhotoTileLabelShutterSpeed": "Verschlusszeit",
+  "editPhotoTileLabelLens": "Objektiv",
+  "editPhotoTileLabelAperture": "Blende",
+  "editPhotoTileLabelFilters": "Filter",
+  "editPhotoTileLabelLocation": "Ort",
+  "editPhotoTileLabelNotes": "Notizen",
+  "editPhotoTileLabelThumbnail": "Vorschau",
+
+  "filmLogPageLoading": "Lade...",
+  "filmLogPageFilmNotFound": "Film nicht gefunden",
+  "filmLogPageExportActionText": "Film Log Export",
+  "filmLogPageNoPhotos": "Es sind noch keine Fotos vorhanden",
+
+  "importPageTileWarning": "Der Import eines Archivs ersetzt alle Daten in der App, Ausrüstung und Filme.",
+  "importPageTileSelectArchive": "Archiv auswählen",
+  "importPageButtonImportData": "Daten importieren",
+  "importPageFilePickerTitle": "Archiv auswählen",
+  "importPageFileOpenError": "Archiv konnte nicht geöffnet werden",
+
+  "manageDataTileExportDataTitle": "Daten exportieren",
+  "manageDataTileExportDataSubtitle": "Alle Daten der App werden in ein ZIP Archiv gespeichert.",
+  "manageDataTileImportDataTitle": "Daten importieren",
+  "manageDataTileImportDataSubtitle": "Daten der App aus einem ZIP Archiv importieren.",
+  "manageDataTileDeleteTitle": "Alles löschen",
+  "manageDataExportPickerTitle": "Film Log Komplettexport",
+
+  "dialogDeleteAllDataTitle": "Alle Daten löschen?",
+  "dialogDeleteAllDataContent": "Bist du sicher, dass du alle Daten der App löschen möchtest?",
+  "dialogConfirmDeleteTitle": "{item} löschen?",
+  "dialogConfirmDeleteText": "Bist du sicher, dass du {item} löschen möchtest?",
+
+  "aboutAppContent": "Diese App richtet sich an Film Fotografen. Sie ermöglicht Ort und Zeit, sowie die Kameraeinstellungen eines Fotos zu notieren.",
+
+  "countCameras": "{count, plural, =0{keine Kamera} =1{1 Kamera} other{{count} Kameras}}",
+  "@countCameras": {
+    "description": "Number of imported cameras",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "countLenses": "{count, plural, =0{kein Objektiv} =1{1 Objektiv} other{{count} Objektive}}",
+  "@countLenses": {
+    "description": "Number of imported lenses",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "countFilters": "{count, plural, =0{keine Filter} =1{1 Filter} other{{count} Filter}}",
+  "@countFilters": {
+    "description": "Number of imported filters",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "countFilmStocks": "{count, plural, =0{keine Film Sorten} =1{1 Film Sorte} other{{count} Film Sorten}}",
+  "@countFilmStocks": {
+    "description": "Number of imported film stocks",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "countFilmInstances": "{count, plural, =0{keine Filme} =1{1 Film} other{{count} Filme}}",
+  "@countFilmInstances": {
+    "description": "Number of imported films",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "countPhotos": "{count, plural, =0{keine Fotos} =1{1 Foto} other{{count} Fotos}}",
+  "@countPhotos": {
+    "description": "Number of imported photos",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+
+  "gearTitleTitleCameras": "Kameras",
+  "gearTitleTitleLenses": "Objektive",
+  "gearTitleTitleFilters": "Filter",
+  "gearTitleTitleFilmStock": "Film Sorten",
+  "gearTitleTitleName": "Name",
+  "gearTitleTitleManufacturer": "Hersteller",
+  "gearTitleTitleProduct": "Produkt",
+  "gearTitleTitleMinShutterSpeed": "Niedrigste Verschlusszeit",
+  "gearTitleTitleMaxShutterSpeed": "Höchste Verschlusszeit",
+  "gearTitleTitleFilmFormat": "Film Format",
+  "gearTitleTitleFilmType": "Film Type",
+  "gearTitleTitleFilmISO": "ISO",
+  "gearTitleTitleLensType": "Objektiv Typ",
+  "gearTitleTitleFStopIncrements": "Blendstufen",
+  "gearTitleTitleFocalLength": "Brennweite",
+  "gearTitleTitleFocalLengthMin": "Niedrigste Brennweite",
+  "gearTitleTitleFocalLengthMax": "Höchste Brennweite",
+  "gearTitleTitleApertureMin": "Niedrigste Blendenstufe",
+  "gearTitleTitleApertureMax": "Höchste Blendenstufe",
+
+  "labelFilmTypeColor": "Farbe",
+  "labelFilmTypeBWPanchromatic": "SW Panchromatisch",
+  "labelFilmTypeBWOrthochromatic": "SW Orthochromatisch",
+  "labelFilmTypeBWInfrared": "SW Infrarot",
+
+  "labelLensTypePrime": "Festbrennweite",
+  "labelLensTypeZoom": "Zoom",
+
+  "labelFStopIncrementsFull": "Ganze Blendenstufen",
+  "labelFStopIncrementsHalf": "Halbe Blendenstufen",
+  "labelFStopIncrementsThird": "Drittel Blendenstufen",
+
+  "gearPageEmptyCameras": "Du hast noch keine Kameras hinterlegt",
+  "gearPageEmptyLenses": "Du hast noch keine Objektive hinterlegt",
+  "gearPageEmptyFilters": "Du hast noch keine Filter hinterlegt",
+  "gearPageEmptyFilmStock": "Du hast noch keine Film Sorten hinterlegt"
+
+}

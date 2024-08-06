@@ -1,0 +1,21 @@
+{
+  "appTitle": "Film Log",
+
+  "addFilmUsePhone": "Benutze dein Smartphone um einen Film anzulegen",
+  "openOnPhone": "Auf Smartphone öffnen",
+
+  "editPhotoTileTitleFrameNumber": "Foto Nummer",
+  "editPhotoTileTitleShutterSpeed": "Verschlusszeit",
+  "editPhotoTileTitleLens": "Objektiv",
+  "editPhotoTileTitleAperture": "Blende",
+  "editPhotoTileTitleFilters": "Filter",
+  "editPhotoTileTitleTimestamp": "Zeitstempel",
+  "editPhotoTileTitleLocation": "Ort",
+
+  "filmInstanceLoading": "Lade...",
+  "filmInstanceFilmNotFound": "Film nicht gefunden",
+
+  "filmListNoFilms": "Keine Filme verfügbar",
+
+  "startUpPageStarting": "Starte..."
+}
