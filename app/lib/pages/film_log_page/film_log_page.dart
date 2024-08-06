@@ -1,3 +1,4 @@
+import 'package:film_log/dialogs/confirm_delete_dialog/confirm_delete_dialog.dart';
 import 'package:film_log/model/film_instance.dart';
 import 'package:film_log/model/photo.dart';
 import 'package:film_log/pages/edit_film_page/edit_film_page.dart';
@@ -57,7 +58,7 @@ class FilmLogPage extends StatelessWidget {
 }
 
 class _FilmLogPageWidget extends StatelessWidget {
-  _FilmLogPageWidget({
+  const _FilmLogPageWidget({
     required this.film,
     required this.repo,
     required this.repos,
@@ -111,6 +112,8 @@ class _FilmLogPageWidget extends StatelessWidget {
   }
 
   Future<void> _delete(BuildContext context) async {
+    if (!await ConfirmDeleteDialog.show(context, film.name)) return;
+
     await repo.delete(film);
     if (!context.mounted) return;
     Navigator.of(context).pop();
@@ -153,18 +156,24 @@ class _FilmLogPageWidget extends StatelessWidget {
                 MenuItemButton(
                   onPressed: () => _export(context),
                   leadingIcon: const Icon(Icons.send),
-                  child: Text(AppLocalizations.of(context).menuItemManageExport),
+                  child: Text(
+                    AppLocalizations.of(context).menuItemManageExport,
+                  ),
                 ),
                 if (!film.archive)
                   MenuItemButton(
                     onPressed: () => _archive(context),
                     leadingIcon: const Icon(Icons.archive),
-                    child: Text(AppLocalizations.of(context).menuItemManageArchive),
+                    child: Text(
+                      AppLocalizations.of(context).menuItemManageArchive,
+                    ),
                   ),
                 MenuItemButton(
                   onPressed: () => _delete(context),
                   leadingIcon: const Icon(Icons.delete),
-                  child: Text(AppLocalizations.of(context).menuItemManageDelete),
+                  child: Text(
+                    AppLocalizations.of(context).menuItemManageDelete,
+                  ),
                 ),
               ],
             ),
@@ -188,7 +197,7 @@ class _FilmLogPageWidget extends StatelessWidget {
             .toList(growable: false),
       );
 
-  Widget _empty(BuildContext context) =>  Center(
+  Widget _empty(BuildContext context) => Center(
         child: Text(AppLocalizations.of(context).filmLogPageNoPhotos),
       );
 

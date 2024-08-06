@@ -1,3 +1,4 @@
+import 'package:film_log/dialogs/confirm_delete_dialog/confirm_delete_dialog.dart';
 import 'package:film_log/model/gear.dart';
 import 'package:film_log/service/gear_repo.dart';
 import 'package:flutter/material.dart';
@@ -64,6 +65,10 @@ class _GearViewPageState<T extends Gear> extends State<GearViewPage<T>> {
   }
 
   Future<void> _delete(BuildContext context) async {
+    if (!await ConfirmDeleteDialog.show(context, item.listItemTitle())) {
+      return;
+    }
+
     await widget.repo.delete(item);
     if (!mounted || !context.mounted) return;
     Navigator.of(context).pop();
