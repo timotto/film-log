@@ -1,6 +1,7 @@
 import 'package:film_log/fmt/aperture.dart';
 import 'package:film_log/fmt/shutterspeed.dart';
 import 'package:film_log/fmt/timestamp.dart';
+import 'package:film_log/model/equals.dart';
 import 'package:film_log/model/json.dart';
 import 'package:film_log/model/thumbnail.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,7 +11,7 @@ import 'filter.dart';
 import 'lens.dart';
 import 'location.dart';
 
-class Photo implements ToJson {
+class Photo implements ToJson, Equals<Photo> {
   final String id;
   final DateTime timestamp;
   final int frameNumber;
@@ -36,6 +37,19 @@ class Photo implements ToJson {
     required this.notes,
     required this.thumbnail,
   });
+
+  @override
+  bool equals(Photo other) =>
+      id == other.id &&
+      timestamp.isAtSameMomentAs(other.timestamp) &&
+      frameNumber == other.frameNumber &&
+      shutter == other.shutter &&
+      aperture == other.aperture &&
+      Equals.all(filters, other.filters) &&
+      Equals.orNull(lens, other.lens) &&
+      Equals.orNull(location, other.location) &&
+      notes == other.notes &&
+      Equals.orNull(thumbnail, other.thumbnail);
 
   String listItemSubtitle(BuildContext context,
           {List<Photo> photos = const []}) =>

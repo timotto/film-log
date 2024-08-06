@@ -52,6 +52,16 @@ class Camera implements Gear<Camera> {
       slowestShutterSpeed != 0 &&
       fastestShutterSpeed <= slowestShutterSpeed;
 
+  @override
+  bool equals(Camera other) =>
+      id == other.id &&
+      name == other.name &&
+      manufacturer == other.manufacturer &&
+      product == other.product &&
+      fastestShutterSpeed == other.fastestShutterSpeed &&
+      slowestShutterSpeed == other.slowestShutterSpeed &&
+      filmstockFormat == other.filmstockFormat;
+
   Camera update({
     String? id,
     String? name,

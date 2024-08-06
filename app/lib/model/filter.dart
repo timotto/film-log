@@ -1,3 +1,5 @@
+import 'package:film_log/model/equals.dart';
+
 import 'gear.dart';
 import 'lens.dart';
 
@@ -49,6 +51,14 @@ class Filter implements Gear<Filter> {
   @override
   bool validate() =>
       name.isNotEmpty && manufacturer.isNotEmpty && product.isNotEmpty;
+
+  @override
+  bool equals(Filter other) =>
+      id == other.id &&
+      name == other.name &&
+      manufacturer == other.manufacturer &&
+      product == other.product &&
+      Equals.all(lenses, other.lenses);
 
   factory Filter.createNew() => Filter(
         id: '',

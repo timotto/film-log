@@ -14,6 +14,7 @@
   "buttonOK": "OK",
   "buttonCancel": "Cancel",
   "buttonDelete": "Delete",
+  "buttonDiscard": "Discard",
   "buttonInstall": "Install",
   "buttonClear": "Clear",
   "buttonCamera": "Camera",
@@ -88,6 +89,8 @@
       }
     }
   },
+  "dialogDiscardChangesTitle": "Discard changes?",
+  "dialogDiscardChangesText": "There are unsaved changes. Are you sure you want to discard them?",
 
   "aboutAppContent": "This app is intended for film photography users. It allows you to record time and place of each frame as well as the settings you used on your camera.",
 

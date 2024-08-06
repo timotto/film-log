@@ -1,6 +1,7 @@
 import 'package:film_log/dialogs/confirm_delete_dialog/confirm_delete_dialog.dart';
 import 'package:film_log/model/gear.dart';
 import 'package:film_log/service/gear_repo.dart';
+import 'package:film_log/widgets/discard_guard_widget.dart';
 import 'package:flutter/material.dart';
 
 typedef OnUpdateFn<T extends Gear> = void Function(dynamic) Function(
@@ -81,6 +82,8 @@ class _GearViewPageState<T extends Gear> extends State<GearViewPage<T>> {
         });
       };
 
+  bool _hasChanges() => (widget.create ?? false) || !item.equals(widget.item);
+
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
@@ -103,8 +106,11 @@ class _GearViewPageState<T extends Gear> extends State<GearViewPage<T>> {
               ),
           ],
         ),
-        body: ListView(
-          children: widget.tilesBuilder(context, item, edit, _onUpdate),
+        body: DiscardGuardWidget(
+          hasChanges: _hasChanges,
+          child: ListView(
+            children: widget.tilesBuilder(context, item, edit, _onUpdate),
+          ),
         ),
       );
 }

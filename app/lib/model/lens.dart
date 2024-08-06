@@ -1,3 +1,4 @@
+import 'package:film_log/model/equals.dart';
 import 'package:film_log/model/fstop.dart';
 
 import 'camera.dart';
@@ -95,6 +96,20 @@ class Lens implements Gear<Lens> {
       product.isNotEmpty &&
       focalLengthMin <= focalLengthMax &&
       apertureMin <= apertureMax;
+
+  @override
+  bool equals(Lens other) =>
+      id == other.id &&
+      name == other.name &&
+      manufacturer == other.manufacturer &&
+      product == other.product &&
+      Equals.all(cameras, other.cameras) &&
+      type == other.type &&
+      focalLengthMin == other.focalLengthMin &&
+      focalLengthMax == other.focalLengthMax &&
+      fStopIncrements == other.fStopIncrements &&
+      apertureMin == other.apertureMin &&
+      apertureMax == other.apertureMax;
 
   factory Lens.createNew() => Lens(
         id: '',

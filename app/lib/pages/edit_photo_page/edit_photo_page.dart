@@ -10,6 +10,7 @@ import 'package:film_log/pages/gear/widgets/shutterspeed_edit_tile.dart';
 import 'package:film_log/pages/gear/widgets/text_edit_tile.dart';
 import 'package:film_log/service/location.dart';
 import 'package:film_log/service/repos.dart';
+import 'package:film_log/widgets/discard_guard_widget.dart';
 import 'package:film_log/widgets/location_list_tile.dart';
 import 'package:film_log/widgets/thumbnail_list_tile.dart';
 import 'package:film_log/widgets/timestamp_list_tile.dart';
@@ -100,6 +101,8 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
 
   bool _show<T>(T? value) => edit || value != null;
 
+  bool _hasChanges() => widget.create || !photo.equals(widget.photo);
+
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
@@ -121,18 +124,21 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
               ),
           ],
         ),
-        body: ListView(
-          children: [
-            _timestampEditTile(context),
-            if (_show(photo.shutter)) _shutterSpeedEditTile(context),
-            if (_show(photo.lens)) _lensEditTile(context),
-            if (_show(photo.aperture)) _apertureEditTile(context),
-            if (edit || photo.filters.isNotEmpty) _filtersEditTile(context),
-            if (_show(photo.location)) _locationEditTile(context),
-            if (edit || (photo.notes?.isNotEmpty ?? false))
-              _notesEditTile(context),
-            if (_show(photo.thumbnail)) _thumbnailEditTile(context),
-          ],
+        body: DiscardGuardWidget(
+          hasChanges: _hasChanges,
+          child: ListView(
+            children: [
+              _timestampEditTile(context),
+              if (_show(photo.shutter)) _shutterSpeedEditTile(context),
+              if (_show(photo.lens)) _lensEditTile(context),
+              if (_show(photo.aperture)) _apertureEditTile(context),
+              if (edit || photo.filters.isNotEmpty) _filtersEditTile(context),
+              if (_show(photo.location)) _locationEditTile(context),
+              if (edit || (photo.notes?.isNotEmpty ?? false))
+                _notesEditTile(context),
+              if (_show(photo.thumbnail)) _thumbnailEditTile(context),
+            ],
+          ),
         ),
       );
 

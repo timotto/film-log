@@ -53,6 +53,15 @@ class FilmStock implements Gear<FilmStock> {
   @override
   bool validate() => manufacturer.isNotEmpty && product.isNotEmpty && iso > 0;
 
+  @override
+  bool equals(FilmStock other) =>
+      id == other.id &&
+      manufacturer == other.manufacturer &&
+      product == other.product &&
+      iso == other.iso &&
+      format == other.format &&
+      type == other.type;
+
   factory FilmStock.createNew() => FilmStock(
         id: '',
         manufacturer: '',

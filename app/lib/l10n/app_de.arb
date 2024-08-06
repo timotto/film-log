@@ -14,6 +14,7 @@
   "buttonOK": "OK",
   "buttonCancel": "Abbrechen",
   "buttonDelete": "Löschen",
+  "buttonDiscard": "Verwerfen",
   "buttonInstall": "Installieren",
   "buttonClear": "Löschen",
   "buttonCamera": "Kamera",
@@ -72,6 +73,8 @@
   "dialogDeleteAllDataContent": "Bist du sicher, dass du alle Daten der App löschen möchtest?",
   "dialogConfirmDeleteTitle": "{item} löschen?",
   "dialogConfirmDeleteText": "Bist du sicher, dass du {item} löschen möchtest?",
+  "dialogDiscardChangesTitle": "Änderungen verwerfen?",
+  "dialogDiscardChangesText": "Die Änderungen sind noch nicht gespeichert. Möchtest du sie wirklich verwerfen?",
 
   "aboutAppContent": "Diese App richtet sich an Film Fotografen. Sie ermöglicht Ort und Zeit, sowie die Kameraeinstellungen eines Fotos zu notieren.",
 

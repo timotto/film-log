@@ -1,4 +1,6 @@
-class Thumbnail {
+import 'package:film_log/model/equals.dart';
+
+class Thumbnail implements Equals<Thumbnail> {
   Thumbnail({required this.id});
 
   final String id;
@@ -11,5 +13,6 @@ class Thumbnail {
         'id': id,
       };
 
+  @override
   bool equals(Thumbnail other) => id == other.id;
 }

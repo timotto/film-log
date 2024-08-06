@@ -1,6 +1,7 @@
+import 'package:film_log/model/equals.dart';
 import 'package:film_log/model/json.dart';
 
-class Location implements ToJson {
+class Location implements ToJson, Equals<Location> {
   final double? latitude;
   final double? longitude;
   final double? height;
@@ -35,6 +36,13 @@ class Location implements ToJson {
   @override
   String toString() =>
       '${latitude?.toStringAsFixed(5)}, ${longitude?.toStringAsFixed(5)}';
+
+  @override
+  bool equals(Location other) =>
+      latitude == other.latitude &&
+      longitude == other.longitude &&
+      height == other.height &&
+      accuracy == other.accuracy;
 
   static Location? tryParse(String value) {
     final parts = value.split(',');

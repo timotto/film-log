@@ -1,6 +1,8 @@
+import 'package:film_log/model/equals.dart';
+
 import 'json.dart';
 
-abstract class Gear<T> extends ToJson {
+abstract class Gear<T> implements ToJson, Equals<T> {
   T withId(String id);
 
   String itemId();

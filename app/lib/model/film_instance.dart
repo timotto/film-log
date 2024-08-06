@@ -1,3 +1,4 @@
+import 'package:film_log/model/equals.dart';
 import 'package:film_log/model/film_stock.dart';
 import 'package:film_log/model/filter.dart';
 import 'package:film_log/model/json.dart';
@@ -7,7 +8,7 @@ import 'camera.dart';
 import 'lens.dart';
 import 'photo.dart';
 
-class FilmInstance implements ToJson {
+class FilmInstance implements ToJson, Equals<FilmInstance> {
   final String id;
   final String name;
   final DateTime inserted;
@@ -52,6 +53,18 @@ class FilmInstance implements ToJson {
 
   bool validate() =>
       name.isNotEmpty && maxPhotoCount > 0 && photos.length <= maxPhotoCount;
+
+  @override
+  bool equals(FilmInstance other) =>
+      id == other.id &&
+      name == other.name &&
+      inserted.isAtSameMomentAs(other.inserted) &&
+      stock == other.stock &&
+      actualIso == other.actualIso &&
+      Equals.orNull(camera, other.camera) &&
+      Equals.all(photos, other.photos) &&
+      maxPhotoCount == other.maxPhotoCount &&
+      archive == other.archive;
 
   FilmInstance update({
     String? id,
