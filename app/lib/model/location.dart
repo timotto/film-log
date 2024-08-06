@@ -15,6 +15,8 @@ class Location implements ToJson {
     this.accuracy,
   });
 
+  bool get hasValue => latitude != null && longitude != null;
+
   factory Location.fromJson(Map<String, dynamic> json) => Location(
         latitude: json['latitude'],
         longitude: json['longitude'],

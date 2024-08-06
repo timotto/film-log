@@ -126,6 +126,9 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
 
   Future<void> _editLocation(BuildContext context) async => _requestLocation();
 
+  Future<void> _openLocation(BuildContext context) async =>
+      openLocation(context, photo.location!);
+
   List<Lens> _lenses() => _lensRepo
       .value()
       .where((lens) => lens.cameras
@@ -210,7 +213,9 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
                   title:
                       AppLocalizations.of(context).editPhotoTileTitleLocation,
                   subtitle: photo.location?.listItemSubtitle(),
-                  onTap: () => _editLocation(context),
+                  onTap: widget.edit
+                      ? () => _editLocation(context)
+                      : () => _openLocation(context),
                 ),
               if (widget.edit) _acceptButton(context),
             ],
