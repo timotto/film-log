@@ -165,6 +165,7 @@
   "gearTitleTitleMinShutterSpeed": "Min shutter speed",
   "gearTitleTitleMaxShutterSpeed": "Max shutter speed",
   "gearTitleTitleFilmFormat": "Film format",
+  "gearTitleTitleDefaultFramesPerFilm": "Frames per film",
   "gearTitleTitleFilmType": "Film type",
   "gearTitleTitleFilmISO": "ISO",
   "gearTitleTitleLensType": "Lens type",

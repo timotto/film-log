@@ -79,7 +79,11 @@ class _EditFilmPageState extends State<EditFilmPage> {
                 value: film.camera,
                 repo: widget.repos.cameraRepo,
                 edit: true,
-                onUpdate: _onUpdate((value) => film.update(camera: value)),
+                onUpdate: _onUpdate((value) => film.update(
+                      camera: value,
+                      maxPhotoCount:
+                          value?.defaultFramesPerFilm ?? film.maxPhotoCount,
+                    )),
               ),
               FilmstockEditTile(
                 label: AppLocalizations.of(context).editFilmTileLabelFilmStock,

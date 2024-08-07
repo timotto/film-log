@@ -149,6 +149,7 @@
   "gearTitleTitleMinShutterSpeed": "Niedrigste Verschlusszeit",
   "gearTitleTitleMaxShutterSpeed": "Höchste Verschlusszeit",
   "gearTitleTitleFilmFormat": "Film Format",
+  "gearTitleTitleDefaultFramesPerFilm": "Fotos pro Film",
   "gearTitleTitleFilmType": "Film Type",
   "gearTitleTitleFilmISO": "ISO",
   "gearTitleTitleLensType": "Objektiv Typ",

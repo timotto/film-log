@@ -1,6 +1,8 @@
 import 'package:film_log/model/camera.dart';
+import 'package:film_log/model/filmstock_format.dart';
 import 'package:film_log/pages/gear/widgets/filmstock_format_edit_tile.dart';
 import 'package:film_log/pages/gear/widgets/gear_view_page.dart';
+import 'package:film_log/pages/gear/widgets/int_edit_tile.dart';
 import 'package:film_log/pages/gear/widgets/shutterspeed_edit_tile.dart';
 import 'package:film_log/pages/gear/widgets/text_edit_tile.dart';
 import 'package:film_log/service/camera_repo.dart';
@@ -65,8 +67,35 @@ class GearCameraViewPage extends StatelessWidget {
             label: AppLocalizations.of(context).gearTitleTitleFilmFormat,
             value: item.filmstockFormat,
             edit: edit,
-            onUpdate: onUpdate((value) => item.update(filmstockFormat: value)),
+            onUpdate: onUpdate((value) => item.update(
+                  filmstockFormat: value,
+                  defaultFramesPerFilm: _defaultFramesPerFilmFormat(value),
+                )),
+          ),
+          IntEditTile(
+            label:
+                AppLocalizations.of(context).gearTitleTitleDefaultFramesPerFilm,
+            value: item.defaultFramesPerFilm,
+            edit: edit,
+            valueToString: (v) => v?.toStringAsFixed(0) ?? '',
+            stringToValue: (v) => int.tryParse(v),
+            onUpdate: onUpdate(
+              (value) => item.update(defaultFramesPerFilm: value),
+            ),
           ),
         ],
       );
+}
+
+int? _defaultFramesPerFilmFormat(FilmStockFormat format) {
+  switch (format) {
+    case FilmStockFormat.type120:
+      return 10;
+    case FilmStockFormat.type127:
+      return 16;
+    case FilmStockFormat.type135:
+      return 36;
+    default:
+      return null;
+  }
 }

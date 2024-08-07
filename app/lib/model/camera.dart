@@ -11,6 +11,7 @@ class Camera implements Gear<Camera> {
   final double fastestShutterSpeed;
   final double slowestShutterSpeed;
   final FilmStockFormat filmstockFormat;
+  final int? defaultFramesPerFilm;
 
   Camera({
     required this.id,
@@ -20,6 +21,7 @@ class Camera implements Gear<Camera> {
     required this.fastestShutterSpeed,
     required this.slowestShutterSpeed,
     required this.filmstockFormat,
+    required this.defaultFramesPerFilm,
   });
 
   List<double> shutterSpeeds() => s
@@ -60,7 +62,8 @@ class Camera implements Gear<Camera> {
       product == other.product &&
       fastestShutterSpeed == other.fastestShutterSpeed &&
       slowestShutterSpeed == other.slowestShutterSpeed &&
-      filmstockFormat == other.filmstockFormat;
+      filmstockFormat == other.filmstockFormat &&
+      defaultFramesPerFilm == other.defaultFramesPerFilm;
 
   Camera update({
     String? id,
@@ -70,6 +73,7 @@ class Camera implements Gear<Camera> {
     double? fastestShutterSpeed,
     double? slowestShutterSpeed,
     FilmStockFormat? filmstockFormat,
+    int? defaultFramesPerFilm,
   }) =>
       Camera(
         id: id ?? this.id,
@@ -79,6 +83,7 @@ class Camera implements Gear<Camera> {
         fastestShutterSpeed: fastestShutterSpeed ?? this.fastestShutterSpeed,
         slowestShutterSpeed: slowestShutterSpeed ?? this.slowestShutterSpeed,
         filmstockFormat: filmstockFormat ?? this.filmstockFormat,
+        defaultFramesPerFilm: defaultFramesPerFilm ?? this.defaultFramesPerFilm,
       );
 
   factory Camera.createNew() => Camera(
@@ -89,6 +94,7 @@ class Camera implements Gear<Camera> {
         fastestShutterSpeed: 1 / 1000,
         slowestShutterSpeed: 1,
         filmstockFormat: FilmStockFormat.type120,
+        defaultFramesPerFilm: null,
       );
 
   factory Camera.fromJson(Map<String, dynamic> json) => Camera(
@@ -99,6 +105,7 @@ class Camera implements Gear<Camera> {
         fastestShutterSpeed: json['fastestShutterSpeed'],
         slowestShutterSpeed: json['slowestShutterSpeed'],
         filmstockFormat: FilmStockFormat.fromJson(json['filmstockFormat']),
+        defaultFramesPerFilm: json['defaultFramesPerFilm'],
       );
 
   @override
@@ -110,5 +117,6 @@ class Camera implements Gear<Camera> {
         'fastestShutterSpeed': fastestShutterSpeed,
         'slowestShutterSpeed': slowestShutterSpeed,
         'filmstockFormat': filmstockFormat.toJson(),
+        'defaultFramesPerFilm': defaultFramesPerFilm,
       };
 }
