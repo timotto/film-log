@@ -91,10 +91,10 @@ jobs:
         flutter test
         flutter build appbundle --build-number "$(cat /tmp/next-version-code-wear)"
 
-    #- name: Publish phone app
-    #  working-directory: app/android
-    #  run: bundle exec fastlane android internal
+    - name: Publish phone app
+      working-directory: app/android
+      run: bundle exec fastlane android internal
 
-    #- name: Publish Wear OS app
-    #  working-directory: app_wear/android
-    #  run: bundle exec fastlane android internal
+    - name: Publish Wear OS app
+      working-directory: app_wear/android
+      run: bundle exec fastlane android internal
