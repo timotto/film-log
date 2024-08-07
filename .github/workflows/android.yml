@@ -56,12 +56,6 @@ jobs:
         echo $(( $versionCodePhone + 2 )) > /tmp/next-version-code-phone
         echo $(( $versionCodeWear + 2 )) > /tmp/next-version-code-wear
 
-    - name: Set up ruby env
-      uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: 2.7.2
-        bundler-cache: true
-
     - name: Setup Java
       uses: actions/setup-java@v3
       with:
@@ -90,6 +84,16 @@ jobs:
         flutter pub get
         flutter test
         flutter build appbundle --build-number "$(cat /tmp/next-version-code-wear)"
+
+    - name: Set up ruby env
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 2.7.2
+        bundler-cache: true
+
+    - name: Install fastlane
+      working-dir: app/android
+      run: bundle install
 
     - name: Publish phone app
       working-directory: app/android
