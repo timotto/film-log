@@ -82,7 +82,8 @@ class _GearViewPageState<T extends Gear> extends State<GearViewPage<T>> {
         });
       };
 
-  bool _hasChanges() => (widget.create ?? false) || !item.equals(widget.item);
+  bool _hasChanges() =>
+      (widget.create ?? false) || (edit && !item.equals(widget.item));
 
   @override
   Widget build(BuildContext context) => Scaffold(
