@@ -97,8 +97,8 @@ jobs:
 
     - name: Publish phone app
       working-directory: app/android
-      run: bundle exec fastlane android internal
+      run: fastlane android internal
 
     - name: Publish Wear OS app
       working-directory: app_wear/android
-      run: bundle exec fastlane android internal
+      run: fastlane android internal
