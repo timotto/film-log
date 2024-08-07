@@ -4,6 +4,12 @@ on:
   push:
     branches:
     - main
+    paths:
+    - app/**
+    - app_wear/**
+    - film_log_wear_data/**
+    - flutter_wear_os_connectivity/**
+    - flutter_wear_os_location/**
   pull_request:
 
 jobs:
