@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
 
 class WearListView extends StatefulWidget {
   const WearListView({
@@ -17,6 +18,19 @@ class WearListView extends StatefulWidget {
 
   @override
   State<WearListView> createState() => _WearListViewState();
+
+  static Widget useDelegate({
+    ScrollController? controller,
+    double itemExtent = 48,
+    required ListWheelChildDelegate childDelegate,
+  }) =>
+      ListWheelScrollView.useDelegate(
+        controller: controller,
+        itemExtent: itemExtent,
+        childDelegate: childDelegate,
+        diameterRatio: RenderListWheelViewport.defaultDiameterRatio,
+        perspective: RenderListWheelViewport.defaultPerspective * 2,
+      );
 }
 
 class _WearListViewState extends State<WearListView> {

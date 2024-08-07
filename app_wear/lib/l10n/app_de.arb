@@ -17,5 +17,22 @@
 
   "filmListNoFilms": "Keine Filme verfügbar",
 
-  "startUpPageStarting": "Starte..."
+  "startUpPageStarting": "Starte...",
+
+  "buttonAboutApp": "Über die App",
+  "buttonShowLicenses": "Lizenzen",
+  "buttonBack": "Zurück",
+  "aboutAppText": "Das ist die Film Log Wear OS companion App.",
+
+  "countLicenses": "{count, plural, =0{keine Lizenzen} =1{1 Lizenz} other{{count} Lizenzen}}",
+  "@countLicenses": {
+    "description": "Number of associated licenses",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  }
+
 }

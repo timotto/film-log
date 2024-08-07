@@ -1,4 +1,5 @@
 import 'package:film_log_wear/model/film.dart';
+import 'package:film_log_wear/pages/about_app/about_app_page.dart';
 import 'package:film_log_wear/pages/film_instance_page.dart';
 import 'package:film_log_wear/widgets/open_on_phone_button.dart';
 import 'package:film_log_wear/widgets/swipe_dismiss.dart';
@@ -35,7 +36,9 @@ class FilmListPage extends StatelessWidget {
   Widget _list(BuildContext context, List<Film> items) => WearListView(
         key: _listKey,
         selectedIndex: items.length,
+        itemExtend: 64,
         children: [
+          _aboutAppButton(context),
           ..._children(context, items),
           _addButton(context),
         ],
@@ -54,9 +57,20 @@ class FilmListPage extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(AppLocalizations.of(context).filmListNoFilms),
-            OpenOnPhoneButton(),
+            const OpenOnPhoneButton(),
+            _aboutAppButton(context),
           ],
         ),
+      );
+
+  Widget _aboutAppButton(BuildContext context) => ElevatedButton.icon(
+        onPressed: () => Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => const AboutAppPage(),
+          ),
+        ),
+        icon: const Icon(Icons.info),
+        label: Text(AppLocalizations.of(context).buttonAboutApp),
       );
 
   Widget _addButton(BuildContext context) => IconButton(
