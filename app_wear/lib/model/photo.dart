@@ -28,15 +28,15 @@ class Photo {
   });
 
   Map<String, dynamic> toJson() => {
-    'id':id,
-    'frameNumber':frameNumber,
-    'recorded':recorded.toIso8601String(),
-    'shutterSpeed':shutterSpeed,
-    'aperture':aperture,
-    'lens':lens?.toJson(),
-    'filters':filters.map((f) => f.toJson()).toList(),
-    'location':location?.toJson(),
-  };
+        'id': id,
+        'frameNumber': frameNumber,
+        'recorded': recorded.toIso8601String(),
+        'shutterSpeed': shutterSpeed,
+        'aperture': aperture,
+        'lens': lens?.toJson(),
+        'filters': filters.map((f) => f.toJson()).toList(),
+        'location': location?.toJson(),
+      };
 
   Photo update({
     DateTime? recorded,

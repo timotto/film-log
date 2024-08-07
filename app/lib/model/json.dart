@@ -1,3 +1,3 @@
 abstract class ToJson {
-  Map<String,dynamic> toJson();
+  Map<String, dynamic> toJson();
 }

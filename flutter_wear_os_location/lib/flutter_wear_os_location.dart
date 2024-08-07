@@ -1,5 +1,5 @@
-import 'flutter_wear_os_location_platform_interface.dart';
 import './model/location.dart';
+import 'flutter_wear_os_location_platform_interface.dart';
 
 class FlutterWearOsLocation {
   Future<String?> getPlatformVersion() =>

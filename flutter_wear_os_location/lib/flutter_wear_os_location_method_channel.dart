@@ -1,9 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
-import 'flutter_wear_os_location_platform_interface.dart';
-
 import './model/location.dart';
+import 'flutter_wear_os_location_platform_interface.dart';
 
 /// An implementation of [FlutterWearOsLocationPlatform] that uses method channels.
 class MethodChannelFlutterWearOsLocation extends FlutterWearOsLocationPlatform {

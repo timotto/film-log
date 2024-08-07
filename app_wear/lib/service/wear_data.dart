@@ -186,7 +186,7 @@ class WearDataService {
 
     Set<String> alreadyInstalled = {};
     final capabilities =
-    await _wearOsConnectivity.findCapabilityByName(clientCapabilityName);
+        await _wearOsConnectivity.findCapabilityByName(clientCapabilityName);
     if (capabilities != null) {
       for (var device in capabilities.associatedDevices) {
         alreadyInstalled.add(device.id);
@@ -214,9 +214,9 @@ class WearDataService {
   Future<void> installWearOsApp(List<m.WearOsDevice> devices) async {
     await Future.wait(
       devices.map((device) => _wearOsConnectivity.startRemoteActivity(
-        url: playStoreUrl,
-        deviceId: device.id,
-      )),
+            url: playStoreUrl,
+            deviceId: device.id,
+          )),
     );
   }
 

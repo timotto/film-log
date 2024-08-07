@@ -89,12 +89,24 @@ class _ImportPageState extends State<ImportPage> {
   List<Widget> _content(BuildContext context) => _archive == null
       ? []
       : [
-          ListTile(title: Text(AppLocalizations.of(context).countCameras(_archive!.cameras.length))),
-          ListTile(title: Text(AppLocalizations.of(context).countLenses(_archive!.lenses.length))),
-          ListTile(title: Text(AppLocalizations.of(context).countFilters(_archive!.filters.length))),
-          ListTile(title: Text(AppLocalizations.of(context).countFilmStocks(_archive!.filmStock.length))),
-          ListTile(title: Text(AppLocalizations.of(context).countFilmInstances(_archive!.films.length))),
-          ListTile(title: Text(AppLocalizations.of(context).countPhotos(_countPhotos()))),
+          ListTile(
+              title: Text(AppLocalizations.of(context)
+                  .countCameras(_archive!.cameras.length))),
+          ListTile(
+              title: Text(AppLocalizations.of(context)
+                  .countLenses(_archive!.lenses.length))),
+          ListTile(
+              title: Text(AppLocalizations.of(context)
+                  .countFilters(_archive!.filters.length))),
+          ListTile(
+              title: Text(AppLocalizations.of(context)
+                  .countFilmStocks(_archive!.filmStock.length))),
+          ListTile(
+              title: Text(AppLocalizations.of(context)
+                  .countFilmInstances(_archive!.films.length))),
+          ListTile(
+              title: Text(
+                  AppLocalizations.of(context).countPhotos(_countPhotos()))),
         ];
 
   int _countPhotos() => _archive == null

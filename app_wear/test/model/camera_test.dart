@@ -7,38 +7,38 @@ void main() {
     late Camera same;
     late Camera otherId, otherLabel, otherShutterSpeeds, reOrderedShutterSpeeds;
 
-    setUp((){
-       ref = const Camera(
+    setUp(() {
+      ref = const Camera(
         id: 'id-1',
         label: 'Label 1',
         shutterSpeeds: [1, 2, 3],
       );
 
-       same = const Camera(
+      same = const Camera(
         id: 'id-1',
         label: 'Label 1',
         shutterSpeeds: [1, 2, 3],
       );
 
-       otherId = const Camera(
+      otherId = const Camera(
         id: 'id-2',
         label: 'Label 1',
         shutterSpeeds: [1, 2, 3],
       );
 
-       otherLabel = const Camera(
+      otherLabel = const Camera(
         id: 'id-1',
         label: 'Label 2',
         shutterSpeeds: [1, 2, 3],
       );
 
-       otherShutterSpeeds = const Camera(
+      otherShutterSpeeds = const Camera(
         id: 'id-1',
         label: 'Label 1',
-        shutterSpeeds: [4,5,6],
+        shutterSpeeds: [4, 5, 6],
       );
 
-       reOrderedShutterSpeeds = const Camera(
+      reOrderedShutterSpeeds = const Camera(
         id: 'id-1',
         label: 'Label 1',
         shutterSpeeds: [1, 3, 2],

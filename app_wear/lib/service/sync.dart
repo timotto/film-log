@@ -91,7 +91,8 @@ class SyncService {
       final film =
           state.films.where((film) => film.id == addPhoto.filmId).firstOrNull;
       if (film == null) {
-        _log.info('update-pending: add-photo with unknown film id: ${addPhoto.filmId}');
+        _log.info(
+            'update-pending: add-photo with unknown film id: ${addPhoto.filmId}');
         continue;
       }
 

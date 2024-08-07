@@ -2,13 +2,13 @@ import 'package:film_log_wear/model/location.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group('Location', (){
+  group('Location', () {
     late Location ref;
     late Location same;
     late Location otherLatitude;
     late Location otherLongitude;
 
-    setUp((){
+    setUp(() {
       // using "const Location" causes same hashCode for different objects!
       ref = Location(latitude: 10.12345, longitude: 50.54321);
       same = Location(latitude: 10.12345, longitude: 50.54321);

@@ -1,6 +1,5 @@
 import 'package:film_log_wear/service/film_repo.dart';
 import 'package:film_log_wear/model/photo.dart' as m;
-
 import 'package:film_log_wear_data/model/camera.dart';
 import 'package:film_log_wear_data/model/film.dart';
 import 'package:film_log_wear_data/model/filter.dart';
@@ -97,7 +96,7 @@ Future<void> fakeEditFilm({
         id: '',
         recorded: DateTime.timestamp(),
         frameNumber: frameNumber,
-        shutterSpeed: 1/250,
+        shutterSpeed: 1 / 250,
         aperture: 8,
         lens: null,
         filters: [],

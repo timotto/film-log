@@ -27,14 +27,16 @@ void main() {
   // }
 
   final result = fStops(stepDivider: 3, max: 128);
-  print(result.map((v) => v < 10 ? v.toStringAsFixed(2) : v.toStringAsFixed(1)).join(','));
+  print(result
+      .map((v) => v < 10 ? v.toStringAsFixed(2) : v.toStringAsFixed(1))
+      .join(','));
 }
 
 List<double> fStops({required double stepDivider, required double max}) {
   final List<double> result = [];
 
   double pwr = 0;
-  final increment = 1 /stepDivider;
+  final increment = 1 / stepDivider;
 
   while (true) {
     final value = pow(sqrt2, pwr).toDouble();

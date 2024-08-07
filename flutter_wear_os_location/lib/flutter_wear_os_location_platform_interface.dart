@@ -1,7 +1,7 @@
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-import 'flutter_wear_os_location_method_channel.dart';
 import './model/location.dart';
+import 'flutter_wear_os_location_method_channel.dart';
 
 abstract class FlutterWearOsLocationPlatform extends PlatformInterface {
   /// Constructs a FlutterWearOsLocationPlatform.

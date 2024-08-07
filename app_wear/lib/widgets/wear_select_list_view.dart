@@ -16,16 +16,14 @@ class WearSelectListView<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => WearListView(
-    selectedIndex: _selectedIndex(),
-    children: _children(context),
-  );
+        selectedIndex: _selectedIndex(),
+        children: _children(context),
+      );
 
-  List<Widget> _children(BuildContext context) => values
-      .map((value) => _listTile(context, value))
-      .toList(growable: false);
+  List<Widget> _children(BuildContext context) =>
+      values.map((value) => _listTile(context, value)).toList(growable: false);
 
-  Widget _listTile(BuildContext context, T value) =>
-      WearListTile(
+  Widget _listTile(BuildContext context, T value) => WearListTile(
         title: titleBuilder(value),
         selected: value == this.value,
         onTap: () => Navigator.pop(context, value),
