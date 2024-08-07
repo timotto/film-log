@@ -92,7 +92,7 @@ jobs:
         bundler-cache: true
 
     - name: Install fastlane
-      working-dir: app/android
+      working-directory: app/android
       run: bundle install
 
     - name: Publish phone app
