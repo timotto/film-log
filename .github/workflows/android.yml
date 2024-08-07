@@ -98,7 +98,11 @@ jobs:
     - name: Publish phone app
       working-directory: app/android
       run: fastlane android internal
+      env:
+        RUBYOPT: '-rostruct' # TODO: Remove when https://github.com/fastlane/fastlane/pull/21950 gets released
 
     - name: Publish Wear OS app
       working-directory: app_wear/android
       run: fastlane android internal
+      env:
+        RUBYOPT: '-rostruct' # TODO: Remove when https://github.com/fastlane/fastlane/pull/21950 gets released
