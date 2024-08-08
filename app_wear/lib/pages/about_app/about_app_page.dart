@@ -34,13 +34,13 @@ class AboutAppPage extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(AppLocalizations.of(context).aboutAppText),
-                        ElevatedButton(
-                          onPressed: () => _showLicensePage(context),
-                          child: Text(
-                            AppLocalizations.of(context).buttonShowLicenses,
-                          ),
-                        ),
                       ],
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () => _showLicensePage(context),
+                    child: Text(
+                      AppLocalizations.of(context).buttonShowLicenses,
                     ),
                   ),
                 ],
