@@ -3,6 +3,7 @@ import 'package:film_log_wear/model/photo.dart';
 import 'package:film_log_wear/pages/edit_photo_page.dart';
 import 'package:film_log_wear/service/film_repo.dart';
 import 'package:film_log_wear/service/wear_data.dart';
+import 'package:film_log_wear/widgets/add_button.dart';
 import 'package:film_log_wear/widgets/swipe_dismiss.dart';
 import 'package:film_log_wear/widgets/wear_list_tile.dart';
 import 'package:film_log_wear/widgets/wear_list_view.dart';
@@ -123,9 +124,8 @@ class _FilmInstancePageState extends State<_FilmInstancePageWidget> {
         onTap: () => _show(context, item),
       );
 
-  Widget _addButton(BuildContext context) => IconButton(
+  Widget _addButton(BuildContext context) => AddButton(
         onPressed: () => _add(context),
-        icon: const Icon(Icons.add),
       );
 
   Future<void> _add(BuildContext context) async {

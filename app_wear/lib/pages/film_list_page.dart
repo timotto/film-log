@@ -2,6 +2,7 @@ import 'package:film_log_wear/model/film.dart';
 import 'package:film_log_wear/pages/about_app/about_app_page.dart';
 import 'package:film_log_wear/pages/film_instance_page.dart';
 import 'package:film_log_wear/service/wear_data.dart';
+import 'package:film_log_wear/widgets/add_button.dart';
 import 'package:film_log_wear/widgets/swipe_dismiss.dart';
 import 'package:film_log_wear/widgets/wear_list_tile.dart';
 import 'package:film_log_wear/widgets/wear_list_view.dart';
@@ -74,9 +75,8 @@ class FilmListPage extends StatelessWidget {
         label: Text(AppLocalizations.of(context).buttonAboutApp),
       );
 
-  Widget _addButton(BuildContext context) => IconButton(
+  Widget _addButton(BuildContext context) => AddButton(
         onPressed: () => _addFilmInstance(context),
-        icon: const Icon(Icons.add),
       );
 
   Future<void> _select(BuildContext context, Film item) async {

@@ -1,3 +1,4 @@
+import 'package:film_log_wear/widgets/accept_button.dart';
 import 'package:film_log_wear/widgets/wear_list_tile.dart';
 import 'package:film_log_wear/widgets/wear_list_view.dart';
 import 'package:flutter/material.dart';
@@ -50,9 +51,8 @@ class _WearMultiSelectListViewState<T>
         onTap: () => _toggleSelected(value),
       );
 
-  Widget _acceptButton(BuildContext context) => IconButton(
+  Widget _acceptButton(BuildContext context) => AcceptButton(
         onPressed: () => widget.onAccept(values),
-        icon: const Icon(Icons.check),
       );
 
   int? _firstSelectedIndex() {

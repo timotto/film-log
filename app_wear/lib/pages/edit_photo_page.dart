@@ -10,6 +10,7 @@ import 'package:film_log_wear/pages/edit_shutter_speed_page.dart';
 import 'package:film_log_wear/service/filter_repo.dart';
 import 'package:film_log_wear/service/lens_repo.dart';
 import 'package:film_log_wear/service/location.dart';
+import 'package:film_log_wear/widgets/accept_button.dart';
 import 'package:film_log_wear/widgets/swipe_dismiss.dart';
 import 'package:film_log_wear/widgets/wear_list_tile.dart';
 import 'package:film_log_wear/widgets/wear_list_view.dart';
@@ -223,9 +224,8 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
         ),
       );
 
-  Widget _acceptButton(BuildContext context) => IconButton(
+  Widget _acceptButton(BuildContext context) => AcceptButton(
         onPressed: () => Navigator.of(context).pop(photo),
-        icon: const Icon(Icons.check),
       );
 
   VoidCallback? _ifEdit(VoidCallback cb) => widget.edit ? cb : null;

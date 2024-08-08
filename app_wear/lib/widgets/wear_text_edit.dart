@@ -1,3 +1,4 @@
+import 'package:film_log_wear/widgets/accept_button.dart';
 import 'package:film_log_wear/widgets/swipe_dismiss.dart';
 import 'package:flutter/material.dart';
 
@@ -47,9 +48,8 @@ class _WearTextEditState extends State<WearTextEdit> {
                   ),
                   onSubmitted: (_) => _save(context),
                 ),
-                IconButton(
+                AcceptButton(
                   onPressed: () => _save(context),
-                  icon: const Icon(Icons.check),
                 ),
               ],
             ),
