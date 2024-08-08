@@ -61,7 +61,7 @@ void main() {
         inserted: DateTime(2020, 1, 2, 3, 4, 5),
         maxPhotoCount: 24,
         actualIso: 200,
-        filmStockId: null,
+        filmStockId: 'fs-1',
         camera: camera1,
         photos: [
           Photo(
