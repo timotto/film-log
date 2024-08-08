@@ -1,8 +1,11 @@
 {
   "appTitle": "Film Log",
 
-  "addFilmUsePhone": "Benutze dein Smartphone um einen Film anzulegen",
-  "openOnPhone": "Auf Smartphone öffnen",
+  "addFilmTitleTitleName": "Name",
+  "addFilmTitleTitleCamera": "Kamera",
+  "addFilmTitleTitleFilmStock": "Film Sorte",
+  "addFilmTitleTitleISO": "ISO",
+  "addFilmTitleTitleFramesPerFilm": "Fotos",
 
   "editPhotoTileTitleFrameNumber": "Foto Nummer",
   "editPhotoTileTitleShutterSpeed": "Verschlusszeit",
@@ -33,6 +36,16 @@
         "format": "compact"
       }
     }
-  }
+  },
 
+  "addFilmNameTemplate": "{count, plural, =0{Film} =1{Film 1} other{Film {count}}}",
+  "@addFilmNameTemplate": {
+    "description": "Name of a film to add",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  }
 }

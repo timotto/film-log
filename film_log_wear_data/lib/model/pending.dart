@@ -1,4 +1,8 @@
+import 'package:film_log_wear_data/model/equals.dart';
+import 'package:film_log_wear_data/model/json.dart';
+
 import 'add_photo.dart';
+import 'film.dart';
 import 'photo.dart';
 import 'state.dart';
 
@@ -7,19 +11,39 @@ import 'state.dart';
 /// app listens for them.
 /// The Wear OS maintains the changes in this item until it receives
 /// a confirmation of them being stored through the [State] object.
-class Pending {
-  const Pending({required this.addPhotos});
+class Pending implements Equals<Pending> {
+  const Pending({required this.addPhotos, required this.addFilms});
+
+  factory Pending.empty() => const Pending(
+        addPhotos: const [],
+        addFilms: const [],
+      );
 
   final List<AddPhoto> addPhotos;
+  final List<Film> addFilms;
 
-  bool get isEmpty => addPhotos.isEmpty;
+  bool get isEmpty => addPhotos.isEmpty && addFilms.isEmpty;
 
-  Pending addItem(AddPhoto item) => Pending(addPhotos: [...addPhotos, item]);
+  Pending addItem(AddPhoto item) => Pending(
+        addPhotos: [...addPhotos, item],
+        addFilms: addFilms,
+      );
 
+  Pending addFilm(Film item) => Pending(
+        addPhotos: addPhotos,
+        addFilms: [...addFilms, item],
+      );
+
+  @override
   bool equals(Pending other) {
     if (addPhotos.length != other.addPhotos.length) return false;
+    if (addFilms.length != other.addFilms.length) return false;
 
-    return _sameAddPhotosByFilm(addPhotosByFilm, other.addPhotosByFilm);
+    if (!_sameAddPhotosByFilm(addPhotosByFilm, other.addPhotosByFilm)) {
+      return false;
+    }
+
+    return Equals.all(addFilms, other.addFilms);
   }
 
   Map<String, List<Photo>> get addPhotosByFilm {
@@ -38,14 +62,13 @@ class Pending {
   }
 
   factory Pending.fromJson(Map<String, dynamic> json) => Pending(
-        addPhotos: (json['addPhotos'] as List<dynamic>)
-            .map((j) => AddPhoto.fromJson(j))
-            .toList(growable: false),
+        addPhotos: allFromJson(json['addPhotos'], AddPhoto.fromJson),
+        addFilms: allFromJson(json['addFilms'], Film.fromJson),
       );
 
   Map<String, dynamic> toJson() => {
-        'addPhotos':
-            addPhotos.map((item) => item.toJson()).toList(growable: false),
+        'addPhotos': allToJson(addPhotos),
+        'addFilms': allToJson(addFilms),
       };
 }
 
@@ -57,23 +80,7 @@ bool _sameAddPhotosByFilm(
     if (photosA == null || photosB == null) {
       return false;
     }
-    if (!_samePhotos(photosA, photosB)) {
-      return false;
-    }
-  }
-
-  return true;
-}
-
-bool _samePhotos(List<Photo> a, List<Photo> b) {
-  if (a.length != b.length) {
-    return false;
-  }
-  final n = a.length;
-  for (var i = 0; i < n; i++) {
-    final photoA = a[i];
-    final photoB = b[i];
-    if (!photoA.equals(photoB)) {
+    if (!Equals.all(photosA, photosB)) {
       return false;
     }
   }

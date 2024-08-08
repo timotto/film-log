@@ -1,6 +1,7 @@
+import 'package:film_log_wear_data/model/json.dart';
 import 'package:film_log_wear_data/model/photo.dart';
 
-class AddPhoto {
+class AddPhoto implements ToJson {
   const AddPhoto({
     required this.filmId,
     required this.photo,
@@ -14,6 +15,7 @@ class AddPhoto {
         photo: Photo.fromJson(json['photo']),
       );
 
+  @override
   Map<String, dynamic> toJson() => {
         'filmId': filmId,
         'photo': photo.toJson(),

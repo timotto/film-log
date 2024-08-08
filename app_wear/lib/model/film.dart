@@ -10,7 +10,9 @@ class Film extends Item<Film> {
     required this.label,
     required this.inserted,
     required this.maxPhotoCount,
+    required this.actualIso,
     required this.camera,
+    required this.filmStockId,
     required this.photos,
   });
 
@@ -18,7 +20,9 @@ class Film extends Item<Film> {
   final String label;
   final DateTime inserted;
   final int maxPhotoCount;
+  final double? actualIso;
   final Camera? camera;
+  final String? filmStockId;
   final List<Photo> photos;
 
   Map<String, dynamic> toJson() => {
@@ -26,7 +30,9 @@ class Film extends Item<Film> {
         'label': label,
         'inserted': inserted.toIso8601String(),
         'maxPhotoCount': maxPhotoCount,
+        'actualIso': actualIso,
         'camera': camera?.toJson(),
+        'filmStockId': filmStockId,
         'photos': photos.map((p) => p.toJson()).toList(),
       };
 
@@ -35,7 +41,9 @@ class Film extends Item<Film> {
         label: label,
         inserted: inserted,
         maxPhotoCount: maxPhotoCount,
+        actualIso: actualIso,
         camera: camera,
+        filmStockId: filmStockId,
         photos: [...photos.where((p) => p.id != photo.id), photo],
       );
 
@@ -63,7 +71,9 @@ class Film extends Item<Film> {
       label == other.label &&
       inserted == other.inserted &&
       maxPhotoCount == other.maxPhotoCount &&
+      actualIso == other.actualIso &&
       camera == other.camera &&
+      filmStockId == other.filmStockId &&
       sameList(photos, other.photos);
 
   @override
@@ -72,7 +82,9 @@ class Film extends Item<Film> {
         label,
         inserted,
         maxPhotoCount,
+        actualIso,
         camera,
+        filmStockId,
         ...photos,
       ]);
 }

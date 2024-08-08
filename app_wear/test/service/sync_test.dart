@@ -1,11 +1,13 @@
 import 'package:film_log_wear/model/camera.dart';
 import 'package:film_log_wear/model/film.dart';
+import 'package:film_log_wear/model/filmstock.dart';
 import 'package:film_log_wear/model/filter.dart';
 import 'package:film_log_wear/model/lens.dart';
 import 'package:film_log_wear/model/location.dart';
 import 'package:film_log_wear/model/photo.dart';
 import 'package:film_log_wear/service/camera_repo.dart';
 import 'package:film_log_wear/service/film_repo.dart';
+import 'package:film_log_wear/service/filmstock_repo.dart';
 import 'package:film_log_wear/service/filter_repo.dart';
 import 'package:film_log_wear/service/lens_repo.dart';
 import 'package:film_log_wear/service/sync.dart';
@@ -13,6 +15,7 @@ import 'package:film_log_wear/service/wear/encode.dart';
 import 'package:film_log_wear_data/model/add_photo.dart';
 import 'package:film_log_wear_data/model/camera.dart' as w;
 import 'package:film_log_wear_data/model/film.dart' as w;
+import 'package:film_log_wear_data/model/film_stock.dart' as w;
 import 'package:film_log_wear_data/model/filter.dart' as w;
 import 'package:film_log_wear_data/model/lens.dart' as w;
 import 'package:film_log_wear_data/model/pending.dart';
@@ -26,6 +29,7 @@ void main() {
     late CameraRepo cameraRepo;
     late FilterRepo filterRepo;
     late LensRepo lensRepo;
+    late FilmStockRepo filmStockRepo;
 
     late int publishPendingCallCount;
     late List<Pending> publishPendingArguments;
@@ -40,10 +44,12 @@ void main() {
       cameraRepo = CameraRepo();
       filterRepo = FilterRepo();
       lensRepo = LensRepo();
+      filmStockRepo = FilmStockRepo();
       filmRepo.set([]);
       cameraRepo.set([]);
       filterRepo.set([]);
       lensRepo.set([]);
+      filmStockRepo.set([]);
 
       publishPendingCallCount = 0;
       publishPendingArguments = [];
@@ -53,6 +59,7 @@ void main() {
         cameraRepo: cameraRepo,
         filterRepo: filterRepo,
         lensRepo: lensRepo,
+        filmStockRepo: filmStockRepo,
         publishPending: publishPending,
       );
     });
@@ -63,17 +70,20 @@ void main() {
       late Lens expectedLens1, expectedLens2;
       late Filter expectedFilter1, expectedFilter2;
       late Film expectedFilm1, expectedFilm2;
+      late FilmStock expectedFilmStock1, expectedFilmStock2;
 
       setUp(() {
         expectedCamera1 = const Camera(
           id: 'cam-1',
           label: 'Camera 1',
           shutterSpeeds: [1 / 1000, 1 / 500, 1 / 250],
+          defaultFramesPerFilm: 36,
         );
         expectedCamera2 = const Camera(
           id: 'cam-2',
           label: 'Camera 2',
           shutterSpeeds: [1 / 125, 1 / 60, 1 / 30],
+          defaultFramesPerFilm: 24,
         );
 
         expectedLens1 = Lens(
@@ -106,6 +116,8 @@ void main() {
           inserted: DateTime(2020, 10, 5, 13, 30, 0),
           maxPhotoCount: 12,
           camera: expectedCamera1,
+          actualIso: 200,
+          filmStockId: 'fs-1',
           photos: [
             Photo(
               id: 'photo-1',
@@ -128,6 +140,8 @@ void main() {
           inserted: DateTime(2020, 11, 5, 13, 30, 0),
           maxPhotoCount: 36,
           camera: expectedCamera2,
+          actualIso: 200,
+          filmStockId: 'fs-1',
           photos: [
             Photo(
               id: 'photo-2',
@@ -155,78 +169,109 @@ void main() {
           ],
         );
 
-        givenState = State(
-          cameras: [
-            w.Camera(
-              id: expectedCamera1.id,
-              label: expectedCamera1.label,
-              shutterSpeeds: [...expectedCamera1.shutterSpeeds],
-            ),
-            w.Camera(
-              id: expectedCamera2.id,
-              label: expectedCamera2.label,
-              shutterSpeeds: [...expectedCamera2.shutterSpeeds],
-            ),
-          ],
-          lenses: [
-            w.Lens(
-              id: expectedLens1.id,
-              label: expectedLens1.label,
-              cameraIds: expectedLens1.cameras.map((c) => c.id).toList(
-                    growable: false,
-                  ),
-              apertures: [...expectedLens1.apertures],
-            ),
-            w.Lens(
-              id: expectedLens2.id,
-              label: expectedLens2.label,
-              cameraIds: expectedLens2.cameras.map((c) => c.id).toList(
-                    growable: false,
-                  ),
-              apertures: [...expectedLens2.apertures],
-            ),
-          ],
-          filters: [
-            w.Filter(
-              id: expectedFilter1.id,
-              label: expectedFilter1.label,
-              lensIdList: expectedFilter1.lenses.map((l) => l.id).toList(
-                    growable: false,
-                  ),
-            ),
-            w.Filter(
-              id: expectedFilter2.id,
-              label: expectedFilter2.label,
-              lensIdList: expectedFilter2.lenses.map((l) => l.id).toList(
-                    growable: false,
-                  ),
-            ),
-          ],
-          films: [
-            w.Film(
-              id: expectedFilm1.id,
-              name: expectedFilm1.label,
-              inserted: expectedFilm1.inserted,
-              maxPhotoCount: expectedFilm1.maxPhotoCount,
-              cameraId: expectedFilm1.camera?.id,
-              lensIdList: [expectedLens1.id, expectedLens2.id],
-              photos: expectedFilm1.photos.map(encodePhoto).toList(
-                    growable: false,
-                  ),
-            ),
-            w.Film(
-              id: expectedFilm2.id,
-              name: expectedFilm2.label,
-              inserted: expectedFilm2.inserted,
-              maxPhotoCount: expectedFilm2.maxPhotoCount,
-              cameraId: expectedFilm2.camera?.id,
-              lensIdList: [expectedLens1.id],
-              photos: expectedFilm2.photos.map(encodePhoto).toList(
-                    growable: false,
-                  ),
-            ),
-          ],
+        expectedFilmStock1 = FilmStock(
+          id: 'fs-1',
+          label: 'Film Stock 1',
+          iso: 100,
+          cameras: [expectedCamera1, expectedCamera2],
         );
+        expectedFilmStock2 = FilmStock(
+          id: 'fs-2',
+          label: 'Film Stock 2',
+          iso: 400,
+          cameras: [expectedCamera2],
+        );
+
+        givenState = State(cameras: [
+          w.Camera(
+            id: expectedCamera1.id,
+            label: expectedCamera1.label,
+            shutterSpeeds: [...expectedCamera1.shutterSpeeds],
+            defaultFramesPerFilm: expectedCamera1.defaultFramesPerFilm,
+          ),
+          w.Camera(
+            id: expectedCamera2.id,
+            label: expectedCamera2.label,
+            shutterSpeeds: [...expectedCamera2.shutterSpeeds],
+            defaultFramesPerFilm: expectedCamera2.defaultFramesPerFilm,
+          ),
+        ], lenses: [
+          w.Lens(
+            id: expectedLens1.id,
+            label: expectedLens1.label,
+            cameraIds: expectedLens1.cameras.map((c) => c.id).toList(
+                  growable: false,
+                ),
+            apertures: [...expectedLens1.apertures],
+          ),
+          w.Lens(
+            id: expectedLens2.id,
+            label: expectedLens2.label,
+            cameraIds: expectedLens2.cameras.map((c) => c.id).toList(
+                  growable: false,
+                ),
+            apertures: [...expectedLens2.apertures],
+          ),
+        ], filters: [
+          w.Filter(
+            id: expectedFilter1.id,
+            label: expectedFilter1.label,
+            lensIdList: expectedFilter1.lenses.map((l) => l.id).toList(
+                  growable: false,
+                ),
+          ),
+          w.Filter(
+            id: expectedFilter2.id,
+            label: expectedFilter2.label,
+            lensIdList: expectedFilter2.lenses.map((l) => l.id).toList(
+                  growable: false,
+                ),
+          ),
+        ], films: [
+          w.Film(
+            id: expectedFilm1.id,
+            name: expectedFilm1.label,
+            inserted: expectedFilm1.inserted,
+            actualIso: expectedFilm1.actualIso,
+            maxPhotoCount: expectedFilm1.maxPhotoCount,
+            cameraId: expectedFilm1.camera?.id,
+            filmStockId: expectedFilm1.filmStockId,
+            lensIdList: [expectedLens1.id, expectedLens2.id],
+            photos: expectedFilm1.photos.map(encodePhoto).toList(
+                  growable: false,
+                ),
+          ),
+          w.Film(
+            id: expectedFilm2.id,
+            name: expectedFilm2.label,
+            inserted: expectedFilm2.inserted,
+            maxPhotoCount: expectedFilm2.maxPhotoCount,
+            cameraId: expectedFilm2.camera?.id,
+            lensIdList: [expectedLens1.id],
+            actualIso: expectedFilm2.actualIso,
+            filmStockId: expectedFilm2.filmStockId,
+            photos: expectedFilm2.photos.map(encodePhoto).toList(
+                  growable: false,
+                ),
+          ),
+        ], filmStocks: [
+          w.FilmStock(
+            id: expectedFilmStock1.id,
+            label: expectedFilmStock1.label,
+            iso: expectedFilmStock1.iso,
+            cameraIds: expectedFilmStock1.cameras.map((c) => c.id).toList(
+                  growable: false,
+                ),
+          ),
+          w.FilmStock(
+            id: expectedFilmStock2.id,
+            label: expectedFilmStock2.label,
+            iso: expectedFilmStock2.iso,
+            cameraIds: expectedFilmStock2.cameras.map((c) => c.id).toList(
+                  growable: false,
+                ),
+          ),
+        ]);
       });
 
       group('repo update', () {
@@ -277,10 +322,22 @@ void main() {
             ]),
           );
         });
+
+        test('stores film stocks', () async {
+          await uut.importState(givenState);
+
+          expect(
+            filmStockRepo.value(),
+            containsAll([
+              expectedFilmStock1,
+              expectedFilmStock2,
+            ]),
+          );
+        });
       });
 
       group('Pending', () {
-        test('removes Pending items when found in State', () async {
+        test('removes Pending Photos when found in State', () async {
           await uut.addPhoto(
             photo: Photo(
               id: 'photo-1',
@@ -326,6 +383,54 @@ void main() {
               photo: encodePhoto(expectedRemainingPhoto),
             )),
           );
+        });
+
+        test('removes Pending Films when found in State', () async {
+          final addedFilmGivenInState = Film(
+            id: 'film-1',
+            label: 'Film 1',
+            inserted: DateTime(2020),
+            maxPhotoCount: 10,
+            camera: null,
+            actualIso: 200,
+            filmStockId: 'fs-1',
+            photos: [],
+          );
+          final addedFilmExpectedToRemain = Film(
+            id: 'film-2',
+            label: 'Film 2',
+            inserted: DateTime(2020, 1, 2),
+            maxPhotoCount: 12,
+            camera: null,
+            actualIso: 200,
+            filmStockId: 'fs-1',
+            photos: [],
+          );
+
+          await uut.addFilm(addedFilmExpectedToRemain);
+          await uut.addFilm(addedFilmGivenInState);
+
+          await uut.importState(State(
+            films: [encodeFilm(addedFilmGivenInState, lenses: [])],
+            filters: [],
+            lenses: [],
+            cameras: [],
+            filmStocks: [],
+          ));
+
+          final actualResult = publishPendingArguments.last.addFilms;
+          expect(
+              actualResult,
+              contains(encodeFilm(
+                addedFilmExpectedToRemain,
+                lenses: [],
+              )));
+          expect(
+              actualResult,
+              isNot(contains(encodeFilm(
+                addedFilmGivenInState,
+                lenses: [],
+              ))));
         });
 
         test('does not call publishPending when nothing changes', () async {
@@ -419,11 +524,14 @@ void main() {
               photos: [],
               lensIdList: [],
               cameraId: null,
+              actualIso: 200,
+              filmStockId: 'fs-1',
             ),
           ],
           filters: [],
           lenses: [],
           cameras: [],
+          filmStocks: [],
         ));
 
         final givenPhoto = Photo(
@@ -448,66 +556,195 @@ void main() {
       });
     });
 
-    group('set pending', () {
-      test('updates FilmRepo', () async {
-        await uut.importState(State(
-          films: [
-            w.Film(
-              id: 'film-1',
-              name: 'Film 1',
-              inserted: DateTime(2000),
-              maxPhotoCount: 10,
-              photos: [],
-              lensIdList: [],
-              cameraId: null,
-            ),
-          ],
-          filters: [],
-          lenses: [],
-          cameras: [],
-        ));
-
-        final givenPhoto = Photo(
-          id: 'photo-1',
-          frameNumber: 1,
-          recorded: DateTime(2021),
-          shutterSpeed: 1 / 250,
-          aperture: 11,
-          lens: null,
-          filters: [],
-          location: null,
+    group('addFilm', () {
+      test('calls publishPending callback', () async {
+        final givenFilm = Film(
+          id: 'film-9',
+          label: 'Wear OS Film',
+          inserted: DateTime(2020, 1, 2),
+          maxPhotoCount: 12,
+          camera: null,
+          photos: [],
+          actualIso: 200,
+          filmStockId: 'fs-1',
         );
 
-        uut.pending = Pending(addPhotos: [
-          AddPhoto(filmId: 'film-1', photo: encodePhoto(givenPhoto)),
-        ]);
+        await uut.addFilm(givenFilm);
 
-        expect(filmRepo.value().length, equals(1));
-        expect(filmRepo.value().last.photos.length, equals(1));
-        expect(filmRepo.value().last.photos.last, equals(givenPhoto));
+        expect(publishPendingCallCount, equals(1));
+        expect(publishPendingArguments.length, equals(1));
+        final arg = publishPendingArguments[0];
+        expect(arg.addFilms.length, equals(1));
+        expect(arg.addFilms[0], equals(encodeFilm(givenFilm, lenses: [])));
       });
 
-      test('updates FilmRepo even when there is no State', () async {
-        expect(filmRepo.value().length, equals(0));
-
-        final givenPhoto = Photo(
-          id: 'photo-1',
-          frameNumber: 1,
-          recorded: DateTime(2021),
-          shutterSpeed: 1 / 250,
-          aperture: 16,
-          lens: null,
-          filters: [],
-          location: null,
+      test('updates FilmRepo', () async {
+        final givenFilm = Film(
+          id: 'film-9',
+          label: 'Wear OS Film',
+          inserted: DateTime(2020, 1, 2),
+          maxPhotoCount: 12,
+          camera: null,
+          photos: [],
+          actualIso: 200,
+          filmStockId: 'fs-1',
         );
 
-        uut.pending = Pending(addPhotos: [
-          AddPhoto(filmId: 'film-1', photo: encodePhoto(givenPhoto)),
-        ]);
+        await uut.addFilm(givenFilm);
 
-        expect(filmRepo.value().length, equals(1));
-        expect(filmRepo.value().last.photos.length, equals(1));
-        expect(filmRepo.value().last.photos.last, equals(givenPhoto));
+        expect(filmRepo.value(), contains(givenFilm));
+      });
+    });
+
+    group('set pending', () {
+      group('when there is State', () {
+        setUp(() async {
+          await uut.importState(State(
+            films: [
+              w.Film(
+                id: 'film-1',
+                name: 'Film 1',
+                inserted: DateTime(2000),
+                maxPhotoCount: 10,
+                photos: [],
+                lensIdList: [],
+                cameraId: null,
+                actualIso: 200,
+                filmStockId: 'fs-1',
+              ),
+            ],
+            filters: [],
+            lenses: [],
+            cameras: [],
+            filmStocks: [],
+          ));
+        });
+
+        test('adds Photo to FilmRepo', () async {
+          final givenPhoto = Photo(
+            id: 'photo-1',
+            frameNumber: 1,
+            recorded: DateTime(2021),
+            shutterSpeed: 1 / 250,
+            aperture: 11,
+            lens: null,
+            filters: [],
+            location: null,
+          );
+
+          uut.pending = Pending(
+            addPhotos: [
+              AddPhoto(filmId: 'film-1', photo: encodePhoto(givenPhoto)),
+            ],
+            addFilms: [],
+          );
+
+          expect(filmRepo.value().length, equals(1));
+          expect(filmRepo.value().last.photos.length, equals(1));
+          expect(filmRepo.value().last.photos.last, equals(givenPhoto));
+        });
+
+        test('adds Film to FilmRepo', () async {
+          final givenFilm = Film(
+            id: 'film-9',
+            label: 'Wear OS Film',
+            inserted: DateTime(2020, 1, 2),
+            maxPhotoCount: 12,
+            camera: null,
+            photos: [],
+            actualIso: 200,
+            filmStockId: 'fs-1',
+          );
+
+          uut.pending = Pending(
+            addPhotos: [],
+            addFilms: [encodeFilm(givenFilm, lenses: [])],
+          );
+
+          expect(filmRepo.value(), contains(givenFilm));
+        });
+
+        test('does not remove photos of existing film', () async {
+          final existingPhoto = Photo(
+            id: 'photo-1',
+            frameNumber: 1,
+            recorded: DateTime(2021),
+            filters: [],
+            shutterSpeed: 1 / 250,
+            aperture: 4,
+            lens: null,
+            location: null,
+          );
+
+          final existingFilm = w.Film(
+            id: 'film-1',
+            name: 'Film 1',
+            inserted: DateTime(2000),
+            maxPhotoCount: 10,
+            photos: [encodePhoto(existingPhoto)],
+            lensIdList: [],
+            cameraId: null,
+            actualIso: 200,
+            filmStockId: 'fs-1',
+          );
+
+          await uut.importState(State(
+            films: [existingFilm],
+            filters: [],
+            lenses: [],
+            cameras: [],
+            filmStocks: [],
+          ));
+
+          final givenFilm = Film(
+            id: existingFilm.id,
+            label: 'Wear OS Film',
+            inserted: DateTime(2020, 1, 2),
+            maxPhotoCount: 12,
+            camera: null,
+            photos: [],
+            actualIso: 200,
+            filmStockId: 'fs-1',
+          );
+
+          uut.pending = Pending(
+            addPhotos: [],
+            addFilms: [encodeFilm(givenFilm, lenses: [])],
+          );
+
+          expect(filmRepo.value().length, equals(1));
+          final actualFilm = filmRepo.value()[0];
+          expect(actualFilm.id, equals(existingFilm.id));
+          expect(actualFilm.photos, contains(existingPhoto));
+        });
+      });
+
+      group('when there is no State', () {
+        test('adds Photo to FilmRepo and also adds matching Film', () async {
+          expect(filmRepo.value().length, equals(0));
+
+          final givenPhoto = Photo(
+            id: 'photo-1',
+            frameNumber: 1,
+            recorded: DateTime(2021),
+            shutterSpeed: 1 / 250,
+            aperture: 16,
+            lens: null,
+            filters: [],
+            location: null,
+          );
+
+          uut.pending = Pending(
+            addPhotos: [
+              AddPhoto(filmId: 'film-1', photo: encodePhoto(givenPhoto)),
+            ],
+            addFilms: [],
+          );
+
+          expect(filmRepo.value().length, equals(1));
+          expect(filmRepo.value().last.photos.length, equals(1));
+          expect(filmRepo.value().last.photos.last, equals(givenPhoto));
+        });
       });
     });
   });

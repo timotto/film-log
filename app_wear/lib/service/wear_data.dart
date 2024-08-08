@@ -6,6 +6,7 @@ import 'package:film_log_wear/model/film.dart';
 import 'package:film_log_wear/model/photo.dart';
 import 'package:film_log_wear/model/wear_os_device.dart' as m;
 import 'package:film_log_wear/service/camera_repo.dart';
+import 'package:film_log_wear/service/filmstock_repo.dart';
 import 'package:film_log_wear/service/filter_repo.dart';
 import 'package:film_log_wear/service/lens_repo.dart';
 import 'package:film_log_wear/service/sync.dart';
@@ -30,6 +31,7 @@ class WearDataService {
       cameraRepo: _cameraRepo,
       filterRepo: _filterRepo,
       lensRepo: _lensRepo,
+      filmStockRepo: _filmStockRepo,
       publishPending: (value) => _sendPending(value),
     );
   }
@@ -44,6 +46,7 @@ class WearDataService {
   final _cameraRepo = CameraRepo();
   final _filterRepo = FilterRepo();
   final _lensRepo = LensRepo();
+  final _filmStockRepo = FilmStockRepo();
   late SyncService _sync;
 
   late final SharedPreferences _prefs;
@@ -127,6 +130,10 @@ class WearDataService {
     await _sync.addPhoto(photo: photo, filmId: film.id);
   }
 
+  Future<void> sendFilm(Film film) async {
+    await _sync.addFilm(film);
+  }
+
   Future<void> _sendPending(Pending pending) async {
     await _wearOsConnectivity.syncData(
       path: syncPendingPath,
@@ -134,7 +141,7 @@ class WearDataService {
     );
 
     _log.finer(
-        'wear-data-service::send-pending: success: ${pending.addPhotos.length} items');
+        'wear-data-service::send-pending: success: photos=${pending.addPhotos.length} films=${pending.addFilms.length}');
   }
 
   Future<void> _restorePending() async {

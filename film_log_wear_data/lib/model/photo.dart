@@ -1,9 +1,10 @@
+import 'package:film_log_wear_data/model/equals.dart';
 import 'package:film_log_wear_data/model/json.dart';
 
 import 'location.dart';
 import 'util.dart';
 
-class Photo {
+class Photo implements ToJson, Equals<Photo> {
   const Photo({
     required this.id,
     required this.recorded,
@@ -24,6 +25,7 @@ class Photo {
   final List<String> filterIdList;
   final Location? location;
 
+  @override
   bool equals(Photo other) =>
       id == other.id &&
       recorded.isAtSameMomentAs(other.recorded) &&
@@ -71,6 +73,7 @@ class Photo {
             : Location.fromJson(json['location']),
       );
 
+  @override
   Map<String, dynamic> toJson() => {
         'id': id,
         'recorded': recorded.toIso8601String(),

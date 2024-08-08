@@ -1,16 +1,18 @@
-import 'package:film_log_wear_data/model/photo.dart' as w;
-import 'package:film_log_wear_data/model/film.dart' as w;
-import 'package:film_log_wear_data/model/location.dart' as w;
 import 'package:film_log_wear_data/model/camera.dart' as w;
+import 'package:film_log_wear_data/model/film.dart' as w;
+import 'package:film_log_wear_data/model/film_stock.dart' as w;
 import 'package:film_log_wear_data/model/filter.dart' as w;
 import 'package:film_log_wear_data/model/lens.dart' as w;
+import 'package:film_log_wear_data/model/location.dart' as w;
+import 'package:film_log_wear_data/model/photo.dart' as w;
 
 import '../../model/camera.dart' as m;
 import '../../model/film.dart' as m;
-import '../../model/photo.dart' as m;
-import '../../model/lens.dart' as m;
+import '../../model/filmstock.dart' as m;
 import '../../model/filter.dart' as m;
+import '../../model/lens.dart' as m;
 import '../../model/location.dart' as m;
+import '../../model/photo.dart' as m;
 
 m.Film decodeFilm(
   w.Film item, {
@@ -24,6 +26,8 @@ m.Film decodeFilm(
       inserted: item.inserted,
       maxPhotoCount: item.maxPhotoCount,
       camera: cameras.where((camera) => camera.id == item.cameraId).firstOrNull,
+      actualIso: item.actualIso,
+      filmStockId: item.filmStockId,
       photos: item.photos
           .map((item) => decodePhoto(
                 item,
@@ -66,6 +70,7 @@ m.Camera? decodeCamera(w.Camera? item) => item == null
         id: item.id,
         label: item.label,
         shutterSpeeds: item.shutterSpeeds,
+        defaultFramesPerFilm: item.defaultFramesPerFilm,
       );
 
 m.Lens? decodeLens(
@@ -96,3 +101,16 @@ m.Filter? decodeFilter(
                 .where((lens) => item.lensIdList.contains(lens.id))
                 .toList(growable: false),
           );
+
+m.FilmStock decodeFilmStock(
+  w.FilmStock item, {
+  required List<m.Camera> cameras,
+}) =>
+    m.FilmStock(
+      id: item.id,
+      label: item.label,
+      iso: item.iso,
+      cameras: cameras
+          .where((camera) => item.cameraIds.contains(camera.id))
+          .toList(growable: false),
+    );

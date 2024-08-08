@@ -33,6 +33,7 @@ void main() {
         id: 'camera-1',
         label: 'Camera 1',
         shutterSpeeds: [1 / 500, 1 / 250, 1 / 125, 1 / 60],
+        defaultFramesPerFilm: 36,
       );
       lens1 = Lens(
           id: 'lens-1',

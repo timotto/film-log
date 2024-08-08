@@ -7,16 +7,19 @@ class Camera extends Item<Camera> {
     required this.id,
     required this.label,
     required this.shutterSpeeds,
+    required this.defaultFramesPerFilm,
   });
 
   final String id;
   final String label;
   final List<double> shutterSpeeds;
+  final int? defaultFramesPerFilm;
 
   Map<String, dynamic> toJson() => {
         'id': id,
         'label': label,
         'shutterSpeeds': shutterSpeeds,
+        'defaultFramesPerFilm': defaultFramesPerFilm,
       };
 
   @override
@@ -30,8 +33,14 @@ class Camera extends Item<Camera> {
       other is Camera &&
       id == other.id &&
       label == other.label &&
-      sameList(shutterSpeeds, other.shutterSpeeds);
+      sameList(shutterSpeeds, other.shutterSpeeds) &&
+      defaultFramesPerFilm == other.defaultFramesPerFilm;
 
   @override
-  int get hashCode => Object.hashAll([id, label, ...shutterSpeeds]);
+  int get hashCode => Object.hashAll([
+        id,
+        label,
+        ...shutterSpeeds,
+        defaultFramesPerFilm,
+      ]);
 }

@@ -64,10 +64,7 @@ class WearDataService {
         .where((item) => !item.archive)
         .toList(growable: false);
 
-    final cameras = films
-        .where((item) => item.camera != null)
-        .map((item) => item.camera!)
-        .toList(growable: false);
+    final cameras = repos.cameraRepo.items();
 
     final lenses = repos.lensRepo
         .items()
@@ -79,6 +76,8 @@ class WearDataService {
         .where((filter) => _intersects(filter.lenses, lenses))
         .toList(growable: false);
 
+    final filmStocks = repos.filmstockRepo.items();
+
     return State(
       films: films
           .map((item) => encodeFilm(item, lenses: lenses))
@@ -88,6 +87,12 @@ class WearDataService {
       lenses: lenses.map((item) => encodeLens(item)).toList(growable: false),
       cameras:
           cameras.map((item) => encodeCamera(item)).toList(growable: false),
+      filmStocks: filmStocks
+          .map((item) => encodeFilmStock(
+                item,
+                cameras: cameras,
+              ))
+          .toList(growable: false),
     );
   }
 
@@ -127,6 +132,7 @@ class WearDataService {
         'wear-data-service::parse-pending-items: received ${dataItems.length} items');
 
     final List<FilmInstance> updates = [];
+    bool filmsAdded = false;
 
     for (var dataItem in dataItems) {
       final data = dataItem.mapData['data'];
@@ -140,6 +146,23 @@ class WearDataService {
         _log.finer('wear-data-service::parse-pending-items: no changes');
         continue;
       }
+
+      List<FilmInstance> addFilms = [];
+      for (var addFilm in pending.addFilms) {
+        final existing = repos.filmRepo.item(addFilm.id);
+        if (existing != null) {
+          continue;
+        }
+        addFilms.add(decodeFilmInstance(
+          addFilm,
+          cameras: repos.cameraRepo.items(),
+          lenses: repos.lensRepo.items(),
+          filters: repos.filterRepo.items(),
+          filmStocks: repos.filmstockRepo.items(),
+        ));
+        filmsAdded = true;
+      }
+      await repos.filmRepo.updateAll(addFilms, save: false);
 
       final byFilm = pending.addPhotosByFilm;
       for (var filmId in byFilm.keys) {
@@ -169,14 +192,14 @@ class WearDataService {
       }
     }
 
-    if (updates.isEmpty) {
-      _log.finer('wear-data-service::parse-pending-items: no updates');
-      return;
+    if (updates.isNotEmpty) {
+      await repos.filmRepo.updateAll(updates);
+    } else if (filmsAdded) {
+      await repos.filmRepo.save();
     }
 
-    await repos.filmRepo.updateAll(updates);
     _log.finer(
-        'wear-data-service::parse-pending-items: success: ${updates.length} updates');
+        'wear-data-service::parse-pending-items: success: photos=${updates.length} films=$filmsAdded updates');
   }
 
   Future<void> _onClientPending(List<DataEvent> events) async {

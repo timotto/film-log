@@ -20,16 +20,19 @@ void main() {
         id: 'cam-1',
         label: 'Camera 1',
         shutterSpeeds: [1 / 1000, 1 / 500, 1 / 250],
+        defaultFramesPerFilm: 36,
       );
       cam2 = const Camera(
         id: 'cam-2',
         label: 'Camera 2',
         shutterSpeeds: [1 / 125, 1 / 60, 1 / 30],
+        defaultFramesPerFilm: 36,
       );
       cam3 = const Camera(
         id: 'cam-3',
         label: 'Camera 3',
         shutterSpeeds: [1 / 125, 1 / 60, 1 / 30],
+        defaultFramesPerFilm: 36,
       );
 
       ref = Lens(

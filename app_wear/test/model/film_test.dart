@@ -28,11 +28,13 @@ void main() {
         id: 'cam-1',
         label: 'Camera 1',
         shutterSpeeds: [1 / 1000, 1 / 500, 1 / 250],
+        defaultFramesPerFilm: 36,
       );
       camera2 = const Camera(
         id: 'cam-2',
         label: 'Camera 2',
         shutterSpeeds: [1 / 1000, 1 / 500, 1 / 250],
+        defaultFramesPerFilm: 36,
       );
 
       lens1 = Lens(
@@ -58,6 +60,8 @@ void main() {
         label: 'Film 1',
         inserted: DateTime(2020, 1, 2, 3, 4, 5),
         maxPhotoCount: 24,
+        actualIso: 200,
+        filmStockId: null,
         camera: camera1,
         photos: [
           Photo(
@@ -88,6 +92,8 @@ void main() {
         label: 'Film 1',
         inserted: DateTime(2020, 1, 2, 3, 4, 5),
         maxPhotoCount: 24,
+        actualIso: 200,
+        filmStockId: 'fs-1',
         camera: camera1,
         photos: [
           Photo(
@@ -119,6 +125,8 @@ void main() {
         inserted: DateTime(2020, 1, 2, 3, 4, 5),
         maxPhotoCount: 24,
         camera: camera1,
+        actualIso: 200,
+        filmStockId: 'fs-1',
         photos: [
           Photo(
             id: 'photo-1',
@@ -149,6 +157,8 @@ void main() {
         inserted: DateTime(2020, 1, 2, 3, 4, 5),
         maxPhotoCount: 24,
         camera: camera1,
+        actualIso: 200,
+        filmStockId: 'fs-1',
         photos: [
           Photo(
             id: 'photo-1',
@@ -179,6 +189,8 @@ void main() {
         inserted: DateTime(2022, 1, 2, 3, 4, 5),
         maxPhotoCount: 24,
         camera: camera1,
+        actualIso: 200,
+        filmStockId: 'fs-1',
         photos: [
           Photo(
             id: 'photo-1',
@@ -209,6 +221,8 @@ void main() {
         inserted: DateTime(2020, 1, 2, 3, 4, 5),
         maxPhotoCount: 36,
         camera: camera1,
+        actualIso: 200,
+        filmStockId: 'fs-1',
         photos: [
           Photo(
             id: 'photo-1',
@@ -239,6 +253,8 @@ void main() {
         inserted: DateTime(2020, 1, 2, 3, 4, 5),
         maxPhotoCount: 24,
         camera: camera2,
+        actualIso: 200,
+        filmStockId: 'fs-1',
         photos: [
           Photo(
             id: 'photo-1',
@@ -269,6 +285,8 @@ void main() {
         inserted: DateTime(2020, 1, 2, 3, 4, 5),
         maxPhotoCount: 24,
         camera: null,
+        actualIso: 200,
+        filmStockId: 'fs-1',
         photos: [
           Photo(
             id: 'photo-1',
@@ -299,6 +317,8 @@ void main() {
         inserted: DateTime(2020, 1, 2, 3, 4, 5),
         maxPhotoCount: 24,
         camera: camera1,
+        actualIso: 200,
+        filmStockId: 'fs-1',
         photos: [
           Photo(
             id: 'photo-1',
@@ -329,6 +349,8 @@ void main() {
         inserted: DateTime(2020, 1, 2, 3, 4, 5),
         maxPhotoCount: 24,
         camera: camera1,
+        actualIso: 200,
+        filmStockId: 'fs-1',
         photos: [
           Photo(
             id: 'photo-2',

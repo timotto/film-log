@@ -53,13 +53,16 @@ class FilmRepo {
     await save();
   }
 
-  Future<void> updateAll(List<FilmInstance> items) async {
-    for(var item in items) {
+  Future<void> updateAll(List<FilmInstance> items, {bool save = true}) async {
+    for (var item in items) {
       itemsList.removeWhere((i) => i.itemId() == item.itemId());
       itemsList.add(item);
     }
     updateItems([...itemsList]);
-    await save();
+
+    if (save) {
+      await this.save();
+    }
   }
 
   final List<FilmInstance> itemsList = [];
