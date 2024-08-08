@@ -106,17 +106,16 @@ class _FilmLogPageWidget extends StatelessWidget {
   }
 
   Future<void> _archive(BuildContext context) async {
-    await repo.update(film.update(archive: true));
-    if (!context.mounted) return;
     Navigator.of(context).pop();
+    await repo.update(film.update(archive: true));
   }
 
   Future<void> _delete(BuildContext context) async {
     if (!await ConfirmDeleteDialog.show(context, film.name)) return;
 
-    await repo.delete(film);
     if (!context.mounted) return;
     Navigator.of(context).pop();
+    await repo.delete(film);
   }
 
   Future<void> _export(BuildContext context) async {
