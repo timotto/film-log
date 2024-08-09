@@ -1,24 +1,11 @@
-import 'package:film_log/service/lens_repo.dart';
-
 import '../model/filter.dart';
 import 'gear_repo.dart';
+import 'lens_repo.dart';
 
 class FilterRepo extends GearRepo<Filter> {
-  FilterRepo({required LensRepo lensRepo})
+  FilterRepo({required LensRepo lensRepo, required super.store})
       : _lensRepo = lensRepo,
-        super(storageKey: 'filter_repo') {
-    // updateItems([
-    //   Filter(
-    //       id: '1',
-    //       name: 'Red',
-    //       manufacturer: 'Something',
-    //       product: 'Dark Red',
-    //       lenses: lensRepo
-    //           .items()
-    //           .where((item) => item.id == "1")
-    //           .toList(growable: false)),
-    // ]);
-  }
+        super(storageKey: 'filter_repo',);
 
   final LensRepo _lensRepo;
 

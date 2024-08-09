@@ -2,6 +2,7 @@ import 'package:film_log/fmt/aperture.dart';
 import 'package:film_log/fmt/shutterspeed.dart';
 import 'package:film_log/fmt/timestamp.dart';
 import 'package:film_log/model/equals.dart';
+import 'package:film_log/model/gear.dart';
 import 'package:film_log/model/json.dart';
 import 'package:film_log/model/thumbnail.dart';
 import 'package:flutter/cupertino.dart';
@@ -149,23 +150,11 @@ class Photo implements ToJson, Equals<Photo> {
         frameNumber: json['frameNumber'],
         shutter: json['shutter'],
         aperture: json['aperture'],
-        filters: (json['filters'] == null)
-            ? []
-            : filters
-                .where((f) => (json['filters'] as List<dynamic>)
-                    .where((id) => f.id == id)
-                    .isNotEmpty)
-                .toList(growable: false),
-        lens: json['lens'] != null
-            ? lenses.where((l) => (json['lens'] == l.id)).firstOrNull
-            : null,
-        location: json['location'] != null
-            ? Location.fromJson(json['location'])
-            : null,
+        filters: Gear.fromIdList(json['filters'], filters),
+        lens: Gear.byId(json['lens'], lenses),
+        location: FromJson.orNull(json['location'], Location.fromJson),
         notes: json['notes'],
-        thumbnail: json['thumbnail'] != null
-            ? Thumbnail.fromJson(json['thumbnail'])
-            : null,
+        thumbnail: FromJson.orNull(json['thumbnail'], Thumbnail.fromJson),
       );
 
   @override

@@ -134,11 +134,7 @@ class Lens implements Gear<Lens> {
         name: json['name'],
         manufacturer: json['manufacturer'],
         product: json['product'],
-        cameras: cameras
-            .where((c) => (json['cameras'] as List<dynamic>)
-                .where((id) => c.id == id)
-                .isNotEmpty)
-            .toList(growable: false),
+        cameras: Gear.fromIdList(json['cameras'], cameras),
         type: LensType.fromJson(json['type']),
         focalLengthMin: json['focalLengthMin'],
         focalLengthMax: json['focalLengthMax'],
@@ -153,7 +149,7 @@ class Lens implements Gear<Lens> {
         'name': name,
         'manufacturer': manufacturer,
         'product': product,
-        'cameras': cameras.map((c) => c.id).toList(growable: false),
+        'cameras': Gear.toIdList(cameras),
         'type': type.toJson(),
         'focalLengthMin': focalLengthMin,
         'focalLengthMax': focalLengthMax,

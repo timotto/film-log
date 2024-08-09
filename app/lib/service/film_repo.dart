@@ -7,7 +7,7 @@ import 'package:film_log/service/camera_repo.dart';
 import 'package:film_log/service/filmstock_repo.dart';
 import 'package:film_log/service/filter_repo.dart';
 import 'package:film_log/service/lens_repo.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:film_log/service/persistence.dart';
 import 'package:uuid/v4.dart';
 
 import '../model/camera.dart';
@@ -16,6 +16,9 @@ import '../model/filter.dart';
 import '../model/lens.dart';
 
 class FilmRepo {
+  FilmRepo({required Persistence store}) : _store = store;
+
+  final Persistence _store;
   final _storageKey = 'film_repo';
 
   VoidCallback? _listener;
@@ -115,8 +118,7 @@ class FilmRepo {
   }) async {
     try {
       print('film-repo[$_storageKey]::load');
-      final prefs = await SharedPreferences.getInstance();
-      final jsonString = prefs.getString(_storageKey);
+      final jsonString = await _store.get(_storageKey);
       if (jsonString == null) {
         print('film-repo[$_storageKey]::load - complete no data');
         return;
@@ -140,8 +142,7 @@ class FilmRepo {
   Future<void> save() async {
     final json = _toJson();
     final jsonString = jsonEncode(json);
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_storageKey, jsonString);
+    await _store.set(_storageKey, jsonString);
     _notify();
   }
 

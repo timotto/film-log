@@ -1,16 +1,22 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:film_log/model/json.dart';
+import 'package:film_log/service/persistence.dart';
 import 'package:flutter/foundation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/v4.dart';
 
 import '../model/gear.dart';
 
 abstract class GearRepo<T extends Gear> {
-  GearRepo({required String storageKey}) : _storageKey = storageKey;
+  GearRepo({
+    required String storageKey,
+    required Persistence store,
+  })  : _storageKey = storageKey,
+        _store = store;
 
   final String _storageKey;
+  final Persistence _store;
 
   VoidCallback? _listener;
 
@@ -64,21 +70,17 @@ abstract class GearRepo<T extends Gear> {
   @protected
   T itemFromJson(Map<String, dynamic> json);
 
-  Map<String, dynamic> _toJson() => {
-        'items': itemsList.map((item) => item.toJson()).toList(growable: false),
-      };
+  Map<String, dynamic> _toJson() => {'items': ToJson.all(itemsList)};
 
   void _loadFromJson(Map<String, dynamic> json) {
-    final items =
-        (json['items'] as List<dynamic>).map((j) => itemFromJson(j)).toList();
+    final items = FromJson.all(json['items'], itemFromJson);
     updateItems(items);
   }
 
   Future<void> load() async {
     try {
       print('gear-repo[$_storageKey]::load');
-      final prefs = await SharedPreferences.getInstance();
-      final jsonString = prefs.getString(_storageKey);
+      final jsonString = await _store.get(_storageKey);
       if (jsonString == null) {
         print('gear-repo[$_storageKey]::load - complete no data');
         return;
@@ -95,8 +97,7 @@ abstract class GearRepo<T extends Gear> {
   Future<void> save() async {
     final json = _toJson();
     final jsonString = jsonEncode(json);
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_storageKey, jsonString);
+    await _store.set(_storageKey, jsonString);
     _notify();
   }
 

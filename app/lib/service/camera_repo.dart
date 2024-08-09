@@ -1,8 +1,11 @@
-import 'package:film_log/model/camera.dart';
-import 'package:film_log/service/gear_repo.dart';
+import '../model/camera.dart';
+import 'gear_repo.dart';
 
 class CameraRepo extends GearRepo<Camera> {
-  CameraRepo() : super(storageKey: 'camera_repo');
+  CameraRepo({required super.store})
+      : super(
+          storageKey: 'camera_repo',
+        );
 
   @override
   Camera itemFromJson(Map<String, dynamic> json) => Camera.fromJson(json);

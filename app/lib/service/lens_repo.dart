@@ -1,9 +1,9 @@
-import 'package:film_log/model/lens.dart';
-import 'package:film_log/service/camera_repo.dart';
-import 'package:film_log/service/gear_repo.dart';
+import '../model/lens.dart';
+import 'camera_repo.dart';
+import 'gear_repo.dart';
 
 class LensRepo extends GearRepo<Lens> {
-  LensRepo({required CameraRepo cameraRepo})
+  LensRepo({required CameraRepo cameraRepo, required super.store})
       : _cameraRepo = cameraRepo,
         super(storageKey: 'lens_repo');
 

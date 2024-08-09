@@ -1,4 +1,5 @@
 import 'package:film_log/pages/film_list_page/film_list_page.dart';
+import 'package:film_log/service/persistence_prefs.dart';
 import 'package:film_log/service/repos.dart';
 import 'package:film_log/service/wear_data.dart';
 import 'package:film_log/widgets/wear_companion_checker.dart';
@@ -19,21 +20,22 @@ class FilmLog extends StatefulWidget {
 }
 
 class _FilmLogState extends State<FilmLog> {
+  final _store = SharedPreferencesPersistence();
+  late final Repos _repos;
   late final WearDataService _wearData;
-
-  final _repos = Repos();
-
   late Future _initialized;
 
   @override
   void initState() {
     _setupLogging();
+    _repos = Repos(store: _store);
     _wearData = WearDataService(repos: _repos);
     _initialized = _init();
     super.initState();
   }
 
   Future<void> _init() async {
+    await _store.setup();
     await _repos.load();
     await _wearData.setup();
   }

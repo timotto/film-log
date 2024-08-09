@@ -77,11 +77,7 @@ class Filter implements Gear<Filter> {
         name: json['name'],
         manufacturer: json['manufacturer'],
         product: json['product'],
-        lenses: lenses
-            .where((item) => (json['lenses'] as List<dynamic>)
-                .where((id) => id == item.id)
-                .isNotEmpty)
-            .toList(growable: false),
+        lenses: Gear.fromIdList(json['lenses'], lenses),
       );
 
   @override
@@ -90,6 +86,6 @@ class Filter implements Gear<Filter> {
         'name': name,
         'manufacturer': manufacturer,
         'product': product,
-        'lenses': lenses.map((lens) => lens.id).toList(growable: false),
+        'lenses': Gear.toIdList(lenses),
       };
 }

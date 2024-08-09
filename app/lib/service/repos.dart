@@ -3,23 +3,23 @@ import 'film_repo.dart';
 import 'filmstock_repo.dart';
 import 'filter_repo.dart';
 import 'lens_repo.dart';
+import 'persistence.dart';
 import 'thumbnail_repo.dart';
 
 class Repos {
-  Repos._() {
-    lensRepo = LensRepo(cameraRepo: cameraRepo);
-    filterRepo = FilterRepo(lensRepo: lensRepo);
+  Repos({required Persistence store}) {
+    cameraRepo = CameraRepo(store: store);
+    filmstockRepo = FilmstockRepo(store: store);
+    filmRepo = FilmRepo(store: store);
+    lensRepo = LensRepo(cameraRepo: cameraRepo, store: store);
+    filterRepo = FilterRepo(lensRepo: lensRepo, store: store);
   }
 
-  static final _sharedInstance = Repos._();
-
-  factory Repos() => _sharedInstance;
-
-  final cameraRepo = CameraRepo();
+  late final CameraRepo cameraRepo;
   late final LensRepo lensRepo;
   late final FilterRepo filterRepo;
-  final filmstockRepo = FilmstockRepo();
-  final filmRepo = FilmRepo();
+  late final FilmstockRepo filmstockRepo;
+  late final FilmRepo filmRepo;
   final thumbnailRepo = ThumbnailRepo();
 
   Future<void> load() async {

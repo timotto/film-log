@@ -5,6 +5,7 @@ import 'package:film_log/model/json.dart';
 import 'package:uuid/v4.dart';
 
 import 'camera.dart';
+import 'gear.dart';
 import 'lens.dart';
 import 'photo.dart';
 
@@ -104,20 +105,16 @@ class FilmInstance implements ToJson, Equals<FilmInstance> {
         id: json['id'],
         name: json['name'],
         inserted: DateTime.parse(json['inserted']),
-        stock: json['stock'] != null
-            ? filmStock.where((f) => f.id == json['stock']).first
-            : null,
+        stock: Gear.byId(json['stock'], filmStock),
         actualIso: json['actualIso'],
-        camera: json['camera'] != null
-            ? cameras.where((c) => c.id == json['camera']).first
-            : null,
-        photos: (json['photos'] as List<dynamic>)
-            .map((p) => Photo.fromJson(
+        camera: Gear.byId(json['camera'], cameras),
+        photos: FromJson.all(
+            json['photos'],
+            (p) => Photo.fromJson(
                   p,
                   filters: filters,
                   lenses: lenses,
-                ))
-            .toList(),
+                )),
         maxPhotoCount: json['maxPhotoCount'],
         archive: json['archive'] ?? false,
       );
@@ -130,7 +127,7 @@ class FilmInstance implements ToJson, Equals<FilmInstance> {
         if (stock != null) 'stock': stock!.id,
         'actualIso': actualIso,
         if (camera != null) 'camera': camera!.id,
-        'photos': photos.map((p) => p.toJson()).toList(growable: false),
+        'photos': ToJson.all(photos),
         'maxPhotoCount': maxPhotoCount,
         if (archive) 'archive': archive,
       };
