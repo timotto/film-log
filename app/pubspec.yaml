@@ -46,7 +46,7 @@ dependencies:
     path: ../flutter_wear_os_connectivity
   film_log_wear_data:
     path: ../film_log_wear_data
-  share_plus: ^10.0.0
+  share_plus: ^10.0.3
   archive: ^3.6.1
   file_picker: ^8.0.7
   logging: ^1.2.0
