@@ -95,7 +95,7 @@ class ExportService {
           await _writeJsonFile(
             dir: dir,
             filename: 'film.json',
-            data: film.toJson(),
+            data: film.toJsonExport(),
           );
 
           await _exportThumbnails(
