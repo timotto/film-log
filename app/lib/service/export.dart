@@ -86,7 +86,7 @@ class ExportService {
     Future<void> Function(String) cb,
   ) async {
     final tempDir = await _createTempDir();
-    final zipFilename = p.join(tempDir.path, 'film-log-export.zip');
+    final zipFilename = p.join(tempDir.path, 'film-log-export-${film.name}.zip');
 
     try {
       await _withTempDirectory(
