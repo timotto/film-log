@@ -41,7 +41,7 @@ class FilmInstance implements ToJson, Equals<FilmInstance> {
       FilmInstance(
         id: const UuidV4().generate(),
         name: '',
-        inserted: DateTime.timestamp(),
+        inserted: DateTime.timestamp().toUtc(),
         stock: filmStock,
         actualIso: actualIso ?? 100,
         camera: camera,

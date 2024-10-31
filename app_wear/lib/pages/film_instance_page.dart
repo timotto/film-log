@@ -164,7 +164,7 @@ class _FilmInstancePageState extends State<_FilmInstancePageWidget> {
     return Photo(
       id: const UuidV4().generate(),
       frameNumber: widget.film.photos.length + 1,
-      recorded: DateTime.timestamp(),
+      recorded: DateTime.timestamp().toUtc(),
       filters: lastPhoto == null ? [] : [...lastPhoto.filters],
       lens: lastPhoto?.lens,
       aperture: lastPhoto?.aperture,

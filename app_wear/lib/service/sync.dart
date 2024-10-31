@@ -164,7 +164,7 @@ class SyncService {
         film = Film(
           id: filmId,
           label: 'Film',
-          inserted: DateTime.timestamp(),
+          inserted: DateTime.timestamp().toUtc(),
           maxPhotoCount: 10,
           camera: null,
           photos: [],

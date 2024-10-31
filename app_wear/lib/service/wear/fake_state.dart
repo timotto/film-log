@@ -12,14 +12,14 @@ State fakeState() => State(films: [
       Film(
         id: 'f1',
         name: 'Demo',
-        inserted: DateTime.timestamp(),
+        inserted: DateTime.timestamp().toUtc(),
         cameraId: 'c1',
         actualIso: 200,
         filmStockId: 'fs-1',
         photos: [
           Photo(
             id: 'p1',
-            recorded: DateTime.timestamp(),
+            recorded: DateTime.timestamp().toUtc(),
             frameNumber: 1,
             shutterSpeed: 1 / 125,
             aperture: 8,
@@ -34,7 +34,7 @@ State fakeState() => State(films: [
       Film(
         id: 'f2',
         name: 'Editing',
-        inserted: DateTime.timestamp(),
+        inserted: DateTime.timestamp().toUtc(),
         cameraId: 'c1',
         photos: [],
         maxPhotoCount: 10,
@@ -102,7 +102,7 @@ Future<void> fakeEditFilm({
     final updated = film.addPhoto(
       m.Photo(
         id: '',
-        recorded: DateTime.timestamp(),
+        recorded: DateTime.timestamp().toUtc(),
         frameNumber: frameNumber,
         shutterSpeed: 1 / 250,
         aperture: 8,

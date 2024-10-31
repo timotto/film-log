@@ -128,7 +128,7 @@ class Photo implements ToJson, Equals<Photo> {
   }) =>
       Photo(
         id: const UuidV4().generate(),
-        timestamp: DateTime.timestamp(),
+        timestamp: DateTime.timestamp().toUtc(),
         frameNumber: frameNumber,
         shutter: shutter,
         aperture: aperture,
