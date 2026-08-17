@@ -1,7 +1,6 @@
 import 'package:film_log/model/gear.dart';
 import 'package:film_log/pages/gear/widgets/gear_multiselect_page.dart';
 import 'package:film_log/service/gear_repo.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class MultiselectEditTile<T extends Gear> extends StatelessWidget {

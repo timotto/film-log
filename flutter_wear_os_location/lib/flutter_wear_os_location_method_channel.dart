@@ -28,13 +28,6 @@ class MethodChannelFlutterWearOsLocation extends FlutterWearOsLocationPlatform {
     final altitude = data['altitude'] as double;
     final accuracy = data['accuracy'] as double;
 
-    if (latitude == null ||
-        longitude == null ||
-        altitude == null ||
-        accuracy == null) {
-      return null;
-    }
-
     return Location(
       latitude: latitude,
       longitude: longitude,

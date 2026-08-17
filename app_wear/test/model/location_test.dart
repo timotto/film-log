@@ -10,8 +10,8 @@ void main() {
 
     setUp(() {
       // using "const Location" causes same hashCode for different objects!
-      ref = Location(latitude: 10.12345, longitude: 50.54321);
-      same = Location(latitude: 10.12345, longitude: 50.54321);
+      ref = const Location(latitude: 10.12345, longitude: 50.54321);
+      same = const Location(latitude: 10.12345, longitude: 50.54321);
       otherLatitude = const Location(latitude: 11.12345, longitude: 50.54321);
       otherLongitude = const Location(latitude: 10.12345, longitude: 49.54321);
     });

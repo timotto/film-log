@@ -14,8 +14,7 @@ class SelectListWidget<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ListView(
-        children: this
-            .items
+        children: items
             .map((item) => ListTile(
                   title: Text(item.value),
                   selected: item.key == value,

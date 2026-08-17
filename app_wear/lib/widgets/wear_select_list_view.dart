@@ -31,7 +31,7 @@ class WearSelectListView<T> extends StatelessWidget {
 
   int? _selectedIndex() {
     if (value == null) return null;
-    final index = values.indexOf(value!);
+    final index = values.indexOf(value as T);
     if (index == -1) return null;
     return index;
   }
