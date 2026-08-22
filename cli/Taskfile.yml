@@ -1,0 +1,22 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+
+version: '3'
+
+env:
+  GOARCH: arm64
+  GOOS: darwin
+
+tasks:
+  default:
+    cmds:
+    - task: build
+
+  build:
+    desc: Build the project
+    cmds:
+    - |
+      BINARIES="$(ls cmd)"
+      for bin in $BINARIES
+      do
+        go build -o bin/${GOOS}_${GOARCH}/$bin ./cmd/${bin}/...
+      done
