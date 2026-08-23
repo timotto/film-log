@@ -8,13 +8,13 @@ require (
 )
 
 require (
-	github.com/dsoprea/go-iptc v0.0.0-20200609062250-162ae6b44feb // indirect
+	github.com/dsoprea/go-iptc v0.0.0-20200610044640-bc9ca208b413 // indirect
 	github.com/dsoprea/go-logging v0.0.0-20200710184922-b02d349568dd // indirect
-	github.com/dsoprea/go-photoshop-info-format v0.0.0-20200609050348-3db9b63b202c // indirect
+	github.com/dsoprea/go-photoshop-info-format v0.0.0-20200610045659-121dd752914d // indirect
 	github.com/dsoprea/go-utility/v2 v2.0.0-20221003172846-a3e1774ef349 // indirect
-	github.com/go-errors/errors v1.4.2 // indirect
-	github.com/go-xmlfmt/xmlfmt v0.0.0-20191208150333-d5b6f63a941b // indirect
-	github.com/golang/geo v0.0.0-20210211234256-740aa86cb551 // indirect
-	golang.org/x/net v0.0.0-20221002022538-bcab6841153b // indirect
+	github.com/go-errors/errors v1.5.1 // indirect
+	github.com/go-xmlfmt/xmlfmt v1.1.3 // indirect
+	github.com/golang/geo v0.0.0-20260818125358-b200a1149890 // indirect
+	golang.org/x/net v0.58.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
