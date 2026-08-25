@@ -46,21 +46,28 @@ func (f Fl2Exif) applyExifTo(imageFilename string, photo filmlog.Photo, film *fi
 	}
 
 	if !photo.Timestamp.Value().IsZero() {
-		// IFD DateTime
-		if err := ifdIb.SetStandard(306, photo.
+		timestampString := photo.
 			Timestamp.
 			Value().
 			UTC().
-			Format("2006:01:02 15:04:05")); err != nil {
+			Format("2006:01:02 15:04:05")
+
+		// clean up empty IFD/DateTimeOriginal, written by SilverFast?
+		if _, err := ifdIb.DeleteAll(0x9003); err != nil {
 			return err
 		}
 
-		// IFD/Exif DateTimeOriginal
-		if err := exifIb.SetStandard(0x9003, photo.
-			Timestamp.
-			Value().
-			UTC().
-			Format("2006:01:02 15:04:05")); err != nil {
+		if err := ifdIb.SetStandardWithName("DateTime", timestampString); err != nil {
+			return err
+		}
+
+		if err := exifIb.SetStandardWithName("DateTimeOriginal", timestampString); err != nil {
+			return err
+		}
+		if err := exifIb.SetStandardWithName("OffsetTimeOriginal", "+00:00"); err != nil {
+			return err
+		}
+		if err := exifIb.SetStandardWithName("SubSecTimeOriginal", "0"); err != nil {
 			return err
 		}
 
