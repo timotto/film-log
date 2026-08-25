@@ -87,7 +87,7 @@ class FlutterWearOsConnectivity extends FlutterSmartWatchPlatformInterface {
       {CapabilityFilterType filterType = CapabilityFilterType.all}) async {
     Map? data = (await channel.invokeMethod("findCapabilityByName",
         {"name": name, "filterType": filterType.index}));
-    return CapabilityInfo.fromJson(data.toMapStringDynamic());
+    return CapabilityInfo.fromJson((data as Map? ?? {}).toMapStringDynamic());
   }
 
   /// Announces that a capability has become available on the local device
