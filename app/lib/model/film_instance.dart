@@ -33,6 +33,7 @@ class FilmInstance implements ToJson, Equals<FilmInstance> {
   });
 
   factory FilmInstance.createNew({
+    String? name,
     Camera? camera,
     FilmStock? filmStock,
     double? actualIso,
@@ -40,7 +41,7 @@ class FilmInstance implements ToJson, Equals<FilmInstance> {
   }) =>
       FilmInstance(
         id: const UuidV4().generate(),
-        name: '',
+        name: name ?? '',
         inserted: DateTime.timestamp().toUtc(),
         stock: filmStock,
         actualIso: actualIso ?? 100,

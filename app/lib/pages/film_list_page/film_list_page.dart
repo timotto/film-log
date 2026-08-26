@@ -6,6 +6,7 @@ import 'package:film_log/service/film_repo.dart';
 import 'package:film_log/service/lru.dart';
 import 'package:film_log/service/repos.dart';
 import 'package:film_log/widgets/app_menu.dart';
+import 'package:film_log_wear_data/common/suggest_name.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -29,6 +30,7 @@ class FilmListPage extends StatelessWidget {
       builder: (_) => EditFilmPage(
         repos: repos,
         film: FilmInstance.createNew(
+          name: _suggestNextFilmName(repos),
           camera: _lru.camera,
           filmStock: _lru.filmStock,
           actualIso: _lru.filmStock?.iso,
@@ -145,4 +147,18 @@ class FilmListPage extends StatelessWidget {
               : AppLocalizations.of(context).filmInstanceListEmpty,
         ),
       );
+}
+
+String _suggestNextFilmName(Repos repos) {
+  if (repos.filmRepo.itemsList.isEmpty) return '';
+
+  var latest = repos.filmRepo.itemsList.reduce((a, b) {
+    if (a.inserted.isAfter(b.inserted)) {
+      return a;
+    } else {
+      return b;
+    }
+  });
+
+  return suggestNextFilmName(previousFilmName: latest.name, fallbackName: '');
 }

@@ -6,6 +6,7 @@ import 'package:film_log_wear/widgets/add_button.dart';
 import 'package:film_log_wear/widgets/swipe_dismiss.dart';
 import 'package:film_log_wear/widgets/wear_list_tile.dart';
 import 'package:film_log_wear/widgets/wear_list_view.dart';
+import 'package:film_log_wear_data/common/suggest_name.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -88,12 +89,24 @@ class FilmListPage extends StatelessWidget {
   Future<void> _addFilmInstance(BuildContext context) async {
     final result = await Navigator.of(context).push<Film>(MaterialPageRoute(
       builder: (_) => AddFilmPage(
-        name: AppLocalizations.of(context)
-            .addFilmNameTemplate(_repo.value().length + 1),
+        name: _suggestNextFilmName(context, _repo),
       ),
     ));
     if (result == null || !context.mounted) return;
 
     await _data.sendFilm(result);
+  }
+
+  String _suggestNextFilmName(BuildContext context, FilmRepo repo) {
+    var items = repo.value();
+    var fallbackName = AppLocalizations.of(context).addFilmNameTemplate(1);
+
+    if (items.isEmpty) {
+      return fallbackName;
+    }
+
+    var latest = items.reduce((a, b) => a.inserted.isAfter(b.inserted) ? a : b);
+    return suggestNextFilmName(
+        previousFilmName: latest.label, fallbackName: fallbackName);
   }
 }
