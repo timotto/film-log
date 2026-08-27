@@ -16,6 +16,7 @@ import 'package:film_log_wear/widgets/swipe_dismiss.dart';
 import 'package:film_log_wear/widgets/wear_list_tile.dart';
 import 'package:film_log_wear/widgets/wear_list_view.dart';
 import 'package:film_log_wear_data/common/fmt/frame_number.dart';
+import 'package:film_log_wear_data/common/frame_number.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -69,8 +70,11 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
   }
 
   Future<void> _editFrameNumber(BuildContext context) async {
-    var n = widget.film.maxPhotoCount * 2;
-    var values = List<int>.generate(n, (int i) => 1+i);
+    var values = generatePossibleFrameNumberEditValues(
+      existingPhotoFrameNumbers: widget.film.photos.map((it) => it.frameNumber).toList(),
+      currentPhotoFrameNumber: photo.frameNumber,
+      filmInstanceMaxPhotoCount: widget.film.maxPhotoCount,
+    );
     final int? result = await Navigator.of(context).push(MaterialPageRoute(
       builder: (_) => EditFrameNumberPage(
         value: photo.frameNumber,
