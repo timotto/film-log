@@ -16,5 +16,5 @@ abstract class FromJson {
           List<dynamic>? json, T Function(Map<String, dynamic>) fromJson) =>
       json == null
           ? []
-          : json.map((item) => fromJson(item)).toList(growable: false);
+          : json.map((item) => fromJson(item)).toList(growable: true);
 }
