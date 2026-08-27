@@ -70,7 +70,7 @@ class Film implements ToJson, Equals<Film> {
         name: json['name'],
         inserted: DateTime.parse(json['inserted']),
         actualIso: json['actualIso'],
-        cameraId: json['cameraId'] as String,
+        cameraId: json['cameraId'] as String?,
         filmStockId: json['filmStockId'],
         photos: allFromJson(json['photos'], Photo.fromJson),
         maxPhotoCount: json['maxPhotoCount'],
