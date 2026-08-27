@@ -4,6 +4,7 @@ import 'package:film_log/model/fstop.dart';
 import 'package:film_log/model/location.dart';
 import 'package:film_log/model/photo.dart';
 import 'package:film_log/pages/gear/widgets/aperture_edit_tile.dart';
+import 'package:film_log/pages/gear/widgets/frame_number_edit_tile.dart';
 import 'package:film_log/pages/gear/widgets/lens_edit_tile.dart';
 import 'package:film_log/pages/gear/widgets/multiselect_edit_tile.dart';
 import 'package:film_log/pages/gear/widgets/shutterspeed_edit_tile.dart';
@@ -14,6 +15,7 @@ import 'package:film_log/widgets/discard_guard_widget.dart';
 import 'package:film_log/widgets/location_list_tile.dart';
 import 'package:film_log/widgets/thumbnail_list_tile.dart';
 import 'package:film_log/widgets/timestamp_list_tile.dart';
+import 'package:film_log_wear_data/common/frame_number.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -37,11 +39,13 @@ class EditPhotoPage extends StatefulWidget {
 
 class _EditPhotoPageState extends State<EditPhotoPage> {
   late Photo photo;
+  late Photo reference;
   bool edit = false;
 
   @override
   void initState() {
     photo = widget.photo;
+    reference = widget.photo;
     if (widget.create) {
       edit = true;
       getLocation().then(_onLocation);
@@ -79,10 +83,17 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
       }
     }
 
-    widget.film.photos.removeWhere((item) => item.id == photo.id);
-    widget.film.photos.add(photo);
-    widget.film.photos.sort((a, b) => a.frameNumber.compareTo(b.frameNumber));
+    var success = widget.film.updatePhoto(photo);
+    if (!success) {
+      photo = reference;
+      setState(() {
+        edit = false;
+      });
+      return;
+    }
+
     await widget.repos.filmRepo.update(widget.film);
+    reference = photo;
     setState(() {
       edit = false;
     });
@@ -101,7 +112,7 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
 
   bool _show<T>(T? value) => edit || value != null;
 
-  bool _hasChanges() => widget.create || !photo.equals(widget.photo);
+  bool _hasChanges() => widget.create || !photo.equals(reference);
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -129,6 +140,7 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
           child: ListView(
             children: [
               _timestampEditTile(context),
+              _frameNumberEditTile(context),
               if (_show(photo.shutter)) _shutterSpeedEditTile(context),
               if (_show(photo.lens)) _lensEditTile(context),
               if (_show(photo.aperture)) _apertureEditTile(context),
@@ -141,6 +153,18 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
           ),
         ),
       );
+
+  Widget _frameNumberEditTile(BuildContext context) => FrameNumberEditTile(
+    label: AppLocalizations.of(context).editPhotoTileLabelFrameNumber,
+    edit: edit,
+    value: photo.frameNumber,
+    items: generatePossibleFrameNumberEditValues(
+      filmInstanceMaxPhotoCount: widget.film.maxPhotoCount,
+      currentPhotoFrameNumber: photo.frameNumber,
+      existingPhotoFrameNumbers: widget.film.existingFrameNumbers(),
+    ),
+    onUpdate: _onUpdate((value) => photo.update(frameNumber: value)),
+  );
 
   Widget _timestampEditTile(BuildContext context) => TimestampListTile(
         label: AppLocalizations.of(context).editPhotoTileLabelTimestamp,

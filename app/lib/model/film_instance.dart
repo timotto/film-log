@@ -2,6 +2,7 @@ import 'package:film_log/model/equals.dart';
 import 'package:film_log/model/film_stock.dart';
 import 'package:film_log/model/filter.dart';
 import 'package:film_log/model/json.dart';
+import 'package:film_log_wear_data/common/frame_number.dart';
 import 'package:uuid/v4.dart';
 
 import 'camera.dart';
@@ -31,6 +32,42 @@ class FilmInstance implements ToJson, Equals<FilmInstance> {
     required this.maxPhotoCount,
     required this.archive,
   });
+
+  bool updatePhoto(Photo photo) {
+    var index = photos.indexWhere((it) => it.id == photo.id);
+    if (index == -1) {
+      return false;
+    }
+
+    if (photos[index].frameNumber != photo.frameNumber) {
+      var res = generateFrameNumberEdits(
+        existingFrameNumbers: existingFrameNumbers(),
+        previousFrameNumberValue: photos[index].frameNumber,
+        updatedFrameNumberValue: photo.frameNumber,
+      );
+      if (res.conflict) {
+        return false;
+      }
+      var edits = Map.fromEntries(res.edits);
+      photos.asMap().forEach((index, it) {
+        if (!edits.containsKey(it.frameNumber)) return;
+        var edit = edits[it.frameNumber];
+        photos[index] = it.update(frameNumber: edit);
+      });
+      photos.removeWhere((it) => it.id == photo.id);
+      photos.add(photo);
+      photos.sort((a, b) => a.frameNumber.compareTo(b.frameNumber));
+    } else {
+      photos[index] = photo;
+    }
+    return true;
+  }
+
+  List<int> existingFrameNumbers() =>
+      photos.map((it) => it.frameNumber).toList(growable: false);
+
+  int nextFrameNumber() =>
+      photos.isEmpty ? 1 : (1 + existingFrameNumbers().last);
 
   factory FilmInstance.createNew({
     String? name,

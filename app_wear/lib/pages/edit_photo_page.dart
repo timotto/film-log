@@ -5,6 +5,7 @@ import 'package:film_log_wear/model/photo.dart';
 import 'package:film_log_wear/model/shutter_speed.dart';
 import 'package:film_log_wear/pages/edit_aperture_page.dart';
 import 'package:film_log_wear/pages/edit_filters_page.dart';
+import 'package:film_log_wear/pages/edit_frame_number_page.dart';
 import 'package:film_log_wear/pages/edit_lens_page.dart';
 import 'package:film_log_wear/pages/edit_shutter_speed_page.dart';
 import 'package:film_log_wear/service/filter_repo.dart';
@@ -14,6 +15,7 @@ import 'package:film_log_wear/widgets/accept_button.dart';
 import 'package:film_log_wear/widgets/swipe_dismiss.dart';
 import 'package:film_log_wear/widgets/wear_list_tile.dart';
 import 'package:film_log_wear/widgets/wear_list_view.dart';
+import 'package:film_log_wear_data/common/fmt/frame_number.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -64,6 +66,22 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
     setState(() {
       photo = photo.update(location: value);
     });
+  }
+
+  Future<void> _editFrameNumber(BuildContext context) async {
+    var n = widget.film.maxPhotoCount * 2;
+    var values = List<int>.generate(n, (int i) => 1+i);
+    final int? result = await Navigator.of(context).push(MaterialPageRoute(
+      builder: (_) => EditFrameNumberPage(
+        value: photo.frameNumber,
+        values: values,
+      ),
+    ));
+    if (result == null || !mounted || !context.mounted) return;
+    setState(() {
+      photo = photo.update(frameNumber: result);
+    });
+
   }
 
   Future<void> _editShutterSpeed(BuildContext context) async {
@@ -164,7 +182,8 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
               WearListTile(
                 title:
                     AppLocalizations.of(context).editPhotoTileTitleFrameNumber,
-                subtitle: '#${photo.frameNumber}',
+                subtitle: formatFrameNumber(photo.frameNumber),
+                onTap: _ifEdit(() => _editFrameNumber(context)),
               ),
               if (_ifEditOrNotNull(photo.shutterSpeed))
                 WearListTile(

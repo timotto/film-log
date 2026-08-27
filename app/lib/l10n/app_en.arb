@@ -42,6 +42,7 @@
   "editFilmTileLabelActualISO": "Actual ISO",
   "editFilmTileLabelFrameCount": "Frames",
 
+  "editPhotoTileLabelFrameNumber": "Frame number",
   "editPhotoTileLabelTimestamp": "Timestamp",
   "editPhotoTileLabelShutterSpeed": "Shutter speed",
   "editPhotoTileLabelLens": "Lens",

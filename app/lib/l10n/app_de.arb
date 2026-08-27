@@ -42,6 +42,7 @@
   "editFilmTileLabelActualISO": "Tatsächliche ISO",
   "editFilmTileLabelFrameCount": "Fotos",
 
+  "editPhotoTileLabelFrameNumber": "Foto Nummer",
   "editPhotoTileLabelTimestamp": "Zeitstempel",
   "editPhotoTileLabelShutterSpeed": "Verschlusszeit",
   "editPhotoTileLabelLens": "Objektiv",
