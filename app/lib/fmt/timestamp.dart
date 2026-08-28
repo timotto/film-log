@@ -9,10 +9,10 @@ String formatTimestamp(
       values.map((item) => [item.year, item.month, item.day].join('-')).toSet();
   final sameDay = values.isNotEmpty && dateSet.length == 1;
   if (sameDay) {
-    return formatTime(context, value);
+    return formatTime(context, value.toLocal());
   }
 
-  return '${formateDate(context, value)} ${formatTime(context, value)}';
+  return '${formateDate(context, value.toLocal())} ${formatTime(context, value.toLocal())}';
 }
 
 String formateDate(BuildContext context, DateTime value) =>
