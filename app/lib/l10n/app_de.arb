@@ -30,6 +30,12 @@
   "menuItemManageGear": "Ausrüstung verwalten",
   "menuItemAboutApp": "Über diese App",
 
+  "menuItemSortFilmByLabel": "Name",
+  "menuItemSortFilmByInserted": "Eingelegt",
+  "menuItemSortFilmByLastPhoto": "Letztes Foto",
+  "menuItemSortFilmsAscending": "Aufsteigend",
+  "menuItemSortFilmsDescending": "Absteigend",
+
   "notificationWearOsAppAvailable": "Wear OS App verfügbar",
 
   "filmInstanceListEmpty": "Du hast noch keine Filme.",

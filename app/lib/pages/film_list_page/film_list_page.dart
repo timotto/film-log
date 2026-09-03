@@ -1,4 +1,6 @@
 import 'package:film_log/model/film_instance.dart';
+import 'package:film_log/model/photo.dart';
+import 'package:film_log/model/sort.dart';
 import 'package:film_log/pages/edit_film_page/edit_film_page.dart';
 import 'package:film_log/pages/film_log_page/film_log_page.dart';
 import 'package:film_log/pages/manage_data_page/manage_data_page.dart';
@@ -6,11 +8,12 @@ import 'package:film_log/service/film_repo.dart';
 import 'package:film_log/service/lru.dart';
 import 'package:film_log/service/repos.dart';
 import 'package:film_log/widgets/app_menu.dart';
+import 'package:film_log/widgets/film_sort_menu.dart';
 import 'package:film_log_wear_data/common/suggest_name.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class FilmListPage extends StatelessWidget {
+class FilmListPage extends StatefulWidget {
   FilmListPage({
     super.key,
     required this.repo,
@@ -18,19 +21,33 @@ class FilmListPage extends StatelessWidget {
     this.archive = false,
   });
 
-  final _lru = LruService();
-
   final FilmRepo repo;
   final Repos repos;
   final bool archive;
+
+  @override
+  State<StatefulWidget> createState() => FilmListPageState();
+}
+
+class FilmListPageState extends State<FilmListPage> {
+  final _lru = LruService();
+
+  FilmSortOrder sortOrder = FilmSortOrder.lastPhoto;
+  SortOrderDirection sortDirection = SortOrderDirection.descending;
+
+  void _updateSortOrder(FilmSortOrder order, SortOrderDirection direction) =>
+      setState(() {
+        sortOrder = order;
+        sortDirection = direction;
+      });
 
   Future<void> _addFilm(BuildContext context) async {
     final FilmInstance? result =
         await Navigator.of(context).push(MaterialPageRoute(
       builder: (_) => EditFilmPage(
-        repos: repos,
+        repos: widget.repos,
         film: FilmInstance.createNew(
-          name: _suggestNextFilmName(repos),
+          name: _suggestNextFilmName(),
           camera: _lru.camera,
           filmStock: _lru.filmStock,
           actualIso: _lru.filmStock?.iso,
@@ -47,7 +64,7 @@ class FilmListPage extends StatelessWidget {
       maxPhotoCount: result.maxPhotoCount,
     );
 
-    final item = await repo.add(result);
+    final item = await widget.repo.add(result);
     if (!context.mounted) return;
     await _selectFilm(context, item);
   }
@@ -56,8 +73,8 @@ class FilmListPage extends StatelessWidget {
     await Navigator.of(context).push(MaterialPageRoute(
       builder: (_) => FilmLogPage(
         value: item,
-        repo: repo,
-        repos: repos,
+        repo: widget.repo,
+        repos: widget.repos,
       ),
     ));
   }
@@ -65,8 +82,8 @@ class FilmListPage extends StatelessWidget {
   Future<void> _showArchive(BuildContext context) async {
     await Navigator.of(context).push(MaterialPageRoute(
       builder: (_) => FilmListPage(
-        repo: repo,
-        repos: repos,
+        repo: widget.repo,
+        repos: widget.repos,
         archive: true,
       ),
     ));
@@ -75,27 +92,38 @@ class FilmListPage extends StatelessWidget {
   Future<void> _manageData(BuildContext context) async {
     await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => ManageDataPage(repos: repos),
+        builder: (_) => ManageDataPage(repos: widget.repos),
       ),
     );
   }
 
-  List<FilmInstance> _filter(List<FilmInstance> items) =>
-      items.where((item) => item.archive == archive).toList(growable: false);
+  List<FilmInstance> _filter(List<FilmInstance> items) => items
+      .where((item) => item.archive == widget.archive)
+      .toList(growable: false);
+
+  List<FilmInstance> _sort(List<FilmInstance> items) {
+    items.sort(_sortFnFor(sortOrder));
+    return _flipOrderWhenDescending(sortDirection, items);
+  }
 
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
           title: Text(
-            archive
+            widget.archive
                 ? AppLocalizations.of(context).pageTitleFilmInstanceListArchive
                 : AppLocalizations.of(context).pageTitleFilmInstanceList,
           ),
           actions: [
+            FilmSortMenu(
+              order: sortOrder,
+              direction: sortDirection,
+              onUpdate: _updateSortOrder,
+            ),
             AppMenu(
-              repos: repos,
+              repos: widget.repos,
               menuItems: [
-                if (!archive)
+                if (!widget.archive)
                   MenuItemButton(
                     onPressed: () => _showArchive(context),
                     leadingIcon: const Icon(Icons.archive),
@@ -112,22 +140,22 @@ class FilmListPage extends StatelessWidget {
             ),
           ],
         ),
-        floatingActionButton: archive
+        floatingActionButton: widget.archive
             ? null
             : FloatingActionButton(
                 onPressed: () => _addFilm(context),
                 child: const Icon(Icons.add),
               ),
         body: StreamBuilder(
-          stream: repo.itemsStream(),
-          initialData: repo.items(),
+          stream: widget.repo.itemsStream(),
+          initialData: widget.repo.items(),
           builder: (context, items) =>
-              _body(context, _filter(items.data ?? [])),
+              _body(context, items.data ?? []),
         ),
       );
 
   Widget _body(BuildContext context, List<FilmInstance> items) =>
-      items.isNotEmpty ? _list(context, items) : _empty(context);
+      items.isNotEmpty ? _list(context, _sort(_filter(items))) : _empty(context);
 
   Widget _list(BuildContext context, List<FilmInstance> items) => ListView(
         children: items
@@ -142,23 +170,56 @@ class FilmListPage extends StatelessWidget {
 
   Widget _empty(BuildContext context) => Center(
         child: Text(
-          archive
+          widget.archive
               ? AppLocalizations.of(context).filmInstanceListArchiveEmpty
               : AppLocalizations.of(context).filmInstanceListEmpty,
         ),
       );
+
+  String _suggestNextFilmName() {
+    if (widget.repos.filmRepo.itemsList.isEmpty) return '';
+
+    var latest = widget.repos.filmRepo.itemsList.reduce((a, b) {
+      if (a.inserted.isAfter(b.inserted)) {
+        return a;
+      } else {
+        return b;
+      }
+    });
+
+    return suggestNextFilmName(previousFilmName: latest.name, fallbackName: '');
+  }
 }
 
-String _suggestNextFilmName(Repos repos) {
-  if (repos.filmRepo.itemsList.isEmpty) return '';
-
-  var latest = repos.filmRepo.itemsList.reduce((a, b) {
-    if (a.inserted.isAfter(b.inserted)) {
-      return a;
-    } else {
-      return b;
-    }
-  });
-
-  return suggestNextFilmName(previousFilmName: latest.name, fallbackName: '');
+int Function(FilmInstance a, FilmInstance b) _sortFnFor(FilmSortOrder order) {
+  switch (order) {
+    case FilmSortOrder.label:
+      return _sortByLabel;
+    case FilmSortOrder.inserted:
+      return _sortByInserted;
+    case FilmSortOrder.lastPhoto:
+      return _sortByLastPhoto;
+  }
 }
+
+int _sortByLabel(FilmInstance a, FilmInstance b) => a.name.compareTo(b.name);
+
+int _sortByInserted(FilmInstance a, FilmInstance b) =>
+    a.inserted.compareTo(b.inserted);
+
+int _sortByLastPhoto(FilmInstance a, FilmInstance b) {
+  var la = _latestPhotoOf(a);
+  var lb = _latestPhotoOf(b);
+  if (la != null && lb == null) return -1;
+  if (la == null && lb != null) return 1;
+  if (la == null && lb == null) return 0;
+  return la!.timestamp.compareTo(lb!.timestamp);
+}
+
+Photo? _latestPhotoOf(FilmInstance film) => film.photos.isEmpty
+    ? null
+    : film.photos.reduce((a, b) => a.timestamp.isAfter(b.timestamp) ? a : b);
+
+List<FilmInstance> _flipOrderWhenDescending(
+        SortOrderDirection direction, List<FilmInstance> items) =>
+    direction == SortOrderDirection.ascending ? items : items.reversed.toList();
